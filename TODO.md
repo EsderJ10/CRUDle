@@ -14,7 +14,7 @@
 - [x] Add confirmation to sensible operations 
 - [x] Validation to create and edit
 - [x] See how to handle that each single user_* is opening the file. Maybe a util??
-- [ ] Handle file upload
-- [ ] 
+- [x] Handle file upload
+- [ ] Change how is saved the avatar in csv 
 - [ ] 
 - [ ] 

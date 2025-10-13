@@ -921,7 +921,7 @@ body {
 
 /* Form styles */
 form {
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--white);
     backdrop-filter: blur(10px);
     padding: var(--space-8);
     border-radius: var(--radius-xl);
@@ -1773,7 +1773,27 @@ tbody tr:nth-child(even):hover {
     }
 }
 
-/* Avatar Styles */
+.user-info-layout {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.user-info-content {
+    flex: 1;
+}
+
+.disabled-input {
+    background: var(--neutral-100);
+    color: var(--neutral-500);
+}
+
+.warning-text {
+    color: var(--error);
+    font-weight: 500;
+}
+
+/* Avatar Management Styles */
 .avatar {
     border-radius: 50%;
     object-fit: cover;
@@ -1797,22 +1817,171 @@ tbody tr:nth-child(even):hover {
     border: 2px solid var(--neutral-200);
 }
 
-.user-info-layout {
+.avatar-container {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3);
+    background: var(--neutral-50);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+    width: fit-content;
 }
 
-.user-info-content {
+.avatar-info {
     flex: 1;
 }
 
-.disabled-input {
+.avatar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+/* Custom Checkbox Styles */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-left: 30px;
+    font-size: 0.925rem;
+    color: var(--neutral-700);
+    transition: all var(--transition);
+}
+
+.checkbox-container input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background: var(--white);
+    border: 2px solid var(--neutral-300);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background: var(--error);
+    border-color: var(--error);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid var(--white);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-label {
+    color: var(--error-dark);
+    font-weight: 500;
+}
+
+.checkbox-container:hover .checkbox-label {
+    color: var(--error);
+}
+
+.avatar-upload-section {
+    transition: all var(--transition);
+}
+
+.avatar-upload-section input[disabled] {
     background: var(--neutral-100);
+    color: var(--neutral-400);
+    cursor: not-allowed;
+}
+
+/* Dark theme adjustments for avatar management */
+.dark-theme .avatar-container {
+    background: rgba(26, 26, 26, 0.8);
+    border-color: var(--neutral-300);
+}
+
+.dark-theme .checkmark {
+    background: var(--neutral-100);
+    border-color: var(--neutral-400);
+}
+
+.dark-theme .checkbox-container:hover input ~ .checkmark {
+    border-color: var(--error);
+}
+
+.dark-theme .checkbox-container input:checked ~ .checkmark {
+    background: var(--error);
+    border-color: var(--error);
+}
+
+.dark-theme .avatar-upload-section input[disabled] {
+    background: rgba(26, 26, 26, 0.6);
     color: var(--neutral-500);
 }
 
-.warning-text {
-    color: var(--error);
+/* Avatar warning styles */
+.avatar-warning {
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid var(--warning-light);
+    border-radius: var(--radius);
+    transition: all var(--transition);
+}
+
+.avatar-warning small {
+    color: var(--warning-dark);
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.avatar-warning i {
+    font-size: 0.875rem;
+}
+
+.text-warning {
+    color: var(--warning-dark);
+}
+
+/* Avatar transition effects */
+.current-avatar img {
+    transition: all var(--transition);
+}
+
+/* Dark theme adjustments for warning */
+.dark-theme .avatar-warning {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: var(--warning);
+}
+
+.dark-theme .avatar-warning small {
+    color: var(--warning-light);
 }

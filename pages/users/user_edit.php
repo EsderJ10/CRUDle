@@ -52,22 +52,37 @@
             'rol' => $_POST['role'] ?? '',
             'fecha_alta' => $_POST['fecha_alta'] ?? ''
         ]);
+        
+        // Check if user wants to remove avatar
+        $removeAvatar = isset($_POST['remove_avatar']) && $_POST['remove_avatar'] == '1';
 
         // Validate input data
         $errors = validateUserData($formData);
         
-        // Validate avatar if uploaded
-        if (isset($_FILES['avatar'])) {
+        // Validate avatar operations
+        if ($removeAvatar && isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+            $errors[] = "No puedes eliminar y subir un avatar al mismo tiempo. Elige solo una opción.";
+        }
+        
+        // Validate avatar if uploaded and not removing
+        if (!$removeAvatar && isset($_FILES['avatar'])) {
             $avatarErrors = validateAvatar($_FILES['avatar']);
             $errors = array_merge($errors, $avatarErrors);
         }
         
         if (empty($errors)) {
-            // Handle avatar upload
+            // Handle avatar operations
             $newAvatarPath = null;
             $oldAvatarPath = $user['avatar'];
             
-            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+            if ($removeAvatar) {
+                // User wants to remove the avatar
+                if ($oldAvatarPath) {
+                    deleteAvatarFile($oldAvatarPath);
+                }
+                $formData['avatar'] = null;
+            } else if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                // User is uploading a new avatar
                 $newAvatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['nombre']);
                 if ($newAvatarPath) {
                     $formData['avatar'] = $newAvatarPath;
@@ -76,7 +91,7 @@
                     $formData['avatar'] = $oldAvatarPath; // Keep old avatar if upload failed
                 }
             } else {
-                // No new avatar uploaded, keep the existing one
+                // No changes to avatar, keep the existing one
                 $formData['avatar'] = $oldAvatarPath;
             }
             

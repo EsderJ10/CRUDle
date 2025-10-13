@@ -59,20 +59,40 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
             <label for="avatar">Avatar del Usuario</label>
             <?php if ($isEdit && !empty($user['avatar'])): ?>
                 <div class="current-avatar mb-3">
-                    <img src="<?php echo htmlspecialchars($user['avatar']); ?>" 
-                         alt="Avatar actual" 
-                         class="avatar" style="width: 80px; height: 80px; border: 2px solid var(--neutral-200);">
-                    <p class="text-small text-neutral-600 mt-1">Avatar actual</p>
+                    <div class="avatar-container">
+                        <img src="<?php echo htmlspecialchars($user['avatar']); ?>" 
+                             alt="Avatar actual" 
+                             class="avatar avatar-medium">
+                    </div>
+                    <div class="avatar-actions mt-3">
+                        <label class="checkbox-container">
+                            <input type="checkbox" 
+                                   id="remove_avatar" 
+                                   name="remove_avatar" 
+                                   value="1"
+                                   onchange="toggleAvatarUpload(this)">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Eliminar avatar actual</span>
+                        </label>
+                        <div id="removeAvatarWarning" class="avatar-warning" style="display: none;">
+                            <small class="text-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                El avatar será eliminado permanentemente al guardar los cambios.
+                            </small>
+                        </div>
+                    </div>
                 </div>
             <?php endif; ?>
-            <input type="file" 
-                   id="avatar" 
-                   name="avatar" 
-                   accept="image/jpeg,image/jpg,image/png,image/gif">
-            <small class="text-neutral-600">
-                Opcional. Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB.
-                <?php if ($isEdit): ?>Subir una nueva imagen reemplazará la actual.<?php endif; ?>
-            </small>
+            <div class="avatar-upload-section" id="avatarUploadSection">
+                <input type="file" 
+                       id="avatar" 
+                       name="avatar" 
+                       accept="image/jpeg,image/jpg,image/png,image/gif">
+                <small class="text-neutral-600">
+                    Opcional. Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB.
+                    <?php if ($isEdit): ?>Subir una nueva imagen reemplazará la actual.<?php endif; ?>
+                </small>
+            </div>
         </div>
         
         <?php if ($isEdit): ?>
@@ -84,7 +104,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
                    value="<?php echo htmlspecialchars($user['fecha_alta']); ?>" 
                    disabled 
                    title="Campo no editable"
-                   style="background: var(--neutral-100); color: var(--neutral-500);">
+                   class="disabled-input">
             <input type="hidden" 
                    name="fecha_alta" 
                    value="<?php echo htmlspecialchars($user['fecha_alta']); ?>">
@@ -97,3 +117,53 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
         </div>
     </form>
 </div>
+
+<?php if ($isEdit): ?>
+<script>
+function toggleAvatarUpload(checkbox) {
+    const avatarUploadSection = document.getElementById('avatarUploadSection');
+    const avatarInput = document.getElementById('avatar');
+    const removeWarning = document.getElementById('removeAvatarWarning');
+    const currentAvatar = document.querySelector('.current-avatar img');
+    
+    if (checkbox.checked) {
+        // If remove avatar is checked, disable file upload and show warning
+        avatarUploadSection.style.opacity = '0.5';
+        avatarInput.disabled = true;
+        avatarInput.value = ''; // Clear any selected file
+        
+        if (removeWarning) {
+            removeWarning.style.display = 'block';
+        }
+        
+        // Add visual indication that avatar will be removed
+        if (currentAvatar) {
+            currentAvatar.style.opacity = '0.4';
+            currentAvatar.style.filter = 'grayscale(100%)';
+        }
+    } else {
+        // If remove avatar is unchecked, enable file upload and hide warning
+        avatarUploadSection.style.opacity = '1';
+        avatarInput.disabled = false;
+        
+        if (removeWarning) {
+            removeWarning.style.display = 'none';
+        }
+        
+        // Remove visual indication
+        if (currentAvatar) {
+            currentAvatar.style.opacity = '1';
+            currentAvatar.style.filter = 'none';
+        }
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const removeAvatarCheckbox = document.getElementById('remove_avatar');
+    if (removeAvatarCheckbox) {
+        toggleAvatarUpload(removeAvatarCheckbox);
+    }
+});
+</script>
+<?php endif; ?>

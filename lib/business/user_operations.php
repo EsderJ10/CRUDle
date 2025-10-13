@@ -59,12 +59,24 @@ function createUser($formData) {
 }
 
 function updateUser($userId, $formData) {
+    // Get current user data to preserve fecha_alta if not provided
+    $currentUser = getUserById($userId);
+    $fechaAlta = $formData['fecha_alta'] ?? '';
+    
+    // If fecha_alta is empty but user exists, preserve original or set current date
+    if (empty($fechaAlta) && $currentUser) {
+        $fechaAlta = !empty($currentUser['fecha_alta']) ? $currentUser['fecha_alta'] : date(DATE_FORMAT);
+    } else if (empty($fechaAlta)) {
+        // If no current user found and no fecha_alta provided, set current date
+        $fechaAlta = date(DATE_FORMAT);
+    }
+    
     $newRecord = [
         $userId,
         $formData['nombre'],
         $formData['email'],
         $formData['rol'],
-        $formData['fecha_alta'],
+        $fechaAlta,
         $formData['avatar'] ?? null
     ];
     
@@ -125,7 +137,7 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
         mkdir($uploadDir, 0755, true);
     }
     
-    // Generate intuitive filename: user_ID_USERNAME_avatar.ext
+    // Generate unique filename
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $safeUserName = $userName ? preg_replace('/[^a-zA-Z0-9_-]/', '_', $userName) : 'unknown';
     $filename = 'user_' . ($userId ?: 'temp') . '_' . $safeUserName . '_avatar.' . $extension;
@@ -138,7 +150,7 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
     
     // Move uploaded file
     if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-        return getWebUploadPath('avatars/' . $filename); // Return web-accessible path
+        return getWebUploadPath('avatars/' . $filename); 
     }
     
     return null;
@@ -146,7 +158,6 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
 
 function deleteAvatarFile($avatarPath) {
     if ($avatarPath) {
-        // Convert web path back to filesystem path
         $filePath = str_replace(getWebPath(''), BASE_PATH, $avatarPath);
         if (file_exists($filePath)) {
             return unlink($filePath);
