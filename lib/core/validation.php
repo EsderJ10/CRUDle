@@ -54,6 +54,46 @@ function validateEmail($email) {
 }
 
 
+function validateAvatar($file) {
+    $errors = [];
+    
+    // Avatar is optional, so if no file is uploaded, that's fine
+    if (!isset($file) || $file['error'] === UPLOAD_ERR_NO_FILE) {
+        return $errors;
+    }
+    
+    // Check for upload errors
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        $errors[] = "Error al subir el archivo de avatar.";
+        return $errors;
+    }
+    
+    // Check file size (max 2MB)
+    $maxSize = 2 * 1024 * 1024; // 2MB in bytes
+    if ($file['size'] > $maxSize) {
+        $errors[] = "El avatar no puede ser mayor a 2MB.";
+    }
+    
+    // Check file type
+    $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+    
+    if (!in_array($mimeType, $allowedTypes)) {
+        $errors[] = "El avatar debe ser una imagen (JPEG, PNG, GIF, SVG).";
+    }
+    
+    // Check file extension
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($extension, $allowedExtensions)) {
+        $errors[] = "Extensión de archivo no válida. Use: JPG, PNG, GIF, SVG.";
+    }
+    
+    return $errors;
+}
+
 function validateUserData($data) {
     $errors = [];
     
@@ -64,7 +104,6 @@ function validateUserData($data) {
     if (isset($data['email'])) {
         $errors = array_merge($errors, validateEmail($data['email']));
     }
-    
     
     return $errors;
 }

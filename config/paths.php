@@ -28,6 +28,11 @@ define('DATA_PATH', BASE_PATH . 'data/');
 // Assets path
 define('ASSETS_PATH', BASE_PATH . 'assets/');
 define('CSS_PATH', ASSETS_PATH . 'css/');
+define('IMAGES_PATH', ASSETS_PATH . 'images/');
+
+// Uploads path
+define('UPLOADS_PATH', BASE_PATH . 'uploads/');
+define('AVATARS_PATH', UPLOADS_PATH . 'avatars/');
 
 // Helper function to get correct path based on current location
 function getPath($relativePath) {
@@ -56,5 +61,18 @@ function requireFile($filePath) {
 // Helper function to get web URL paths
 function getWebPath($relativePath) {
     return WEB_ROOT . '/' . ltrim($relativePath, '/');
+}
+
+// Helper functions for upload paths
+function getUploadPath($relativePath = '') {
+    return UPLOADS_PATH . ltrim($relativePath, '/');
+}
+
+function getAvatarPath($filename = '') {
+    return AVATARS_PATH . ltrim($filename, '/');
+}
+
+function getWebUploadPath($relativePath = '') {
+    return getWebPath('uploads/' . ltrim($relativePath, '/'));
 }
 ?>

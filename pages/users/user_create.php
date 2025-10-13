@@ -22,9 +22,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate input data
     $errors = validateUserData($formData);
     
+    // Validate avatar if uploaded
+    if (isset($_FILES['avatar'])) {
+        $avatarErrors = validateAvatar($_FILES['avatar']);
+        $errors = array_merge($errors, $avatarErrors);
+    }
+    
     if (empty($errors)) {
-        // Use business logic to create user
-        $success = createUser($formData);
+        // Create user first to get the ID
+        $userId = createUser($formData);
+        
+        if ($userId) {
+            // Handle avatar upload with proper naming now that we have user ID
+            $avatarPath = null;
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                $avatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['nombre']);
+                if ($avatarPath) {
+                    // Update user record with avatar path
+                    $formData['avatar'] = $avatarPath;
+                    updateUser($userId, $formData);
+                }
+            }
+            $success = true;
+        } else {
+            $success = false;
+        }
         
         // Include header
         include getPath('views/partials/header.php');
@@ -33,6 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo renderMessage("Usuario creado exitosamente.", 'success');
         } else {
             echo renderMessage("Error al crear el usuario.", 'error');
+            // Clean up avatar file if user creation failed
+            if ($avatarPath) {
+                deleteAvatarFile($avatarPath);
+            }
         }
         
         echo '<div class="card text-center">

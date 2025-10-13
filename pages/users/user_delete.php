@@ -28,10 +28,17 @@ $pageHeader = "Confirmar Eliminación";
         $userId = $_POST['id'];
         
         if ($_POST['confirm'] === 'yes') {
+            // Get user data before deletion to clean up avatar
+            $user = getUserById($userId);
+            
             // Use business logic to delete user
             $success = deleteUserById($userId);
             
             if ($success) {
+                // Clean up avatar file if it exists
+                if ($user && !empty($user['avatar'])) {
+                    deleteAvatarFile($user['avatar']);
+                }
                 echo renderMessage("Usuario con ID " . $userId . " eliminado exitosamente.", 'success');
             } else {
                 echo renderMessage("ERROR: al eliminar el usuario con ID " . $userId . ".", 'error');

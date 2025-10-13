@@ -17,7 +17,8 @@ function getAllUsers() {
                 'nombre' => $record[1],
                 'email' => $record[2],
                 'rol' => $record[3],
-                'fecha_alta' => $record[4]
+                'fecha_alta' => $record[4],
+                'avatar' => $record[5] ?? null
             ];
         }
     }
@@ -34,7 +35,8 @@ function getUserById($userId) {
             'nombre' => $record[1],
             'email' => $record[2],
             'rol' => $record[3],
-            'fecha_alta' => $record[4]
+            'fecha_alta' => $record[4],
+            'avatar' => $record[5] ?? null
         ];
     }
     
@@ -42,15 +44,18 @@ function getUserById($userId) {
 }
 
 function createUser($formData) {
+    $userId = getNextId();
     $data = [
-        getNextId(),
+        $userId,
         $formData['nombre'],
         $formData['email'],
         $formData['rol'],
-        date(DATE_FORMAT)
+        date(DATE_FORMAT),
+        $formData['avatar'] ?? null
     ];
     
-    return appendToCSV($data);
+    $success = appendToCSV($data);
+    return $success ? $userId : false;
 }
 
 function updateUser($userId, $formData) {
@@ -59,7 +64,8 @@ function updateUser($userId, $formData) {
         $formData['nombre'],
         $formData['email'],
         $formData['rol'],
-        $formData['fecha_alta']
+        $formData['fecha_alta'],
+        $formData['avatar'] ?? null
     ];
     
     return updateRecordById($userId, $newRecord);
@@ -84,13 +90,13 @@ function getUserStatistics() {
                 $usersByRole[$role]++;
             }
             
-            // Store for recent users
             $recentUsers[] = [
                 'id' => $record[0],
                 'nombre' => $record[1],
                 'email' => $record[2],
                 'rol' => $record[3],
-                'fecha_alta' => $record[4]
+                'fecha_alta' => $record[4],
+                'avatar' => $record[5] ?? null
             ];
         }
     }
@@ -106,6 +112,65 @@ function getUserStatistics() {
         'usersByRole' => $usersByRole,
         'recentUsers' => $recentUsers
     ];
+}
+
+function handleAvatarUpload($file, $userId = null, $userName = null) {
+    if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+    
+    // Create upload directory if it doesn't exist using path config
+    $uploadDir = getAvatarPath();
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+    
+    // Generate intuitive filename: user_ID_USERNAME_avatar.ext
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $safeUserName = $userName ? preg_replace('/[^a-zA-Z0-9_-]/', '_', $userName) : 'unknown';
+    $filename = 'user_' . ($userId ?: 'temp') . '_' . $safeUserName . '_avatar.' . $extension;
+    $targetPath = $uploadDir . $filename;
+    
+    // Remove existing avatar for this user if updating
+    if ($userId) {
+        removeExistingUserAvatar($userId);
+    }
+    
+    // Move uploaded file
+    if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+        return getWebUploadPath('avatars/' . $filename); // Return web-accessible path
+    }
+    
+    return null;
+}
+
+function deleteAvatarFile($avatarPath) {
+    if ($avatarPath) {
+        // Convert web path back to filesystem path
+        $filePath = str_replace(getWebPath(''), BASE_PATH, $avatarPath);
+        if (file_exists($filePath)) {
+            return unlink($filePath);
+        }
+    }
+    return false;
+}
+
+function removeExistingUserAvatar($userId) {
+    // Find and remove any existing avatar for this user
+    $avatarDir = getAvatarPath();
+    if (is_dir($avatarDir)) {
+        $pattern = $avatarDir . 'user_' . $userId . '_*_avatar.*';
+        $files = glob($pattern);
+        foreach ($files as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+    }
+}
+
+function getDefaultAvatar() {
+    return getWebPath('assets/images/default-avatar.svg');
 }
 
 function checkSystemStatus() {

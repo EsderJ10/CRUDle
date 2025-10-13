@@ -1772,3 +1772,41 @@ tbody tr:nth-child(even):hover {
         --neutral-900: #fafafa;
     }
 }
+
+/* Avatar Styles */
+.avatar {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-small {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--neutral-200);
+}
+
+.avatar-large {
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--neutral-200);
+}
+
+.user-info-layout {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.user-info-content {
+    flex: 1;
+}
+
+.disabled-input {
+    background: var(--neutral-100);
+    color: var(--neutral-500);
+}
+
+.warning-text {
+    color: var(--error);
+    font-weight: 500;
+}

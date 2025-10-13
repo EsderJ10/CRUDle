@@ -15,6 +15,7 @@ function renderUserTable($users) {
                     <table>
                         <thead>
                             <tr>
+                                <th>Avatar</th>
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
@@ -26,7 +27,14 @@ function renderUserTable($users) {
                         <tbody>';
                 
     foreach ($users as $user) {
+        $avatarSrc = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : getDefaultAvatar();
         $html .= '<tr>
+                    <td>
+                        <img src="' . $avatarSrc . '" 
+                             alt="Avatar de ' . htmlspecialchars($user['nombre']) . '" 
+                             class="avatar avatar-small"
+                             onerror="this.src=\'' . getDefaultAvatar() . '\'">
+                    </td>
                     <td><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
                     <td><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
                     <td>' . htmlspecialchars($user['email']) . '</td>
@@ -55,18 +63,30 @@ function renderUserTable($users) {
 }
 
 function renderUserInfo($user) {
+    $avatarSrc = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : getDefaultAvatar();
+    
     return '<div class="card page-transition">
                 <h2>Información del Usuario</h2>
-                <div class="table-container">
-                    <table>
-                        <tbody>
-                            <tr><th width="150">ID</th><td><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td></tr>
-                            <tr><th>Nombre</th><td><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td></tr>
-                            <tr><th>Email</th><td>' . htmlspecialchars($user['email']) . '</td></tr>
-                            <tr><th>Rol</th><td><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td></tr>
-                            <tr><th>Fecha de Alta</th><td>' . htmlspecialchars($user['fecha_alta']) . '</td></tr>
-                        </tbody>
-                    </table>
+                <div class="user-info-layout">
+                    <div>
+                        <img src="' . $avatarSrc . '" 
+                             alt="Avatar de ' . htmlspecialchars($user['nombre']) . '" 
+                             class="avatar avatar-large"
+                             onerror="this.src=\'' . getDefaultAvatar() . '\'">
+                    </div>
+                    <div class="user-info-content">
+                        <div class="table-container">
+                            <table>
+                                <tbody>
+                                    <tr><th width="150">ID</th><td><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td></tr>
+                                    <tr><th>Nombre</th><td><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td></tr>
+                                    <tr><th>Email</th><td>' . htmlspecialchars($user['email']) . '</td></tr>
+                                    <tr><th>Rol</th><td><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td></tr>
+                                    <tr><th>Fecha de Alta</th><td>' . htmlspecialchars($user['fecha_alta']) . '</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="actions mt-6">
                     <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="btn btn-primary">Editar Usuario</a>
@@ -107,7 +127,7 @@ function renderEditForm($user) {
                                value="' . htmlspecialchars($user['fecha_alta']) . '" 
                                disabled 
                                title="Campo no editable"
-                               style="background: var(--neutral-100); color: var(--neutral-500);">
+                               class="disabled-input">
                         <input type="hidden" name="fecha_alta" value="' . htmlspecialchars($user['fecha_alta']) . '">
                     </div>
                     
@@ -123,7 +143,7 @@ function renderDeleteConfirmation($userId) {
     return '<div class="card page-transition text-center">
                 <h2>Confirmar Eliminación</h2>
                 <p class="mb-6">¿Estás seguro de que deseas eliminar el usuario con ID <strong>#' . htmlspecialchars($userId) . '</strong>?</p>
-                <p class="mb-6 text-center" style="color: var(--error); font-weight: 500;">Esta acción no se puede deshacer.</p>
+                <p class="mb-6 text-center warning-text">Esta acción no se puede deshacer.</p>
                 <form method="POST" action="./user_delete.php">
                     <input type="hidden" name="id" value="' . htmlspecialchars($userId) . '">
                     <div class="actions">

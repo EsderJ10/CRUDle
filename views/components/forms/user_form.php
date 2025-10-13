@@ -17,7 +17,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
 ?>
 
 <div class="card">
-    <form method="post" action="<?php echo $action; ?>" class="page-transition">
+    <form method="post" action="<?php echo $action; ?>" class="page-transition" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Nombre Completo</label>
             <input type="text" 
@@ -53,6 +53,26 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
                     </option>
                 <?php endforeach; ?>
             </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="avatar">Avatar del Usuario</label>
+            <?php if ($isEdit && !empty($user['avatar'])): ?>
+                <div class="current-avatar mb-3">
+                    <img src="<?php echo htmlspecialchars($user['avatar']); ?>" 
+                         alt="Avatar actual" 
+                         class="avatar" style="width: 80px; height: 80px; border: 2px solid var(--neutral-200);">
+                    <p class="text-small text-neutral-600 mt-1">Avatar actual</p>
+                </div>
+            <?php endif; ?>
+            <input type="file" 
+                   id="avatar" 
+                   name="avatar" 
+                   accept="image/jpeg,image/jpg,image/png,image/gif">
+            <small class="text-neutral-600">
+                Opcional. Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB.
+                <?php if ($isEdit): ?>Subir una nueva imagen reemplazará la actual.<?php endif; ?>
+            </small>
         </div>
         
         <?php if ($isEdit): ?>
