@@ -1439,16 +1439,50 @@ tbody tr:nth-child(even):hover {
 }
 
 .action-view {
-    background: linear-gradient(135deg, var(--primary-bg) 0%, rgba(99, 102, 241, 0.1) 100%);
-    color: var(--primary);
-    border-color: var(--primary-light);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    border: 2px solid var(--primary-light);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-4);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    font-size: 0.825rem;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.action-view::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all var(--transition);
 }
 
 .action-view:hover {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: var(--white);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-light);
+}
+
+.action-view:hover::before {
+    width: 100px;
+    height: 100px;
+}
+
+.action-view:active {
+    transform: scale(0.98);
 }
 
 .action-edit {
