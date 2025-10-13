@@ -42,13 +42,7 @@
         exit;
     }
 
-    // If the user was found, display the edit form.
-    if ($user !== null) {
-        include getPath('views/partials/header.php');
-        echo renderEditForm($user);
-        include getPath('views/partials/footer.php');
-    }
-    // If the request is POST, it means the form was submitted.
+    // If the request is POST, it means the form was submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $formData = [
             'nombre' => $_POST['nombre'] ?? '',
@@ -69,5 +63,12 @@
             header('Location: user_index.php?error=' . urlencode('ERROR al actualizar el usuario con ID ' . $userId . '.'));
             exit;
         }
+    }
+    
+    // If the user was found, display the edit form (only for GET requests)
+    if ($user !== null) {
+        include getPath('views/partials/header.php');
+        echo renderEditForm($user);
+        include getPath('views/partials/footer.php');
     }
 ?>
