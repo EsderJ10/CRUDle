@@ -45,6 +45,11 @@ function renderUserTable($users) {
     $html .= '</tbody>
               </table>
               </div>
+              <div class="card-footer">
+                  <a href="user_create.php" class="btn btn-primary">
+                      <i class="fas fa-plus"></i> Añadir usuario
+                  </a>
+              </div>
               </div>';
     return $html;
 }
