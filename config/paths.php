@@ -28,6 +28,7 @@ define('DATA_PATH', BASE_PATH . 'data/');
 // Assets path
 define('ASSETS_PATH', BASE_PATH . 'assets/');
 define('CSS_PATH', ASSETS_PATH . 'css/');
+define('JS_PATH', ASSETS_PATH . 'js/');
 define('IMAGES_PATH', ASSETS_PATH . 'images/');
 
 // Uploads path

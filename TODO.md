@@ -16,5 +16,5 @@
 - [x] See how to handle that each single user_* is opening the file. Maybe a util??
 - [x] Handle file upload
 - [ ] Change how is saved the avatar in csv 
-- [ ] 
+- [ ] Fix media-queries
 - [ ] 

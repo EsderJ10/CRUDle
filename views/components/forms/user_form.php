@@ -69,8 +69,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
                             <input type="checkbox" 
                                    id="remove_avatar" 
                                    name="remove_avatar" 
-                                   value="1"
-                                   onchange="toggleAvatarUpload(this)">
+                                   value="1">
                             <span class="checkmark"></span>
                             <span class="checkbox-label">Eliminar avatar actual</span>
                         </label>
@@ -119,51 +118,5 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
 </div>
 
 <?php if ($isEdit): ?>
-<script>
-function toggleAvatarUpload(checkbox) {
-    const avatarUploadSection = document.getElementById('avatarUploadSection');
-    const avatarInput = document.getElementById('avatar');
-    const removeWarning = document.getElementById('removeAvatarWarning');
-    const currentAvatar = document.querySelector('.current-avatar img');
-    
-    if (checkbox.checked) {
-        // If remove avatar is checked, disable file upload and show warning
-        avatarUploadSection.style.opacity = '0.5';
-        avatarInput.disabled = true;
-        avatarInput.value = ''; // Clear any selected file
-        
-        if (removeWarning) {
-            removeWarning.style.display = 'block';
-        }
-        
-        // Add visual indication that avatar will be removed
-        if (currentAvatar) {
-            currentAvatar.style.opacity = '0.4';
-            currentAvatar.style.filter = 'grayscale(100%)';
-        }
-    } else {
-        // If remove avatar is unchecked, enable file upload and hide warning
-        avatarUploadSection.style.opacity = '1';
-        avatarInput.disabled = false;
-        
-        if (removeWarning) {
-            removeWarning.style.display = 'none';
-        }
-        
-        // Remove visual indication
-        if (currentAvatar) {
-            currentAvatar.style.opacity = '1';
-            currentAvatar.style.filter = 'none';
-        }
-    }
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const removeAvatarCheckbox = document.getElementById('remove_avatar');
-    if (removeAvatarCheckbox) {
-        toggleAvatarUpload(removeAvatarCheckbox);
-    }
-});
-</script>
+    <script src="<?php echo getWebPath('assets/js/user-form.js'); ?>" defer></script>
 <?php endif; ?>
