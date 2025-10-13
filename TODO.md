@@ -17,4 +17,4 @@
 - [x] Handle file upload
 - [ ] Change how is saved the avatar in csv 
 - [ ] Fix media-queries
-- [ ] 
+- [ ] Check TECHNICAL_DOC.md in order to get ideas for improvements.
