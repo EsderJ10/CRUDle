@@ -8,7 +8,6 @@ const DashboardModule = {
     init() {
         console.log('Dashboard script loaded');
         this.initSidebar();
-        this.initThemeToggle();
         this.initNavigation();
         this.initPageTransitions();
     },
@@ -54,28 +53,6 @@ const DashboardModule = {
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
                 body.classList.remove('sidebar-mobile-open');
-            });
-        }
-    },
-    
-    /**
-     * Initialize theme toggle functionality
-     */
-    initThemeToggle() {
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        
-        if (themeToggle) {
-            // Load saved theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            body.classList.toggle('dark-theme', savedTheme === 'dark');
-            
-            themeToggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                console.log('Theme toggle clicked');
-                body.classList.toggle('dark-theme');
-                const isDark = body.classList.contains('dark-theme');
-                localStorage.setItem('theme', isDark ? 'dark' : 'light');
             });
         }
     },
