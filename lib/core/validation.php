@@ -1,5 +1,7 @@
 <?php
-// Here are all the main validation functions for the forms
+/*
+ * En este archivo se definen funciones para validar los datos de entrada del usuario.
+ */
 
 require_once getPath('config/config.php');
 
@@ -57,24 +59,17 @@ function validateEmail($email) {
 function validateAvatar($file) {
     $errors = [];
     
-    // Avatar is optional, so if no file is uploaded, that's fine
     if (!isset($file) || $file['error'] === UPLOAD_ERR_NO_FILE) {
         return $errors;
     }
     
-    // Check for upload errors
+    // Se busca cualquier error en la subida del archivo para manejarlo
     if ($file['error'] !== UPLOAD_ERR_OK) {
-        $errors[] = "Error al subir el archivo de avatar.";
+        $errors[] = "* ERROR: Subida fallida del archivo de avatar.";
         return $errors;
     }
     
-    // Check file size (max 2MB)
-    $maxSize = 2 * 1024 * 1024; // 2MB in bytes
-    if ($file['size'] > $maxSize) {
-        $errors[] = "El avatar no puede ser mayor a 2MB.";
-    }
-    
-    // Check file type
+    // Compprobación de tipos MIME y extensiones permitidas
     $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = finfo_file($finfo, $file['tmp_name']);
@@ -84,7 +79,6 @@ function validateAvatar($file) {
         $errors[] = "El avatar debe ser una imagen (JPEG, PNG, GIF, SVG).";
     }
     
-    // Check file extension
     $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($extension, $allowedExtensions)) {

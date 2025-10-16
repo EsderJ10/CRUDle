@@ -1,5 +1,4 @@
 <?php
-// User creation page
 
 require_once '../../config/paths.php';
 require_once getPath('lib/business/user_operations.php');
@@ -7,7 +6,6 @@ require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
 
-// Set page variables for partials
 $pageTitle = "Crear Usuario";
 $pageHeader = "Crear Nuevo Usuario";
 
@@ -22,14 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate input data
     $errors = validateUserData($formData);
     
-    // Validate avatar if uploaded
     if (isset($_FILES['avatar'])) {
         $avatarErrors = validateAvatar($_FILES['avatar']);
         $errors = array_merge($errors, $avatarErrors);
     }
     
     if (empty($errors)) {
-        // Create user first to get the ID
         $userId = createUser($formData);
         
         if ($userId) {
@@ -68,10 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
               </div>';
         
-        // Include footer
         include getPath('views/partials/footer.php');
     } else {
-        // Show form with errors
         include getPath('views/partials/header.php');
         
         foreach ($errors as $error) {
@@ -83,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         include getPath('views/partials/footer.php');
     }
 } else {
-    // Show form
     include getPath('views/partials/header.php');
     include getPath('views/components/forms/user_form.php');
     include getPath('views/partials/footer.php');

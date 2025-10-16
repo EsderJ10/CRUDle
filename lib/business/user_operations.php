@@ -1,5 +1,12 @@
 <?php
-// Business logic for user operations
+/*
+ * Funciones para la lógica de negocio relacionada con los usuarios.
+ * Maneja operaciones CRUD, validación y procesamiento de datos.
+ * Utiliza funciones de los módulos core/csv, core/validation y core/sanitization.
+ * También maneja la carga y eliminación de avatares de usuario.
+ * Autor: José Antonio Cortés Ferre
+ */
+
 require_once __DIR__ . '/../../config/paths.php';
 require_once getPath('lib/core/csv.php');
 require_once getPath('lib/core/validation.php');
@@ -59,17 +66,14 @@ function createUser($formData) {
 }
 
 function updateUser($userId, $formData) {
-    // Get current user data to preserve fecha_alta if not provided
+    // Preservación de fecha_alta debido a que no se puede modificar
     $currentUser = getUserById($userId);
-    $fechaAlta = $formData['fecha_alta'] ?? '';
     
-    // If fecha_alta is empty but user exists, preserve original or set current date
-    if (empty($fechaAlta) && $currentUser) {
-        $fechaAlta = !empty($currentUser['fecha_alta']) ? $currentUser['fecha_alta'] : date(DATE_FORMAT);
-    } else if (empty($fechaAlta)) {
-        // If no current user found and no fecha_alta provided, set current date
-        $fechaAlta = date(DATE_FORMAT);
+    if (!$currentUser) {
+        return false;  
     }
+    
+    $fechaAlta = $formData['fecha_alta'] ?? $currentUser['fecha_alta'] ;
     
     $newRecord = [
         $userId,
@@ -113,11 +117,11 @@ function getUserStatistics() {
         }
     }
     
-    // Sort by most recent (assuming higher ID = more recent)
+    // Se asume que un ID más alto = más reciente
     usort($recentUsers, function($a, $b) {
         return (int)$b['id'] - (int)$a['id'];
     });
-    $recentUsers = array_slice($recentUsers, 0, 5); // Keep only last 5
+    $recentUsers = array_slice($recentUsers, 0, 5); // Top 5 usuarios más recientes
     
     return [
         'userCount' => $userCount,
@@ -131,24 +135,22 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
         return null;
     }
     
-    // Create upload directory if it doesn't exist using path config
     $uploadDir = getAvatarPath();
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0755, true);
     }
     
-    // Generate unique filename
+    // Se genera un nombre para el archivo con el nombre del usuario
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $safeUserName = $userName ? preg_replace('/[^a-zA-Z0-9_-]/', '_', $userName) : 'unknown';
     $filename = 'user_' . ($userId ?: 'temp') . '_' . $safeUserName . '_avatar.' . $extension;
     $targetPath = $uploadDir . $filename;
     
-    // Remove existing avatar for this user if updating
     if ($userId) {
         removeExistingUserAvatar($userId);
     }
     
-    // Move uploaded file
+    // Se mueve el archivo subido a la ubicación deseada
     if (move_uploaded_file($file['tmp_name'], $targetPath)) {
         return getWebUploadPath('avatars/' . $filename); 
     }
@@ -167,7 +169,6 @@ function deleteAvatarFile($avatarPath) {
 }
 
 function removeExistingUserAvatar($userId) {
-    // Find and remove any existing avatar for this user
     $avatarDir = getAvatarPath();
     if (is_dir($avatarDir)) {
         $pattern = $avatarDir . 'user_' . $userId . '_*_avatar.*';

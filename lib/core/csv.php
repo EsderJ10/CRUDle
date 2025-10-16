@@ -1,5 +1,7 @@
 <?php
-// Here are defined the main CSV handling functions
+/*
+ * Funciones para manejar operaciones con archivos CSV.
+ */
 
 require_once getPath('config/config.php');
 
@@ -17,6 +19,7 @@ function getCSVRecords($filePath = null) {
     $handle = fopen($filePath, 'r');
     if ($handle !== FALSE) {
         while (($data = fgetcsv($handle)) !== FALSE) {
+            // Se comprueba que la fila tenga al menos 5 columnas (id, nombre, email, rol, fecha_alta)
             if (count($data) >= 5) {
                 $records[] = $data;
             }
@@ -26,7 +29,6 @@ function getCSVRecords($filePath = null) {
     
     return $records;
 }
-
 function writeCSVRecords($records, $filePath = null) {
     if ($filePath === null) {
         $filePath = getPath(DATA_FILE);
@@ -49,13 +51,11 @@ function writeCSVRecords($records, $filePath = null) {
     
     return false;
 }
-
 function appendToCSV($record, $filePath = null) {
     if ($filePath === null) {
         $filePath = getPath(DATA_FILE);
     }
     
-    // Ensure directory exists
     $dir = dirname($filePath);
     if (!is_dir($dir)) {
         mkdir($dir, 0755, true);
@@ -111,7 +111,7 @@ function deleteRecordById($id, $filePath = null) {
     foreach ($records as $record) {
         if (isset($record[0]) && $record[0] == $id) {
             $found = true;
-            continue; // Skip this record (delete it)
+            continue; // Salta el registro a eliminar
         }
         $filteredRecords[] = $record;
     }
@@ -136,7 +136,7 @@ function getNextId($filePath = null) {
     return $maxId + 1;
 }
 
-// Check the status of the CSV file and its directory
+// Comprueba el estado del archivo CSV (existencia, permisos, etc.)
 function checkCSVStatus($filePath = null) {
     if ($filePath === null) {
         $filePath = getPath(DATA_FILE);

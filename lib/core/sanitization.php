@@ -1,5 +1,7 @@
 <?php
-// Data sanitization functions
+/*
+ * Aquí se definen las funciones de saneamiento de datos.
+ */
 
 function sanitizeName($name) {
     if (empty($name)) {
@@ -8,8 +10,7 @@ function sanitizeName($name) {
     
     $name = trim($name);
     $name = preg_replace('/\s+/', ' ', $name);
-    
-    // Capitalize first letter of each word
+    $name = filter_var($name, FILTER_SANITIZE_STRING);
     $name = ucwords(strtolower($name));
     
     return $name;
@@ -77,7 +78,10 @@ function sanitizeUrl($value) {
 }
 
 function sanitizeForCSV($value) {
-    // Remove or escape characters that could break CSV format
+    if (empty($value)) {
+        return '';
+    }
+    // Se eliminan elementos que puedan romper el formato CSV
     $value = str_replace(["\r", "\n"], ' ', $value);
     $value = trim($value);
     
