@@ -20,4 +20,5 @@
 - [x] Handle file upload
 - [ ] Check TECHNICAL_DOC.md in order to get ideas for improvements.
 - [ ] Check why sometimes it creates an Array in editing. Case => edited an user without avatar, added one, and a new user with Array in each field is created (did not check if it was in the csv).
+- [ ] Generate documentation ??.
 
