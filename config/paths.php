@@ -1,46 +1,47 @@
 <?php
-// Path definitions for the application
+/*
+ * Definición de las rutas del proyecto.
+ * También se definen funciones de ayuda para obtener las rutas.
+ */ 
 
-// Web root path
+// Web root
 define('WEB_ROOT', '/crud_php');
 
-// Folders
+// Directorios
 define('BASE_PATH', __DIR__ . '/../');
 define('LIB_PATH', BASE_PATH . 'lib/');
 define('PAGES_PATH', BASE_PATH . 'pages/');
 define('VIEWS_PATH', BASE_PATH . 'views/');
 define('CONFIG_PATH', BASE_PATH . 'config/');
 
-// Library paths
+// Librerías
 define('CORE_PATH', LIB_PATH . 'core/');
 define('BUSINESS_PATH', LIB_PATH . 'business/');
 define('PRESENTATION_PATH', LIB_PATH . 'presentation/');
 define('HELPERS_PATH', LIB_PATH . 'helpers/');
 
-// View paths
+// Vistas
 define('PARTIALS_PATH', VIEWS_PATH . 'partials/');
 define('COMPONENTS_PATH', VIEWS_PATH . 'components/');
 define('FORMS_PATH', COMPONENTS_PATH . 'forms/');
 
-// Data path
+// Data
 define('DATA_PATH', BASE_PATH . 'data/');
 
-// Assets path
+// Assets 
 define('ASSETS_PATH', BASE_PATH . 'assets/');
 define('CSS_PATH', ASSETS_PATH . 'css/');
 define('JS_PATH', ASSETS_PATH . 'js/');
 define('IMAGES_PATH', ASSETS_PATH . 'images/');
 
-// Uploads path
+// Subida de ficheros
 define('UPLOADS_PATH', BASE_PATH . 'uploads/');
 define('AVATARS_PATH', UPLOADS_PATH . 'avatars/');
 
-// Helper function to get correct path based on current location
 function getPath($relativePath) {
     return realpath(BASE_PATH . ltrim($relativePath, '/'));
 }
 
-// File include helpers
 function includeFile($filePath) {
     $fullPath = BASE_PATH . ltrim($filePath, '/');
     if (file_exists($fullPath)) {
@@ -59,12 +60,10 @@ function requireFile($filePath) {
     return false;
 }
 
-// Helper function to get web URL paths
 function getWebPath($relativePath) {
     return WEB_ROOT . '/' . ltrim($relativePath, '/');
 }
 
-// Helper functions for upload paths
 function getUploadPath($relativePath = '') {
     return UPLOADS_PATH . ltrim($relativePath, '/');
 }
