@@ -1,10 +1,13 @@
 <?php
-// User form component
+/*
+ * Formulario para crear o editar un usuario.
+ * Utiliza variables $user (opcional) para edición y $formData para repoblar datos en caso de error.
+ * Autor: José Antonio Cortés Ferre
+ */
 
 require_once getPath('lib/helpers/utils.php');
 require_once getPath('config/config.php');
 
-// Get form data if it exists (for repopulating on error)
 $formData = $formData ?? [
     'nombre' => '',
     'email' => '',
