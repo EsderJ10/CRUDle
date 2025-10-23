@@ -6,7 +6,6 @@ const DashboardModule = {
      * Initialize dashboard functionality
      */
     init() {
-        console.log('Dashboard script loaded');
         this.initSidebar();
         this.initNavigation();
         this.initPageTransitions();
@@ -22,13 +21,10 @@ const DashboardModule = {
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const body = document.body;
         
-        console.log('Elements found:', { sidebar, sidebarToggle, mobileToggle });
-        
         // Desktop sidebar toggle
         if (sidebarToggle && sidebar) {
             sidebarToggle.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Sidebar toggle clicked');
                 sidebar.classList.toggle('collapsed');
                 body.classList.toggle('sidebar-collapsed');
             });
@@ -38,7 +34,6 @@ const DashboardModule = {
         if (mobileToggle && sidebar) {
             mobileToggle.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Mobile toggle clicked');
                 sidebar.classList.toggle('mobile-open');
                 if (sidebarOverlay) {
                     sidebarOverlay.classList.toggle('active');
@@ -64,8 +59,6 @@ const DashboardModule = {
         const currentPath = window.location.pathname.toLowerCase();
         const navLinks = document.querySelectorAll('.nav-link');
         
-        console.log('Current path:', currentPath);
-        
         // First, remove all active classes
         navLinks.forEach(link => {
             link.classList.remove('active');
@@ -78,11 +71,8 @@ const DashboardModule = {
         let activeLink = null;
         let matchPriority = 0;
         
-        navLinks.forEach((link, index) => {
-            const linkHref = link.getAttribute('href').toLowerCase();
+        navLinks.forEach((link) => {
             const page = link.getAttribute('data-page');
-            
-            console.log(`Link ${index}:`, { href: linkHref, page, currentPath });
             
             // Determine match priority (higher number = better match)
             let priority = 0;
@@ -113,7 +103,6 @@ const DashboardModule = {
         
         // Set only the best match as active
         if (activeLink) {
-            console.log('Setting active for:', activeLink.getAttribute('data-page'));
             activeLink.classList.add('active');
             if (activeLink.parentElement) {
                 activeLink.parentElement.classList.add('active');
