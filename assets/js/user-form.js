@@ -1,9 +1,13 @@
-// User Form Module
-// Handles avatar removal and upload interactions
+/*
+ * Módulo del Formulario de Usuario
+ * Maneja la interactividad del formulario: avatar (subida, eliminación) y validación
+ * La validación real se realiza en PHP. JavaScript solo maneja la experiencia de usuario e interactividad
+ * Autor: José Antonio Cortés Ferre.
+ */
 
 const UserFormModule = {
     /**
-     * Initialize user form functionality
+     * Inicializa toda la funcionalidad del formulario de usuario
      */
     init() {
         this.initAvatarHandling();
@@ -11,27 +15,29 @@ const UserFormModule = {
     },
     
     /**
-     * Initialize avatar handling functionality
+     * Inicializa el manejo del avatar (subida y eliminación)
+     * Configura los listeners para el checkbox de eliminación y el input de archivo
+     * Sincroniza los estados entre ambos controles para mejorar la UX
      */
     initAvatarHandling() {
         const removeAvatarCheckbox = document.getElementById('remove_avatar');
         if (removeAvatarCheckbox) {
-            // Initialize the state on page load
+            // Inicializa el estado del formulario en la carga de la página
             this.toggleAvatarUpload(removeAvatarCheckbox);
             
-            // Set up event listener for changes
+            // Configura el listener para cambios en el checkbox
             removeAvatarCheckbox.addEventListener('change', () => {
                 this.toggleAvatarUpload(removeAvatarCheckbox);
             });
         }
         
-        // Add file input change handler for better UX
+        // Agrega un handler para el input de archivo para mejor UX
         const avatarInput = document.getElementById('avatar');
         if (avatarInput) {
             avatarInput.addEventListener('change', () => {
                 const removeCheckbox = document.getElementById('remove_avatar');
                 if (removeCheckbox && avatarInput.files.length > 0) {
-                    // If user selects a file, uncheck remove avatar
+                    // Si el usuario selecciona un archivo, desactiva la opción de eliminación
                     removeCheckbox.checked = false;
                     this.toggleAvatarUpload(removeCheckbox);
                 }
@@ -40,8 +46,10 @@ const UserFormModule = {
     },
     
     /**
-     * Toggles avatar upload section based on remove checkbox state
-     * @param {HTMLElement} checkbox - The remove avatar checkbox
+     * Alterna la visibilidad y estado del área de subida de avatar
+     * Controla la opacidad del formulario, estado del input y avisos visuales
+     * También aplica efectos visuales al avatar actual (desaturado, opacidad)
+     * @param {HTMLElement} checkbox - El checkbox de eliminación de avatar
      */
     toggleAvatarUpload(checkbox) {
         const avatarUploadSection = document.getElementById('avatarUploadSection');
@@ -50,24 +58,23 @@ const UserFormModule = {
         const currentAvatar = document.querySelector('.current-avatar img');
         
         if (checkbox.checked) {
-            // If remove avatar is checked, disable file upload and show warning
+            // Si la opción de eliminar está marcada, desactiva la subida de archivos
             if (avatarUploadSection) avatarUploadSection.style.opacity = '0.5';
             if (avatarInput) {
                 avatarInput.disabled = true;
-                avatarInput.value = ''; // Clear any selected file
+                avatarInput.value = ''; // Limpia cualquier archivo seleccionado
             }
             
             if (removeWarning) {
                 removeWarning.style.display = 'block';
             }
             
-            // Add visual indication that avatar will be removed
             if (currentAvatar) {
                 currentAvatar.style.opacity = '0.4';
                 currentAvatar.style.filter = 'grayscale(100%)';
             }
         } else {
-            // If remove avatar is unchecked, enable file upload and hide warning
+            // Si la opción de eliminar no está marcada, habilita la subida de archivos
             if (avatarUploadSection) avatarUploadSection.style.opacity = '1';
             if (avatarInput) avatarInput.disabled = false;
             
@@ -75,48 +82,22 @@ const UserFormModule = {
                 removeWarning.style.display = 'none';
             }
             
-            // Remove visual indication
             if (currentAvatar) {
                 currentAvatar.style.opacity = '1';
                 currentAvatar.style.filter = 'none';
             }
         }
     },
-    
-    /**
-     * Initialize form validation (can be extended)
-     */
-    initFormValidation() {
-        const form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', (event) => {
-                // Add custom validation logic here if needed
-                return this.validateForm(form);
-            });
-        }
-    },
-    
-    /**
-     * Validate form before submission
-     * @param {HTMLFormElement} form - The form element
-     * @returns {boolean} Whether the form is valid
-     */
-    validateForm(form) {
-        // Add custom validation logic here
-        // For now, just return true to allow normal form submission
-        return true;
-    }
 };
 
-// Initialize when DOM is ready
+// Inicialización del módulo al cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
     UserFormModule.init();
     
-    // Register with main app if available
+    // Registra el módulo con la aplicación principal si está disponible
     if (window.CrudApp) {
         window.CrudApp.registerModule('userForm', UserFormModule);
     }
 });
 
-// Export for global access if needed
 window.UserFormModule = UserFormModule;
