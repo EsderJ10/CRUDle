@@ -130,7 +130,7 @@ const DashboardModule = {
     }
 };
 
-// Inicalización del módulo al cargar el DOM
+// Inicialización del módulo al cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
     DashboardModule.init();
     
