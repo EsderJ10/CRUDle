@@ -11,7 +11,7 @@
 - [x] Change how is saved the avatar in csv 
 - [x] Check what is better: enums, classes or the constant defined in config.php
 - [ ] Fix media-queries
-- [ ] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
+- [x] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
 - [ ] Add error handling and exceptions
 
 ## LOW
