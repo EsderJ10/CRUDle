@@ -1,19 +1,21 @@
-// Dashboard Module
-// Handles sidebar navigation, theme toggle, and page transitions
+/*
+ * Módulo del Dashboard
+ * Maneja la navegación de la barra lateral, el cambio de tema y las transiciones de página
+ * Autor: José Antonio Cortés Ferre.
+ */
 
 const DashboardModule = {
     /**
-     * Initialize dashboard functionality
+     * Inicializa la funcionalidad del dashboard
      */
     init() {
-        console.log('Dashboard script loaded');
         this.initSidebar();
         this.initNavigation();
         this.initPageTransitions();
     },
     
     /**
-     * Initialize sidebar functionality
+     * Inicializa la funcionalidad de la barra lateral
      */
     initSidebar() {
         const sidebar = document.getElementById('sidebar');
@@ -22,23 +24,17 @@ const DashboardModule = {
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const body = document.body;
         
-        console.log('Elements found:', { sidebar, sidebarToggle, mobileToggle });
-        
-        // Desktop sidebar toggle
         if (sidebarToggle && sidebar) {
             sidebarToggle.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Sidebar toggle clicked');
                 sidebar.classList.toggle('collapsed');
                 body.classList.toggle('sidebar-collapsed');
             });
         }
         
-        // Mobile sidebar toggle
         if (mobileToggle && sidebar) {
             mobileToggle.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Mobile toggle clicked');
                 sidebar.classList.toggle('mobile-open');
                 if (sidebarOverlay) {
                     sidebarOverlay.classList.toggle('active');
@@ -47,7 +43,7 @@ const DashboardModule = {
             });
         }
         
-        // Close mobile sidebar when clicking overlay
+        // Cierra la barra lateral móvil al hacer clic en el overlay
         if (sidebarOverlay) {
             sidebarOverlay.addEventListener('click', function() {
                 sidebar.classList.remove('mobile-open');
@@ -58,15 +54,12 @@ const DashboardModule = {
     },
     
     /**
-     * Initialize navigation highlighting
+     * Inicializa la funcionalidad de resaltado de navegación
      */
     initNavigation() {
         const currentPath = window.location.pathname.toLowerCase();
         const navLinks = document.querySelectorAll('.nav-link');
         
-        console.log('Current path:', currentPath);
-        
-        // First, remove all active classes
         navLinks.forEach(link => {
             link.classList.remove('active');
             if (link.parentElement) {
@@ -74,35 +67,35 @@ const DashboardModule = {
             }
         });
         
-        // Find the best match and set only one as active
         let activeLink = null;
         let matchPriority = 0;
         
-        navLinks.forEach((link, index) => {
-            const linkHref = link.getAttribute('href').toLowerCase();
+        /* Se determina el mejor enlace coincidente basado en la ruta actual
+         * Es decir, se da prioridad a las coincidencias más específicas
+         * Esto sirve para que, por ejemplo, en user_edit.php se resalte "Usuarios" en lugar de "Dashboard"
+         */
+
+        navLinks.forEach((link) => {
             const page = link.getAttribute('data-page');
             
-            console.log(`Link ${index}:`, { href: linkHref, page, currentPath });
-            
-            // Determine match priority (higher number = better match)
             let priority = 0;
             
             if (currentPath.includes('user_create.php') && page === 'create') {
-                priority = 5; // Most specific match
+                priority = 5;
             } else if (currentPath.includes('user_edit.php') && page === 'users') {
-                priority = 4; // Specific match
+                priority = 4;
             } else if (currentPath.includes('user_info.php') && page === 'users') {
-                priority = 4; // Specific match
+                priority = 4;
             } else if (currentPath.includes('user_delete.php') && page === 'users') {
-                priority = 4; // Specific match
+                priority = 4;
             } else if (currentPath.includes('user_index.php') && page === 'users') {
-                priority = 4; // Specific match
+                priority = 4;
             } else if (currentPath.includes('index.php') && page === 'dashboard') {
-                priority = 3; // Dashboard match
+                priority = 3;
             } else if (currentPath.endsWith('/') && page === 'dashboard') {
-                priority = 2; // Root path
+                priority = 2;
             } else if (currentPath.includes('user_') && page === 'users') {
-                priority = 1; // Generic user page match
+                priority = 1;
             }
             
             if (priority > matchPriority) {
@@ -111,9 +104,7 @@ const DashboardModule = {
             }
         });
         
-        // Set only the best match as active
         if (activeLink) {
-            console.log('Setting active for:', activeLink.getAttribute('data-page'));
             activeLink.classList.add('active');
             if (activeLink.parentElement) {
                 activeLink.parentElement.classList.add('active');
@@ -122,7 +113,7 @@ const DashboardModule = {
     },
     
     /**
-     * Initialize page transitions
+     * Inicializa las transiciones de página
      */
     initPageTransitions() {
         const pageContent = document.querySelector('.page-content');
@@ -139,11 +130,10 @@ const DashboardModule = {
     }
 };
 
-// Initialize when DOM is ready
+// Inicialización del módulo al cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
     DashboardModule.init();
     
-    // Register with main app if available
     if (window.CrudApp) {
         window.CrudApp.registerModule('dashboard', DashboardModule);
     }

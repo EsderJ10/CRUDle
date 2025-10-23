@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? $pageTitle : 'CRUD PHP'; ?></title>
-    
-    <!-- Theme Initialization - Must run before CSS loads to prevent flash -->
+
+    <!-- Inicialización del tema -->
     <script src="<?php echo getWebPath('assets/js/theme-init.js'); ?>"></script>
     
     <link rel="stylesheet" href="<?php echo getWebPath('assets/css/styles.css'); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- JavaScript Files -->
+    <!-- JavaScript -->
     <script src="<?php echo getWebPath('assets/js/app.js'); ?>" defer></script>
     <script src="<?php echo getWebPath('assets/js/dashboard.js'); ?>" defer></script>
 </head>
 <body class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-brand">
@@ -65,7 +65,7 @@
         </nav>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <div class="main-wrapper">
         <!-- Top Header Bar -->
         <header class="top-header">
@@ -88,4 +88,3 @@
         <!-- Page Content -->
         <main class="page-content">
             <div class="content-container">
-

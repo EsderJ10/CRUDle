@@ -1,13 +1,15 @@
 <?php
-    // It will display the user information in a table format. It will receive the user id. It will be always called from user_index.php.
+/*
+ * Página para mostrar la información detallada de un usuario.
+ * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
+ * Autor: José Antonio Cortés Ferre
+ */
 
-    // Include business logic and presentation
     require_once '../../config/paths.php';
     require_once getPath('config/config.php');
     require_once getPath('lib/business/user_operations.php');
     require_once getPath('lib/presentation/user_views.php');
 
-    // Set page variables for partials
     $pageTitle = "Información del Usuario";
     $pageHeader = "Detalles del Usuario";
 
@@ -30,7 +32,6 @@
         exit;
     }
     
-    // Use business logic to get user
     $user = getUserById($userId);
     
     if ($user === null) {
@@ -41,12 +42,9 @@
         exit;
     }
 
-    // Include header
     include getPath('views/partials/header.php');
     
-    // Use presentation layer to render user information
     echo renderUserInfo($user);
 
-    // Include footer
     include getPath('views/partials/footer.php');
 ?>

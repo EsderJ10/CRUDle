@@ -1,15 +1,16 @@
-/**
- * Theme Initialization and Toggle Script
- * Handles all theme switching logic in one place
- * Runs before page render to prevent theme flash
- * Must be placed in <head> before CSS loads
- * 
- * Checks for saved theme preference in localStorage
- * Falls back to system preference (prefers-color-scheme)
- * Applies dark-theme class to html element immediately
- * 
- * Features smooth wave animation when switching themes
+/*
+ * Script de inicialización del tema y gestión del cambio de tema
+ * Maneja la lógica de cambio de tema en un solo lugar
+ * Se ejecuta antes de que se renderice la página para evitar parpadeos de tema
+ * Debe colocarse en <head> antes de que se cargue CSS
+ * Verifica la preferencia de tema guardada en localStorage
+ * Recurre a la preferencia del sistema (prefers-color-scheme)
+ * Aplica la clase dark-theme al elemento html de inmediato
+ * Presenta una suave animación de ola al cambiar de tema
+ * Autor: José Antonio Cortés Ferre.
  */
+ 
+// Se usa IIFE para evitar contaminar el scope global.
 
 (function() {
     'use strict';
@@ -17,10 +18,9 @@
     const htmlElement = document.documentElement;
 
     /**
-     * Create wave effect from button position
+     * Crea un efecto de ola en el botón al cambiar de tema
      */
     function createWaveEffect(event) {
-        // Get button position
         const button = event.target.closest('button');
         if (!button) return;
 
@@ -28,7 +28,6 @@
         const startX = rect.left + rect.width / 2;
         const startY = rect.top + rect.height / 2;
 
-        // Create wave container
         const wave = document.createElement('div');
         wave.className = 'theme-wave';
         wave.style.cssText = `
@@ -49,13 +48,11 @@
 
         document.body.appendChild(wave);
 
-        // Calculate distance to farthest corner
         const maxDistance = Math.sqrt(
             Math.max(startX, window.innerWidth - startX) ** 2 +
             Math.max(startY, window.innerHeight - startY) ** 2
         );
 
-        // Animate wave
         let progress = 0;
         const duration = 600; // ms
         const startTime = performance.now();
@@ -77,17 +74,14 @@
     }
 
     /**
-     * Initialize theme on page load
-     * Executes before content renders to prevent flash
+     * Inicializa el tema al cargar la página
+     * Se ejecuta antes de que se renderice la página para evitar parpadeos de tema
      */
     function initializeTheme() {
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        // Determine if dark theme should be active
         const isDarkTheme = savedTheme === 'dark' || (!savedTheme && prefersDark);
 
-        // Apply theme class to html element
         if (isDarkTheme) {
             htmlElement.classList.add('dark-theme');
         } else {
@@ -96,13 +90,11 @@
     }
 
     /**
-     * Toggle theme and save preference
+     * Maneja el cambio de tema al hacer clic en el botón
      */
     function toggleTheme(event) {
-        // Create wave effect
         createWaveEffect(event);
 
-        // Small delay to show wave before theme change
         setTimeout(() => {
             htmlElement.classList.toggle('dark-theme');
             const isDark = htmlElement.classList.contains('dark-theme');
@@ -112,7 +104,7 @@
     }
 
     /**
-     * Setup theme toggle button listener
+     * Configura el listener para el botón de cambio de tema
      */
     function setupThemeToggle() {
         const themeToggle = document.getElementById('themeToggle');
@@ -125,10 +117,8 @@
         }
     }
 
-    // Run immediately on page load
     initializeTheme();
 
-    // Setup toggle button when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', setupThemeToggle);
     } else {
@@ -136,13 +126,13 @@
     }
 
     /**
-     * Listen for system theme preference changes
-     * Updates theme if user changes OS-level preference
+     * Escucha cambios en la preferencia del sistema
+     * Actualiza el tema si el usuario cambia la preferencia a nivel de sistema
      */
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
         const savedTheme = localStorage.getItem('theme');
         
-        // Only auto-switch if no manual preference is saved
+        // Solo hace el cambio si no hay una preferencia guardada
         if (!savedTheme) {
             if (this.matches) {
                 htmlElement.classList.add('dark-theme');

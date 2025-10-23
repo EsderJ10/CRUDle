@@ -1,8 +1,11 @@
 <?php
-    // It will receive the user id and it will show the user information in a form to edit it. It will be always called from user_index.php.
-    // After edition, it will save the changes in the CSV file and redirect to user_index.php.
+/*
+ * Página para editar un usuario.
+ * Maneja la visualización del formulario y el procesamiento de datos.
+ * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
+ * Autor: José Antonio Cortés Ferre
+ */
 
-    // Include business logic and presentation
     require_once '../../config/paths.php';
     require_once getPath('config/config.php');
     require_once getPath('lib/business/user_operations.php');
@@ -10,7 +13,6 @@
     require_once getPath('lib/core/validation.php');
     require_once getPath('lib/core/sanitization.php');
 
-    // Set page variables for partials
     $pageTitle = "Editar Usuario";
     $pageHeader = "Editar Usuario";
 
@@ -33,7 +35,6 @@
         exit;
     }
     
-    // Use business logic to get user
     $user = getUserById($userId);
     
     if ($user === null) {
@@ -44,7 +45,7 @@
         exit;
     }
 
-    // If the request is POST, it means the form was submitted
+    // Si la petición es POST, procesar el formulario
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $formData = sanitizeUserData([
             'nombre' => $_POST['name'] ?? '',
@@ -53,73 +54,61 @@
             'fecha_alta' => $_POST['fecha_alta'] ?? ''
         ]);
         
-        // Check if user wants to remove avatar
         $removeAvatar = isset($_POST['remove_avatar']) && $_POST['remove_avatar'] == '1';
-
-        // Validate input data
         $errors = validateUserData($formData);
         
-        // Validate avatar operations
         if ($removeAvatar && isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
             $errors[] = "No puedes eliminar y subir un avatar al mismo tiempo. Elige solo una opción.";
         }
-        
-        // Validate avatar if uploaded and not removing
+    
         if (!$removeAvatar && isset($_FILES['avatar'])) {
             $avatarErrors = validateAvatar($_FILES['avatar']);
             $errors = array_merge($errors, $avatarErrors);
         }
         
         if (empty($errors)) {
-            // Handle avatar operations
             $newAvatarPath = null;
             $oldAvatarPath = $user['avatar'];
             
             if ($removeAvatar) {
-                // User wants to remove the avatar
+                // El usuario ha optado por eliminar el avatar existente
                 if ($oldAvatarPath) {
                     deleteAvatarFile($oldAvatarPath);
                 }
                 $formData['avatar'] = null;
             } else if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-                // User is uploading a new avatar
+                // El usuario está subiendo un nuevo avatar
                 $newAvatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['nombre']);
                 if ($newAvatarPath) {
                     $formData['avatar'] = $newAvatarPath;
-                    // Old avatar is automatically removed by removeExistingUserAvatar in handleAvatarUpload
+                    // El avatar antiguo se elimina automáticamente en removeExistingUserAvatar en handleAvatarUpload
                 } else {
-                    $formData['avatar'] = $oldAvatarPath; // Keep old avatar if upload failed
+                    $formData['avatar'] = $oldAvatarPath; // Se mantiene el antiguo si la subida falla
                 }
             } else {
                 // No changes to avatar, keep the existing one
                 $formData['avatar'] = $oldAvatarPath;
             }
-            
+
             $success = updateUser($userId, $formData);
             
             if ($success) {
-                // Redirect to user_index.php with success message
                 header('Location: user_index.php?message=' . urlencode('Usuario con ID ' . $userId . ' actualizado exitosamente.'));
                 exit;
             } else {
-                // If update failed and we uploaded a new avatar, clean it up
                 if ($newAvatarPath && $newAvatarPath !== $oldAvatarPath) {
                     deleteAvatarFile($newAvatarPath);
                 }
-                // Redirect to user_index.php with error message
                 header('Location: user_index.php?error=' . urlencode('ERROR al actualizar el usuario con ID ' . $userId . '.'));
                 exit;
             }
         } else {
-            // There are validation errors, display the form with errors
             include getPath('views/partials/header.php');
             
-            // Display all validation errors
             foreach ($errors as $error) {
                 echo renderMessage($error, 'error');
             }
             
-            // Re-populate the form with submitted data (but keep the original user data for non-submitted fields)
             $user['nombre'] = $formData['nombre'];
             $user['email'] = $formData['email'];
             $user['rol'] = $formData['rol'];
@@ -129,8 +118,8 @@
             exit;
         }
     }
-    
-    // If the user was found, display the edit form (only for GET requests)
+
+    // Si se entra por GET (se encuentra el usuario), mostrar el formulario con los datos actuales del usuario
     if ($user !== null) {
         include getPath('views/partials/header.php');
         include getPath('views/components/forms/user_form.php');

@@ -9,7 +9,7 @@
         </footer>
     </div>
 
-    <!-- Sidebar Overlay for Mobile -->
+    <!-- Sidebar solo para dispositivos móviles -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 </body>

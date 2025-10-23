@@ -1,69 +1,62 @@
-// Main application JavaScript entry point
-// Manages global functionality and module coordination
-
-/**
- * Main App object for managing global functionality
+/*
+ * Punto de entrada en JavaScript para la aplicación CRUD.
+ * Este archivo inicializa la aplicación y configura los módulos necesarios.
+ * Autor: José Antonio Cortés Ferre.
  */
 const CrudApp = {
-    // Configuration
     config: {
-        debug: false, // Set to true for development
+        debug: false,
         version: '1.0.0'
     },
     
-    // Module registry
     modules: {},
     
     /**
-     * Initialize the application
+     * Inicializa la aplicación CRUD
      */
     init() {
         if (this.config.debug) {
-            console.log('CRUD App initializing...', this.config);
+            console.log('CRUDle initializing...', this.config);
         }
         
-        // Initialize core modules
         this.initGlobalEventListeners();
-        this.initUtilities();
         
         if (this.config.debug) {
-            console.log('CRUD App initialized successfully');
+            console.log('CRUDle initialized successfully');
         }
     },
     
     /**
-     * Register a module
-     * @param {string} name - Module name
-     * @param {Object} module - Module object
+     * Registra un módulo en la aplicación
+     * @param {string} name - Nombre del módulo
+     * @param {Object} module - Objeto del módulo
      */
     registerModule(name, module) {
         this.modules[name] = module;
         if (this.config.debug) {
-            console.log(`Module '${name}' registered`);
+            console.log(`Module '${name}' registered.`);
         }
     },
     
     /**
-     * Get a registered module
-     * @param {string} name - Module name
-     * @returns {Object|null} Module object or null if not found
+     * Obtiene un módulo registrado
+     * @param {string} name - Nombre del módulo
+     * @returns {Object|null} Objeto del módulo o null si no se encuentra
      */
     getModule(name) {
         return this.modules[name] || null;
     },
     
     /**
-     * Initialize global event listeners
+     * Inicializa los listeners de eventos globales
      */
     initGlobalEventListeners() {
-        // Global error handler
         window.addEventListener('error', (event) => {
             if (this.config.debug) {
                 console.error('Global error:', event.error);
             }
         });
         
-        // Global unhandled promise rejection handler
         window.addEventListener('unhandledrejection', (event) => {
             if (this.config.debug) {
                 console.error('Unhandled promise rejection:', event.reason);
@@ -72,17 +65,9 @@ const CrudApp = {
     },
     
     /**
-     * Initialize utility functions
-     */
-    initUtilities() {
-        // Add global utility functions to window if needed
-        window.CrudApp = this;
-    },
-    
-    /**
-     * Utility function to safely get element by ID
-     * @param {string} id - Element ID
-     * @returns {HTMLElement|null} Element or null if not found
+     * Función de utilidad para obtener un elemento de forma segura por ID
+     * @param {string} id - Elemento ID
+     * @returns {HTMLElement|null} Elemento o null si no se encuentra
      */
     getElementById(id) {
         const element = document.getElementById(id);
@@ -93,12 +78,11 @@ const CrudApp = {
     },
     
     /**
-     * Utility function to show notifications (can be extended)
-     * @param {string} message - Notification message
-     * @param {string} type - Notification type (success, error, warning, info)
+     * Función de utilidad para mostrar notificaciones
+     * @param {string} message - Mensaje de la notificación
+     * @param {string} type - Tipo de notificación (success, error, warning, info)
      */
     showNotification(message, type = 'info') {
-        // This can be extended to show toast notifications
         console.log(`[${type.toUpperCase()}] ${message}`);
     }
 };
