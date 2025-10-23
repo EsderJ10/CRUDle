@@ -9,6 +9,7 @@
 - [x] Create user info (user_info)
 - [x] Edit user info (user_edit)
 - [x] Change how is saved the avatar in csv 
+- [ ] Check what is better: enums but requiring php >= 8.1 or classes.
 - [ ] Fix media-queries
 - [ ] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
 - [ ] Add error handling and exceptions
