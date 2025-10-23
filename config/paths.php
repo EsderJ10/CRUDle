@@ -5,7 +5,7 @@
  */ 
 
 // Web root
-define('WEB_ROOT', '/crud_php');
+define('WEB_ROOT', '/CRUDle');
 
 // Directorios
 define('BASE_PATH', __DIR__ . '/../');
