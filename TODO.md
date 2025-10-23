@@ -11,6 +11,7 @@
 - [ ] Change how is saved the avatar in csv 
 - [ ] Fix media-queries
 - [ ] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
+- [ ] Add error handling and expections
 
 ## LOW
 
