@@ -8,10 +8,10 @@
 - [x] Add see, edit and delete in list users.
 - [x] Create user info (user_info)
 - [x] Edit user info (user_edit)
-- [ ] Change how is saved the avatar in csv 
+- [x] Change how is saved the avatar in csv 
 - [ ] Fix media-queries
 - [ ] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
-- [ ] Add error handling and expections
+- [ ] Add error handling and exceptions
 
 ## LOW
 
