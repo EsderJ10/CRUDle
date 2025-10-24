@@ -46,7 +46,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
             <select id="role" name="role" required>
                 <option value="">Seleccione un rol</option>
                 <?php 
-                $roles = ROLES;
+                $roles = getRoles();
                 $currentRole = $isEdit ? $user['rol'] : $formData['rol'];
                 foreach ($roles as $role): 
                 ?>

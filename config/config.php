@@ -11,15 +11,6 @@ define('APP_VERSION', '1.0.0');
 define('DATA_FILE', 'data/usuarios.csv');
 define('DATA_DIR', 'data/');
 
-// Valores por defecto
-define('DEFAULT_ROLE', 'viewer');
-define('ROLES', ['admin', 'editor', 'viewer']);
-
-// Paginación
-/* TODO: Check this, maybe it is not useful.
-define('USERS_PER_PAGE', 10);
-*/
-
 // Formato de fecha
 define('DATE_FORMAT', 'Y-m-d H:i:s');
 define('DISPLAY_DATE_FORMAT', 'd/m/Y H:i');
