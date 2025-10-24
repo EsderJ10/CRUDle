@@ -24,14 +24,18 @@ const DashboardModule = {
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const body = document.body;
         
+        this.restoreSidebarState(sidebar, body);
+        
         if (sidebarToggle && sidebar) {
             sidebarToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 sidebar.classList.toggle('collapsed');
                 body.classList.toggle('sidebar-collapsed');
+                // Guarda el nuevo estado
+                DashboardModule.saveSidebarState(sidebar);
             });
         }
-        
+
         if (mobileToggle && sidebar) {
             mobileToggle.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -51,6 +55,34 @@ const DashboardModule = {
                 body.classList.remove('sidebar-mobile-open');
             });
         }
+    },
+    
+    /**
+     * Guarda el estado del sidebar de escritorio en localStorage
+     * @param {HTMLElement} sidebar - Elemento de la barra lateral
+     */
+    saveSidebarState(sidebar) {
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        localStorage.setItem('sidebarCollapsed', isCollapsed ? 'true' : 'false');
+    },
+    
+    /**
+     * Restaura el estado guardado del sidebar de escritorio desde localStorage
+     * Se aplican AMBAS clases: .collapsed en el sidebar y .sidebar-collapsed en el body
+     * @param {HTMLElement} sidebar - Elemento de la barra lateral
+     * @param {HTMLElement} body - Elemento body
+     */
+    restoreSidebarState(sidebar, body) {
+        if (!sidebar || !body) return;
+        
+        const savedState = localStorage.getItem('sidebarCollapsed');
+        const isCollapsed = savedState === 'true';
+        
+        // Aplicar/remover .collapsed en el sidebar
+        sidebar.classList.toggle('collapsed', isCollapsed);
+        
+        // Aplicar/remover .sidebar-collapsed en el body (necesario para el main-wrapper)
+        body.classList.toggle('sidebar-collapsed', isCollapsed);
     },
     
     /**

@@ -9,9 +9,9 @@
 - [x] Create user info (user_info)
 - [x] Edit user info (user_edit)
 - [x] Change how is saved the avatar in csv 
-- [ ] Check what is better: enums, classes or the constant defined in config.php
+- [x] Check what is better: enums, classes or the constant defined in config.php
 - [ ] Fix media-queries
-- [ ] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
+- [x] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
 - [ ] Add error handling and exceptions
 
 ## LOW
@@ -24,4 +24,4 @@
 - [ ] Check why sometimes it creates an Array in editing. Case => edited an user without avatar, added one, and a new user with Array in each field is created (did not check if it was in the csv).
 - [ ] Generate documentation ??.
 - [ ] Format correctly the documents.
-
+- [ ] Check deprecated.
