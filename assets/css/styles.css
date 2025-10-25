@@ -1692,10 +1692,13 @@ tbody tr:nth-child(even):hover {
 
 /* Footer styles */
 .main-footer {
+    display: flex;
     background: var(--bg-primary);
     border-top: 1px solid var(--border-color);
     margin-top: auto;
     padding: var(--space-4) var(--space-6);
+    justify-content: center;
+    align-items: center;
 }
 
 .dark-theme .main-footer {
@@ -2289,51 +2292,24 @@ tbody tr:nth-child(even):hover {
         margin: 0 auto;
     }
     
-    .top-header {
-        height: 85px;
-        padding: 0 var(--space-8);
-    }
-    
-    .page-title {
-        font-size: 2rem;
-    }
-    
     .page-content {
-        padding: var(--space-10) var(--space-8);
+        padding: var(--space-10) var(--space-10);
     }
     
-    .sidebar-header {
-        padding: var(--space-5);
-    }
-    
-    .sidebar-nav {
-        padding: var(--space-4);
+    .top-header {
+        padding: 0 var(--space-10);
     }
     
     .stats-grid {
-        gap: var(--space-6);
+        gap: var(--space-8);
     }
     
     table {
         font-size: 1rem;
     }
     
-    th,
-    td {
-        padding: var(--space-4) var(--space-4);
-    }
-    
     .card {
         padding: var(--space-10);
-    }
-    
-    .form-group {
-        margin-bottom: var(--space-6);
-    }
-    
-    .btn {
-        font-size: 1.05rem;
-        padding: var(--space-3) var(--space-7);
     }
 }
 

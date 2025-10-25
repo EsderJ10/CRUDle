@@ -25,3 +25,4 @@
 - [ ] Generate documentation ??.
 - [ ] Format correctly the documents.
 - [ ] Check deprecated.
+- [ ] Add GitHub Icon in footer.

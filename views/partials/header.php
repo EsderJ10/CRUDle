@@ -22,7 +22,7 @@
         <div class="sidebar-header">
             <div class="sidebar-brand">
                 <i class="fas fa-database brand-icon"></i>
-                <span class="brand-text">CRUD System</span>
+                <span class="brand-text">CRUDle</span>
             </div>
             <button class="sidebar-toggle" id="sidebarToggle">
                 <i class="fas fa-bars"></i>
