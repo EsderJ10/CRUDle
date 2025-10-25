@@ -10,7 +10,7 @@
 - [x] Edit user info (user_edit)
 - [x] Change how is saved the avatar in csv 
 - [x] Check what is better: enums, classes or the constant defined in config.php
-- [ ] Fix media-queries
+- [x] Fix media-queries
 - [x] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
 - [ ] Add error handling and exceptions
 
