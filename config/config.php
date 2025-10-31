@@ -6,6 +6,7 @@
 // Aplicación
 define('APP_NAME', 'CRUD PHP Application');
 define('APP_VERSION', '1.0.0');
+define('APP_ENV', 'development'); // Cambiar a 'production' en entorno de producción
 
 // Data
 define('DATA_FILE', 'data/usuarios.csv');
@@ -19,4 +20,5 @@ define('DISPLAY_DATE_FORMAT', 'd/m/Y H:i');
 define('MAX_NAME_LENGTH', 100);
 define('MAX_EMAIL_LENGTH', 150);
 define('MIN_NAME_LENGTH', 2);
+define('ERROR_LOG_MAX_SIZE', 5 * 1024 * 1024);
 ?>
