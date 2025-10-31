@@ -24,7 +24,7 @@
 - [x] Check if smoother animations are working on other browsers/devices
 - [x] Check why sometimes it creates an Array in editing. Case => edited an user without avatar, added one, and a new user with Array in each field is created (did not check if it was in the csv). **RESOLVED: Was a false alarm - never actually occurred. Added defensive type checking in sanitization functions to prevent similar issues.**
 - [ ] Generate documentation ??.
-- [ ] Format correctly the documents.
-- [ ] Check deprecated.
+- [x] Format correctly the documents.
+- [x] Check deprecated.
 - [x] Style input type file.
 - [x] Add GitHub Icon in footer.
