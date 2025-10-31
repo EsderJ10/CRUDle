@@ -424,18 +424,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### MIT License Summary
-
-✅ Commercial use  
-✅ Modification  
-✅ Distribution  
-✅ Private use  
-
-❌ Liability  
-❌ Warranty  
-
----
-
 ## Author
 
 **José Antonio Cortés Ferre**
@@ -471,7 +459,7 @@ SOFTWARE.
 - Confirmation dialogs
 - Smooth animations
 
-### Planned Features 🚀
+### Planned Features 
 
 - 🔄 Database migration (SQLite/MySQL)
 - 🔄 User authentication
@@ -501,6 +489,15 @@ A: Yes, edit the role options in `lib/core/validation.php` and update the form i
 
 **Q: How do I migrate to a database?**  
 A: Replace the CSV operations in `lib/core/csv.php` with database queries. The business logic layer can remain largely unchanged.
+
+**Q: Can I extend the user model with more fields?**  
+A: Yes, add the new fields to the CSV structure, update the validation and sanitization functions, and modify the user forms and views accordingly. The idea is to keep the architecture flexible for such extensions.
+
+**Q: Where can I find the documentation?**  
+A: Detailed documentation is available in the `docs/` directory, including [TECHNICAL_DOC.md](docs/TECHNICAL_DOC.md) for architecture and design patterns.
+
+**Q: How do I report bugs or request features?**  
+A: Use the [GitHub Issues](https://github.com/EsderJ10/CRUDle/issues) page to report bugs or request new features.
 
 ---
 
