@@ -239,3 +239,163 @@ Context: {
     "errno": 2
 }
 --------------------------------------------------------------------------------
+[2025-10-31 23:20:48] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:20:49] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:20:50] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:20:52] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:21:10] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:21:17] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:21:27] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:21:42] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:22:36] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:22:46] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:22:57] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:24:22] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:24:38] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:25:11] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:25:12] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:25:38] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------

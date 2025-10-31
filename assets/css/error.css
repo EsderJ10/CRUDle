@@ -64,11 +64,11 @@ body::before {
 }
 
 .error-icon {
+    color: #d97706;
     font-size: 80px;
     margin-bottom: 24px;
     display: inline-block;
     animation: pulse 2s ease-in-out infinite;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
 @keyframes pulse {

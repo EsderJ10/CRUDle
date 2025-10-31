@@ -19,10 +19,11 @@ $message = $isProductionMode
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error</title>
     <link rel="stylesheet" href="<?php echo getWebPath('assets/css/error.css'); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="error-container">
-        <div class="error-icon">⚠️</div>
+        <div class="error-icon fas fa-exclamation-triangle"></div>
         <h1 class="error-title">Error</h1>
         <p class="error-message"><?php echo $message; ?></p>
         
