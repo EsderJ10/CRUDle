@@ -26,4 +26,5 @@
 - [ ] Generate documentation ??.
 - [ ] Format correctly the documents.
 - [ ] Check deprecated.
+- [ ] Style input type file.
 - [x] Add GitHub Icon in footer.
