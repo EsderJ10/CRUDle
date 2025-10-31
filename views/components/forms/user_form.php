@@ -14,7 +14,7 @@ $formData = $formData ?? [
     'rol' => ''
 ];
 
-$isEdit = isset($user) && !empty($user);
+$isEdit = isset($user) && !empty($user) && isset($user['id']);
 $action = $isEdit ? 'user_edit.php?id=' . urlencode($user['id']) : 'user_create.php';
 $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
 ?>

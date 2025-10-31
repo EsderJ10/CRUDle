@@ -1,0 +1,241 @@
+[2025-10-31 22:05:44] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:09:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:09:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:09:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:09:58] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:03] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:39] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:39] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:43] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:11:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:11:25] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:12:52] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:03] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:15] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:22] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:33] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:43] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:15:23] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:16:21] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:18:07] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:18:17] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:24:48] [WARNING] Undefined array key "id"
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\views\\components\\forms\\user_form.php",
+    "line": 18,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:24:48] [WARNING] Undefined array key "fecha_alta"
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\views\\components\\forms\\user_form.php",
+    "line": 106,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:24:48] [WARNING] Undefined array key "fecha_alta"
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\views\\components\\forms\\user_form.php",
+    "line": 112,
+    "errno": 2
+}
+--------------------------------------------------------------------------------

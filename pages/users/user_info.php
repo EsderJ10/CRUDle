@@ -5,14 +5,18 @@
  * Autor: José Antonio Cortés Ferre
  */
 
-    require_once '../../config/paths.php';
-    require_once getPath('config/config.php');
-    require_once getPath('lib/business/user_operations.php');
-    require_once getPath('lib/presentation/user_views.php');
+require_once '../../config/paths.php';
+require_once getPath('config/config.php');
+require_once getPath('lib/business/user_operations.php');
+require_once getPath('lib/presentation/user_views.php');
+require_once getPath('lib/core/error_handler.php');
+require_once getPath('lib/core/exceptions.php');
 
-    $pageTitle = "Información del Usuario";
-    $pageHeader = "Detalles del Usuario";
+$pageTitle = "Información del Usuario";
+$pageHeader = "Detalles del Usuario";
 
+try {
+    // Validar que se proporcione un ID
     if (!isset($_GET['id'])) {
         include getPath('views/partials/header.php');
         echo renderMessage('ERROR: No se ha proporcionado un ID de usuario.', 'error');
@@ -20,31 +24,51 @@
         include getPath('views/partials/footer.php');
         exit;
     }
-
+    
     $userId = $_GET['id'];
-    $file = getPath(DATA_FILE);
     
-    if (!file_exists($file)) {
+    // Cargar usuario
+    try {
+        $user = getUserById($userId);
+        
+        if ($user === null) {
+            throw new ResourceNotFoundException(
+                'User not found: ' . $userId,
+                'El usuario no existe.'
+            );
+        }
+    } catch (ResourceNotFoundException $e) {
         include getPath('views/partials/header.php');
-        echo renderMessage('ERROR: El archivo de usuarios no existe.', 'error');
+        echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
+        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
+        include getPath('views/partials/footer.php');
+        exit;
+    } catch (CSVException $e) {
+        include getPath('views/partials/header.php');
+        echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
+        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
+        include getPath('views/partials/footer.php');
+        exit;
+    } catch (UserOperationException $e) {
+        include getPath('views/partials/header.php');
+        echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
         echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
         include getPath('views/partials/footer.php');
         exit;
     }
     
-    $user = getUserById($userId);
-    
-    if ($user === null) {
-        include getPath('views/partials/header.php');
-        echo renderMessage('ERROR: Usuario con ID ' . $userId . ' no encontrado.', 'error');
-        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-        include getPath('views/partials/footer.php');
-        exit;
-    }
-
+    // Mostrar información del usuario
     include getPath('views/partials/header.php');
-    
     echo renderUserInfo($user);
-
     include getPath('views/partials/footer.php');
+    
+} catch (Exception $e) {
+    // Error no esperado
+    include getPath('views/partials/header.php');
+    echo renderMessage('ERROR: Ocurrió un error inesperado. ' . $e->getMessage(), 'error');
+    echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
+    include getPath('views/partials/footer.php');
+    error_log('Unexpected error in user_info.php: ' . $e->getMessage());
+    exit;
+}
 ?>
