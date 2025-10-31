@@ -357,6 +357,8 @@ body {
     background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%);
 }
 
+/* Desktop-only: Collapsed sidebar adjusts main wrapper margin */
+/* This will be overridden on mobile via media query */
 .dashboard-layout.sidebar-collapsed .main-wrapper {
     margin-left: 70px;
 }
@@ -1077,6 +1079,28 @@ body {
     font-weight: 600;
 }
 
+/* Card Footer */
+.card-footer {
+    padding: var(--space-4);
+    margin: var(--space-4) calc(var(--space-6) * -1) calc(var(--space-6) * -1);
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark-theme .card-footer {
+    background: rgba(15, 15, 15, 0.8);
+    border-top-color: var(--neutral-300);
+}
+
 /* Form styles */
 form {
     background: var(--bg-primary);
@@ -1338,15 +1362,38 @@ textarea:hover {
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     overflow: hidden;
+    overflow-x: auto;
     margin-bottom: var(--space-6);
     border: 1px solid var(--border-color);
     transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                 background 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                 border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smooth scrolling on touch devices */
+    -webkit-overflow-scrolling: touch;
 }
 
+/* Dark theme table styles */
 .dark-theme .table-container {
     background: rgba(26, 26, 26, 0.9);
+}
+
+/* Scrollbar styling for table containers */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: var(--radius-full);
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
 }
 
 table {
@@ -1386,6 +1433,10 @@ td {
                 color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--bg-primary);
     color: var(--text-primary);
+    /* Prevent text overflow - critical for emails and long text */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 300px;
 }
 
 tr {
@@ -2096,10 +2147,169 @@ tbody tr:nth-child(even):hover {
     }
 }
 
-/* Mobile Devices: Below 768px - Hide sidebar toggle, show only mobile toggle */
+/* Mobile Devices: Below 768px - Mobile-specific layout adjustments */
 @media (max-width: 767px) {
+    /* Hide sidebar toggle on mobile, only show mobile toggle */
     .sidebar-toggle {
         display: none !important;
+    }
+    
+    /* Reset main wrapper margin on mobile - critical fix for left spacing issue */
+    .main-wrapper,
+    .dashboard-layout.sidebar-collapsed .main-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Ensure dashboard layout is block on mobile, no flex */
+    .dashboard-layout {
+        display: block !important;
+    }
+    
+    /* Ensure sidebar doesn't interfere with content when collapsed */
+    .sidebar,
+    .sidebar.collapsed {
+        width: 280px;
+        transform: translateX(-100%);
+    }
+    
+    /* Sidebar visible state on mobile */
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    
+    /* Ensure page content has proper mobile padding */
+    .page-content {
+        padding: var(--space-4) var(--space-3);
+        width: 100%;
+    }
+    
+    /* Ensure content container doesn't have unwanted margins */
+    .content-container {
+        padding: 0;
+        margin: 0 auto;
+        width: 100%;
+    }
+    
+    /* Convert table to card-based layout on mobile for better UX */   
+    /* Make table container scrollable with better overflow handling */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-4);
+    }
+    
+    /* Hide table headers on mobile */
+    table thead {
+        display: none;
+    }
+    
+    /* Make table body display as block */
+    table,
+    table tbody {
+        display: block;
+        width: 100%;
+    }
+    
+    /* Convert each row to a card */
+    table tbody tr {
+        display: block;
+        margin-bottom: var(--space-4);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        background: var(--bg-primary);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition);
+    }
+    
+    .dark-theme table tbody tr {
+        background: rgba(26, 26, 26, 0.8);
+        border-color: var(--neutral-300);
+    }
+    
+    table tbody tr:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+    
+    /* Make table cells display as grid items */
+    table tbody tr td {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: var(--space-2);
+        padding: var(--space-3) 0;
+        border-bottom: 1px solid var(--border-color);
+        text-align: left;
+        align-items: center;
+        /* Ensure text wrapping in mobile cards */
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    .dark-theme table tbody tr td {
+        border-bottom-color: var(--neutral-300);
+    }
+    
+    table tbody tr td:last-child {
+        border-bottom: none;
+    }
+    
+    /* Add labels before each cell using data attributes */
+    table tbody tr td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+    
+    /* Special styling for avatar cell */
+    table tbody tr td:first-child {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        padding: var(--space-2) 0 var(--space-3) 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    table tbody tr td:first-child::before {
+        content: '';
+        display: none;
+    }
+    
+    table tbody tr td:first-child img {
+        width: 60px;
+        height: 60px;
+        border: 3px solid var(--border-color);
+    }
+    
+    /* Actions cell - make buttons stack vertically on very small screens */
+    table tbody tr td:last-child .actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        width: 100%;
+        grid-column: 1 / -1;
+    }
+    
+    table tbody tr td:last-child .actions a {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    /* Remove hover transform on mobile for better touch experience */
+    table tbody tr:hover {
+        transform: none;
+        background: var(--primary-bg);
+    }
+    
+    .dark-theme table tbody tr:hover {
+        background: rgba(139, 92, 246, 0.1);
     }
 }
 
@@ -2148,6 +2358,43 @@ tbody tr:nth-child(even):hover {
     th,
     td {
         padding: var(--space-2) var(--space-2);
+    }
+    
+    /* Improve mobile table layout for slightly larger screens */
+    table tbody tr td:last-child .actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    table tbody tr td:last-child .actions a {
+        width: auto;
+        min-width: 80px;
+        flex: 1;
+    }
+}
+
+/* Small-Medium Breakpoint: 640px - Start transitioning back to table */
+@media (min-width: 640px) and (max-width: 767px) {
+    /* Hybrid approach: keep card layout but make data labels inline */
+    table tbody tr td {
+        grid-template-columns: 100px 1fr;
+        font-size: 0.9rem;
+    }
+    
+    table tbody tr td::before {
+        font-size: 0.8rem;
+    }
+    
+    /* Make actions horizontal */
+    table tbody tr td:last-child .actions {
+        flex-direction: row;
+        gap: var(--space-2);
+    }
+    
+    table tbody tr td:last-child .actions a {
+        flex: 1;
+        min-width: 70px;
     }
 }
 
