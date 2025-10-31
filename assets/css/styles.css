@@ -2191,6 +2191,17 @@ tbody tr:nth-child(even):hover {
         width: 100%;
     }
     
+    /* Make action buttons stack vertically on mobile */
+    .actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .actions .btn {
+        width: 100%;
+        min-width: unset;
+    }
+    
     /* Convert table to card-based layout on mobile for better UX */   
     /* Make table container scrollable with better overflow handling */
     .table-container {
@@ -2311,6 +2322,67 @@ tbody tr:nth-child(even):hover {
     .dark-theme table tbody tr:hover {
         background: rgba(139, 92, 246, 0.1);
     }
+    
+    /* User Info Page - Mobile Optimization */
+    .user-info-layout {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-4);
+        margin-bottom: var(--space-4);
+    }
+    
+    .user-info-layout > div:first-child {
+        text-align: center;
+    }
+    
+    .user-info-layout .avatar-large {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .user-info-content {
+        width: 100%;
+    }
+    
+    /* User info table - different structure, needs special handling */
+    .user-info-content table thead {
+        display: table-header-group !important;
+    }
+    
+    .user-info-content table tbody tr {
+        display: table-row !important;
+        margin-bottom: 0 !important;
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    
+    .user-info-content table tbody tr td,
+    .user-info-content table tbody tr th {
+        display: table-cell !important;
+        grid-template-columns: unset !important;
+        padding: var(--space-3) var(--space-4) !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        text-align: left !important;
+    }
+    
+    .user-info-content table tbody tr th {
+        font-weight: 600;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        width: 40%;
+    }
+    
+    .user-info-content table tbody tr td::before {
+        content: none !important;
+        display: none !important;
+    }
+    
+    .user-info-content table tbody tr:hover {
+        transform: none !important;
+        background: var(--primary-bg) !important;
+    }
 }
 
 /* Small Devices: 480px and up (Landscape phones, small tablets) */
@@ -2395,6 +2467,17 @@ tbody tr:nth-child(even):hover {
     table tbody tr td:last-child .actions a {
         flex: 1;
         min-width: 70px;
+    }
+    
+    /* User info - better layout on larger phones */
+    .user-info-layout {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    
+    .user-info-layout .avatar-large {
+        width: 120px;
+        height: 120px;
     }
 }
 
