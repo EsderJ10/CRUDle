@@ -4,6 +4,7 @@
  */
 
 require_once getPath('config/config.php');
+require_once getPath('lib/core/exceptions.php');
 
 function getCSVRecords($filePath = null) {
     if ($filePath === null) {
@@ -16,15 +17,32 @@ function getCSVRecords($filePath = null) {
         return $records;
     }
     
-    $handle = fopen($filePath, 'r');
-    if ($handle !== FALSE) {
+    try {
+        $handle = @fopen($filePath, 'r');
+        if ($handle === false) {
+            throw new CSVException(
+                'Unable to open CSV file for reading: ' . $filePath,
+                'Error al acceder al archivo de datos.'
+            );
+        }
+        
         while (($data = fgetcsv($handle)) !== FALSE) {
             // Se comprueba que la fila tenga al menos 5 columnas (id, nombre, email, rol, fecha_alta)
             if (count($data) >= 5) {
                 $records[] = $data;
             }
         }
+        
         fclose($handle);
+    } catch (CSVException $e) {
+        throw $e;
+    } catch (Exception $e) {
+        throw new CSVException(
+            'CSV reading error: ' . $e->getMessage(),
+            'Error al leer el archivo de datos.',
+            0,
+            $e
+        );
     }
     
     return $records;
@@ -34,41 +52,93 @@ function writeCSVRecords($records, $filePath = null) {
         $filePath = getPath(DATA_FILE);
     }
     
-    // Ensure directory exists
-    $dir = dirname($filePath);
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
-    }
-    
-    $handle = fopen($filePath, 'w');
-    if ($handle !== FALSE) {
-        foreach ($records as $record) {
-            fputcsv($handle, $record);
+    try {
+        // Ensure directory exists
+        $dir = dirname($filePath);
+        if (!is_dir($dir)) {
+            if (!@mkdir($dir, 0755, true)) {
+                throw new CSVException(
+                    'Unable to create CSV directory: ' . $dir,
+                    'Error al crear el directorio de datos.'
+                );
+            }
         }
+        
+        $handle = @fopen($filePath, 'w');
+        if ($handle === FALSE) {
+            throw new CSVException(
+                'Unable to open CSV file for writing: ' . $filePath,
+                'Error al escribir en el archivo de datos.'
+            );
+        }
+        
+        foreach ($records as $record) {
+            if (fputcsv($handle, $record) === FALSE) {
+                fclose($handle);
+                throw new CSVException(
+                    'Error writing record to CSV file',
+                    'Error al guardar datos en el archivo.'
+                );
+            }
+        }
+        
         fclose($handle);
         return true;
+    } catch (CSVException $e) {
+        throw $e;
+    } catch (Exception $e) {
+        throw new CSVException(
+            'CSV writing error: ' . $e->getMessage(),
+            'Error al guardar el archivo de datos.',
+            0,
+            $e
+        );
     }
-    
-    return false;
 }
 function appendToCSV($record, $filePath = null) {
     if ($filePath === null) {
         $filePath = getPath(DATA_FILE);
     }
     
-    $dir = dirname($filePath);
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
-    }
-    
-    $handle = fopen($filePath, 'a');
-    if ($handle !== FALSE) {
-        $result = fputcsv($handle, $record);
+    try {
+        $dir = dirname($filePath);
+        if (!is_dir($dir)) {
+            if (!@mkdir($dir, 0755, true)) {
+                throw new CSVException(
+                    'Unable to create CSV directory: ' . $dir,
+                    'Error al crear el directorio de datos.'
+                );
+            }
+        }
+        
+        $handle = @fopen($filePath, 'a');
+        if ($handle === FALSE) {
+            throw new CSVException(
+                'Unable to open CSV file for appending: ' . $filePath,
+                'Error al acceder al archivo de datos.'
+            );
+        }
+        
+        if (fputcsv($handle, $record) === FALSE) {
+            fclose($handle);
+            throw new CSVException(
+                'Error appending record to CSV file',
+                'Error al guardar los datos.'
+            );
+        }
+        
         fclose($handle);
-        return $result !== FALSE;
+        return true;
+    } catch (CSVException $e) {
+        throw $e;
+    } catch (Exception $e) {
+        throw new CSVException(
+            'CSV append error: ' . $e->getMessage(),
+            'Error al guardar el archivo de datos.',
+            0,
+            $e
+        );
     }
-    
-    return false;
 }
 
 function findRecordById($id, $filePath = null) {
