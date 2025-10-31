@@ -703,16 +703,29 @@ body {
     background: none;
     border: none;
     color: var(--text-secondary);
-    font-size: 1rem;
-    padding: var(--space-2);
+    font-size: 1.25rem;
+    padding: var(--space-2) var(--space-3);
     border-radius: var(--radius);
     cursor: pointer;
     transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .mobile-toggle:hover {
     background: var(--bg-secondary);
     color: var(--primary);
+    transform: scale(1.05);
+}
+
+.mobile-toggle:active {
+    transform: scale(0.95);
+}
+
+.mobile-toggle i {
+    transition: all var(--transition);
 }
 
 .page-title {
@@ -2080,6 +2093,13 @@ tbody tr:nth-child(even):hover {
     .btn,
     .nav-link {
         border: 2px solid currentColor;
+    }
+}
+
+/* Mobile Devices: Below 768px - Hide sidebar toggle, show only mobile toggle */
+@media (max-width: 767px) {
+    .sidebar-toggle {
+        display: none !important;
     }
 }
 
