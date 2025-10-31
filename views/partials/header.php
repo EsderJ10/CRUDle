@@ -15,6 +15,7 @@
     <!-- JavaScript -->
     <script src="<?php echo getWebPath('assets/js/app.js'); ?>" defer></script>
     <script src="<?php echo getWebPath('assets/js/dashboard.js'); ?>" defer></script>
+    <script src="<?php echo getWebPath('assets/js/user-form.js'); ?>" defer></script>
 </head>
 <body class="dashboard-layout">
     <!-- Sidebar -->

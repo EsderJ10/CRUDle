@@ -21,10 +21,10 @@
 - [x] See how to handle that each single user_* is opening the file. Maybe a util??
 - [x] Handle file upload
 - [x] Remove sidebar-toggle in mobile devices and add the style to mobile-toggle
-- [ ] Check if smoother animations are working on other browsers/devices
+- [x] Check if smoother animations are working on other browsers/devices
 - [ ] Check why sometimes it creates an Array in editing. Case => edited an user without avatar, added one, and a new user with Array in each field is created (did not check if it was in the csv).
 - [ ] Generate documentation ??.
 - [ ] Format correctly the documents.
 - [ ] Check deprecated.
-- [ ] Style input type file.
+- [x] Style input type file.
 - [x] Add GitHub Icon in footer.
