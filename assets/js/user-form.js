@@ -232,6 +232,7 @@ const UserFormModule = {
         const avatarInput = document.getElementById('avatar');
         const removeWarning = document.getElementById('removeAvatarWarning');
         const currentAvatar = document.querySelector('.current-avatar img');
+        const customFileUpload = document.getElementById('customFileUpload');
         
         if (checkbox.checked) {
             // Si la opción de eliminar está marcada, desactiva la subida de archivos
@@ -239,6 +240,12 @@ const UserFormModule = {
             if (avatarInput) {
                 avatarInput.disabled = true;
                 avatarInput.value = ''; // Limpia cualquier archivo seleccionado
+            }
+            
+            // Deshabilita visualmente el área de upload
+            if (customFileUpload) {
+                customFileUpload.classList.add('disabled');
+                customFileUpload.style.pointerEvents = 'none';
             }
             
             if (removeWarning) {
@@ -253,6 +260,12 @@ const UserFormModule = {
             // Si la opción de eliminar no está marcada, habilita la subida de archivos
             if (avatarUploadSection) avatarUploadSection.style.opacity = '1';
             if (avatarInput) avatarInput.disabled = false;
+            
+            // Habilita visualmente el área de upload
+            if (customFileUpload) {
+                customFileUpload.classList.remove('disabled');
+                customFileUpload.style.pointerEvents = 'auto';
+            }
             
             if (removeWarning) {
                 removeWarning.style.display = 'none';
