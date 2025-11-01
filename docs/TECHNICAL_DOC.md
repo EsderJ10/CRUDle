@@ -44,8 +44,7 @@
 8. [Frontend Architecture](#8-frontend-architecture)
 9. [Performance & Optimization](#9-performance--optimization)
 10. [Security Considerations](#10-security-considerations)
-11. [Testing Strategies](#11-testing-strategies)
-12. [Deployment Guide](#12-deployment-guide)
+11. [Deployment Guide](#11-deployment-guide)
 
 </td>
 </tr>
@@ -498,6 +497,8 @@ $avatarUrl = getWebPath('assets/images/default-avatar.svg');
 $userAvatar = getWebUploadPath('avatars/user_5_john_avatar.jpg');
 // Result: /CRUDle/uploads/avatars/user_5_john_avatar.jpg
 ```
+
+</details>
 
 ---
 
@@ -1109,6 +1110,8 @@ validateEmail("user@");                     // ["El email no tiene un formato v�
 validateEmail(str_repeat("a", 151) . "@x.com"); // ["El email no puede tener más de 150 caracteres."]
 ```
 
+</details>
+
 ---
 
 <div align="center">
@@ -1441,7 +1444,11 @@ function getUserStatistics(): array {
 
 ---
 
+<div align="center">
+
 ## 5. Exception Hierarchy & Error Handling
+
+</div>
 
 ### 5.1 Exception Architecture (lib/core/exceptions.php)
 
@@ -1804,7 +1811,11 @@ function displayErrorPage($exception) {
 
 ---
 
+<div align="center">
+
 ## 6. Sanitization Layer
+
+</div>
 
 ### 6.1 Input Sanitization (lib/core/sanitization.php)
 
@@ -2222,6 +2233,8 @@ urlencode($user['id'])              // URL encode parameters
 onerror="this.src='...'"            // Fallback for broken images
 
 ```
+
+</details>
 
 ### 7.2 Message Rendering
 
@@ -2823,7 +2836,7 @@ $filename = 'user_' . $userId . '_' . $safeUserName . '_avatar.' . $extension;
 
 <div align="center">
 
-## 12. Deployment Guide
+## 11. Deployment Guide
 
 *Production deployment strategies, security hardening, and monitoring*
 
@@ -2831,7 +2844,7 @@ $filename = 'user_' . $userId . '_' . $safeUserName . '_avatar.' . $extension;
 
 ---
 
-### 12.1 Server Requirements
+### 11.1 Server Requirements
 
 <details>
 <summary><strong>View Complete Server Specifications</strong></summary>
@@ -2921,7 +2934,7 @@ Order Deny,Allow
 Deny from all
 ```
 
-### 12.3 Deployment Steps
+### 11.3 Deployment Steps
 
 **1. Upload Files:**
 ```bash
@@ -2972,7 +2985,7 @@ https://yourdomain.com/CRUDle/
 - [ ] No PHP errors in logs
 ```
 
-### 12.4 Backup Strategy
+### 11.4 Backup Strategy
 
 **Manual Backup:**
 ```bash
@@ -3274,7 +3287,7 @@ SOFTWARE.
 </p>
 
 <p align="center">
-<a href="#-crudle---technical-documentation">Back to Top ↑</a>
+<a href="#crudle---technical-documentation">Back to Top ↑</a>
 </p>
 
 <p align="center">
