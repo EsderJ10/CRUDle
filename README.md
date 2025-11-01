@@ -21,6 +21,7 @@ CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create
 - [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+- [Docker Setup](#docker-setup)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
@@ -76,32 +77,59 @@ CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create
 ### Backend
 - **PHP 8.1+** - Server-side scripting
 - **CSV** - Data storage format
+- **Apache** - Web server (containerized)
 
 ### Frontend
 - **HTML5** - Semantic markup
 - **CSS3** - Modern styling with CSS Grid and Flexbox
 - **Vanilla JavaScript** - No frameworks, pure ES6+
 
+### DevOps & Containerization
+- **Docker** - Container platform
+- **Docker Compose** - Multi-container orchestration
+
 ### Development
-- **Apache/XAMPP** - Local development server
+- **Apache/XAMPP** - Local development server (optional)
 - **Git** - Version control
 
 ---
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
-
+### Traditional Installation
 - **PHP** 8.1 or higher
 - **Apache** web server (or XAMPP/WAMP/MAMP)
 - **Git** (optional, for cloning)
 - A modern web browser (Chrome, Firefox, Safari, Edge)
 
+### Docker Installation
+- **Docker Desktop** - [Download here](https://www.docker.com/products/docker-desktop)
+- **Docker Compose** (included with Docker Desktop)
+- A modern web browser
+
 ---
 
 ## Installation
 
-### Option 1: Clone the Repository
+### Option 1: Docker (Recommended for quick start)
+
+```bash
+# Clone the repository
+git clone https://github.com/EsderJ10/CRUDle.git
+cd CRUDle
+
+# Copy environment configuration (optional)
+cp .env.example .env
+
+# Build and run with Docker Compose
+docker-compose up -d
+
+# Application is now available at http://localhost
+```
+
+**That's it!** No PHP, Apache, or configuration needed. All dependencies are containerized.
+
+### Option 2: Clone the Repository (Traditional)
 
 ```bash
 # Clone the repository
@@ -115,7 +143,7 @@ cd CRUDle
 # Linux/Mac: /opt/lampp/htdocs/CRUDle
 ```
 
-### Option 2: Download ZIP
+### Option 3: Download ZIP
 
 1. Download the [latest release](https://github.com/EsderJ10/CRUDle/releases)
 2. Extract to your web server's document root
@@ -123,7 +151,7 @@ cd CRUDle
 
 ### Setup Steps
 
-1. **Configure the Web Root**
+1. **Configure the Web Root** (Traditional Installation Only)
 
    Edit `config/paths.php` if your application is not in the root directory:
 
@@ -135,7 +163,7 @@ cd CRUDle
    define('WEB_ROOT', '');
    ```
 
-2. **Set Permissions**
+2. **Set Permissions** (Traditional Installation Only)
 
    Ensure the following directories are writable:
 
@@ -145,7 +173,7 @@ cd CRUDle
    chmod 755 logs/
    ```
 
-3. **Initialize Data File**
+3. **Initialize Data File** (Traditional Installation Only)
 
    The `data/usuarios.csv` file should already exist. If not, create it:
 
@@ -155,17 +183,66 @@ cd CRUDle
 
 4. **Start Your Server**
 
+   **Docker:**
    ```bash
-   # If using XAMPP, start Apache
+   docker-compose up -d
+   # Access at http://localhost
+   ```
+
+   **Traditional (XAMPP):**
+   ```bash
+   # Start Apache in XAMPP
    # Or use PHP's built-in server:
    php -S localhost:8000
    ```
 
 5. **Access the Application**
 
-   Open your browser and navigate to:
-   - `http://localhost/CRUDle/` (if using XAMPP)
-   - `http://localhost:8000/` (if using PHP server)
+   - **Docker:** `http://localhost`
+   - **XAMPP:** `http://localhost/CRUDle/`
+   - **PHP Server:** `http://localhost:8000/`
+
+---
+
+## Docker Setup
+
+### Quick Start with Docker
+
+**One-command setup:**
+
+```bash
+git clone https://github.com/EsderJ10/CRUDle.git
+cd CRUDle
+docker-compose up -d
+```
+
+Then access the app at **`http://localhost`**
+
+### Common Docker Commands
+
+```bash
+# View running containers
+docker-compose ps
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
+
+# Rebuild the image
+docker-compose up -d --build
+
+# Access container shell
+docker-compose exec web bash
+```
+
+### Docker Features
+
+- **No dependencies needed** - Everything is containerized  
+- **Easy deployment** - Push to Docker Hub or cloud platforms  
+- **Data persistence** - `data/`, `uploads/`, and `logs/` are preserved  
+- **Development friendly** - Hot reload on code changes  
 
 ---
 
