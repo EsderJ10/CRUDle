@@ -398,7 +398,7 @@ $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
 
 ## License
 
-This project is licensed under the **MIT License**.
+CRUDle is licensed under the **MIT License**.
 
 ```
 MIT License
@@ -509,7 +509,7 @@ If you find this project useful, please consider giving it a ⭐ on GitHub!
 
 <div align="center">
 
-**Built with ❤️ using PHP, HTML, CSS, and JavaScript**
+<strong>Made with ❤️ and ☕ by <a href="https://github.com/EsderJ10">José Antonio Cortés Ferre</a></strong>
 
 [Report Bug](https://github.com/EsderJ10/CRUDle/issues) · [Request Feature](https://github.com/EsderJ10/CRUDle/issues) · [Documentation](docs/TECHNICAL_DOC.md)
 
