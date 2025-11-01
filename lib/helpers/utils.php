@@ -4,7 +4,7 @@
  * Autor: José Antonio Cortés Ferre
  */
 
-require_once '../../config/paths.php';
+require_once __DIR__ . '/../../config/paths.php';
 
 require_once getPath('lib/helpers/enums.php');
 require_once getPath('lib/core/csv.php');
