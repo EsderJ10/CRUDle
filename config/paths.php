@@ -4,8 +4,14 @@
  * También se definen funciones de ayuda para obtener las rutas.
  */ 
 
-// Web root
-define('WEB_ROOT', '/CRUDle');
+// Detección del entorno
+if (getenv('APP_ENV') === 'development' || isset($_SERVER['APP_ENV'])) {
+    // Ejecución en Docker
+    define('WEB_ROOT', '');
+} else {
+    // Ejecución local (XAMPP, WAMP, etc.)
+    define('WEB_ROOT', '/CRUDle');
+}
 
 // Directorios
 define('BASE_PATH', __DIR__ . '/../');

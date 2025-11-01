@@ -13,6 +13,7 @@ require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
 require_once getPath('lib/core/exceptions.php');
 require_once getPath('config/config.php');
+require_once getPath('lib/helpers/utils.php');
 
 function getAllUsers() {
     try {
@@ -27,7 +28,7 @@ function getAllUsers() {
                     'email' => $record[2],
                     'rol' => $record[3],
                     'fecha_alta' => $record[4],
-                    'avatar' => $record[5] ?? null
+                    'avatar' => normalizeAvatarPath($record[5] ?? null)
                 ];
             }
         }
@@ -63,7 +64,7 @@ function getUserById($userId) {
                 'email' => $record[2],
                 'rol' => $record[3],
                 'fecha_alta' => $record[4],
-                'avatar' => $record[5] ?? null
+                'avatar' => normalizeAvatarPath($record[5] ?? null)
             ];
         }
         
@@ -248,7 +249,7 @@ function getUserStatistics() {
                     'email' => $record[2],
                     'rol' => $record[3],
                     'fecha_alta' => $record[4],
-                    'avatar' => $record[5] ?? null
+                    'avatar' => normalizeAvatarPath($record[5] ?? null)
                 ];
             }
         }
