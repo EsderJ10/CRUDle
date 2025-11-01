@@ -1,0 +1,32 @@
+# CRUDle Docker Ignore
+
+# Git and version control
+.git/
+.gitignore
+.github/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation and logs
+docs/
+ACTIVITY.md
+TODO.md
+TECHNICAL_DOC.md
+*.md
+!README.md
+
+# Development
+.env
+.env.local
+node_modules/
+vendor/
+
+# OS
+Thumbs.db
+.DS_Store
