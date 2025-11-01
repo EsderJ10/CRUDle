@@ -1,0 +1,401 @@
+[2025-10-31 22:05:44] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:09:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:09:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:09:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:09:58] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:03] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:39] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:39] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:10:43] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:11:24] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:11:25] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:12:52] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:03] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:15] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:22] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:33] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:13:43] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:15:23] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:16:21] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:18:07] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:18:17] [CRITICAL] Uncaught Exception
+Exception: ResourceNotFoundException - Test error in real app
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_info.php",
+    "line": 17,
+    "code": 404
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:24:48] [WARNING] Undefined array key "id"
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\views\\components\\forms\\user_form.php",
+    "line": 18,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:24:48] [WARNING] Undefined array key "fecha_alta"
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\views\\components\\forms\\user_form.php",
+    "line": 106,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-10-31 22:24:48] [WARNING] Undefined array key "fecha_alta"
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\views\\components\\forms\\user_form.php",
+    "line": 112,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:20:48] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:20:49] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:20:50] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:20:52] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:21:10] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:21:17] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:21:27] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:21:42] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:22:36] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:22:46] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:22:57] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:24:22] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:24:38] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:25:11] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:25:12] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-10-31 23:25:38] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function handleException()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "C:\\xampp\\htdocs\\CRUDle\\pages\\users\\user_edit.php",
+    "line": 27,
+    "code": 0
+}
+--------------------------------------------------------------------------------

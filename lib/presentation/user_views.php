@@ -29,18 +29,18 @@ function renderUserTable($users) {
     foreach ($users as $user) {
         $avatarSrc = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : getDefaultAvatar();
         $html .= '<tr>
-                    <td>
+                    <td data-label="Avatar">
                         <img src="' . $avatarSrc . '" 
                              alt="Avatar de ' . htmlspecialchars($user['nombre']) . '" 
                              class="avatar avatar-small"
                              onerror="this.src=\'' . getDefaultAvatar() . '\'">
                     </td>
-                    <td><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
-                    <td><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
-                    <td>' . htmlspecialchars($user['email']) . '</td>
-                    <td><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
-                    <td>' . htmlspecialchars($user['fecha_alta']) . '</td>
-                    <td>
+                    <td data-label="ID"><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
+                    <td data-label="Nombre"><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
+                    <td data-label="Email">' . htmlspecialchars($user['email']) . '</td>
+                    <td data-label="Rol"><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
+                    <td data-label="Fecha">' . htmlspecialchars($user['fecha_alta']) . '</td>
+                    <td data-label="Acciones">
                         <div class="actions">
                             <a href="user_info.php?id=' . urlencode($user['id']) . '" class="action-view">Ver</a>
                             <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="action-edit">Editar</a>
@@ -203,12 +203,12 @@ function renderRecentUsers($recentUsers) {
                  
     foreach ($recentUsers as $user) {
         $html .= '<tr>
-                    <td><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
-                    <td><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
-                    <td>' . htmlspecialchars($user['email']) . '</td>
-                    <td><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
-                    <td>' . htmlspecialchars($user['fecha_alta']) . '</td>
-                    <td><a href="pages/users/user_info.php?id=' . urlencode($user['id']) . '" class="action-view">Ver Detalles</a></td>
+                    <td data-label="ID"><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
+                    <td data-label="Nombre"><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
+                    <td data-label="Email">' . htmlspecialchars($user['email']) . '</td>
+                    <td data-label="Rol"><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
+                    <td data-label="Fecha">' . htmlspecialchars($user['fecha_alta']) . '</td>
+                    <td data-label="Acciones"><a href="pages/users/user_info.php?id=' . urlencode($user['id']) . '" class="action-view">Ver Detalles</a></td>
                   </tr>';
     }
     

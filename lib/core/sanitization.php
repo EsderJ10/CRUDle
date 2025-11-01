@@ -4,19 +4,28 @@
  */
 
 function sanitizeName($name) {
+    if (is_array($name) || is_object($name)) {
+        return '';
+    }
+    
     if (empty($name)) {
         return '';
     }
     
     $name = trim($name);
     $name = preg_replace('/\s+/', ' ', $name);
-    $name = filter_var($name, FILTER_SANITIZE_STRING);
+    // Reemplazado de FILTRO_SANITIZE_STRING (deprecated) por strip_tags
+    $name = strip_tags($name);
     $name = ucwords(strtolower($name));
     
     return $name;
 }
 
 function sanitizeEmail($email) {
+    if (is_array($email) || is_object($email)) {
+        return '';
+    }
+    
     if (empty($email)) {
         return '';
     }
@@ -28,6 +37,10 @@ function sanitizeEmail($email) {
 }
 
 function sanitizeRole($role) {
+    if (is_array($role) || is_object($role)) {
+        return '';
+    }
+    
     if (empty($role)) {
         return '';
     }

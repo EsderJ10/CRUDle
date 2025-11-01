@@ -25,8 +25,10 @@ define('PARTIALS_PATH', VIEWS_PATH . 'partials/');
 define('COMPONENTS_PATH', VIEWS_PATH . 'components/');
 define('FORMS_PATH', COMPONENTS_PATH . 'forms/');
 
-// Data
+// Data and logs
 define('DATA_PATH', BASE_PATH . 'data/');
+define('LOGS_PATH', BASE_PATH . 'logs/');
+define('ERROR_LOG_FILE', LOGS_PATH . 'error.log');
 
 // Assets 
 define('ASSETS_PATH', BASE_PATH . 'assets/');

@@ -14,7 +14,7 @@ $formData = $formData ?? [
     'rol' => ''
 ];
 
-$isEdit = isset($user) && !empty($user);
+$isEdit = isset($user) && !empty($user) && isset($user['id']);
 $action = $isEdit ? 'user_edit.php?id=' . urlencode($user['id']) : 'user_create.php';
 $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
 ?>
@@ -46,7 +46,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
             <select id="role" name="role" required>
                 <option value="">Seleccione un rol</option>
                 <?php 
-                $roles = ROLES;
+                $roles = getRoles();
                 $currentRole = $isEdit ? $user['rol'] : $formData['rol'];
                 foreach ($roles as $role): 
                 ?>
@@ -86,12 +86,29 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
                 </div>
             <?php endif; ?>
             <div class="avatar-upload-section" id="avatarUploadSection">
+                <label for="avatar" class="custom-file-upload" id="customFileUpload">
+                    <span class="file-icon fas fa-upload"></span>
+                    <span class="file-text">
+                        <span class="file-text-main" id="fileTextMain">Seleccionar archivo</span>
+                        <span class="file-text-sub" id="fileTextSub">o arrastra y suelta aquí</span>
+                    </span>
+                </label>
                 <input type="file" 
                        id="avatar" 
                        name="avatar" 
                        accept="image/jpeg,image/jpg,image/png,image/gif">
+                <div class="file-preview" id="filePreview">
+                    <img src="" alt="Preview" class="file-preview-image" id="filePreviewImage">
+                    <div class="file-preview-info">
+                        <div class="file-preview-name" id="filePreviewName"></div>
+                        <div class="file-preview-size" id="filePreviewSize"></div>
+                    </div>
+                    <button type="button" class="file-preview-remove" id="filePreviewRemove">
+                        <i class="fas fa-times"></i> Quitar
+                    </button>
+                </div>
                 <small class="text-neutral-600">
-                    Opcional. Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB.
+                    Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB.
                     <?php if ($isEdit): ?>Subir una nueva imagen reemplazará la actual.<?php endif; ?>
                 </small>
             </div>

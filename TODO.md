@@ -9,10 +9,10 @@
 - [x] Create user info (user_info)
 - [x] Edit user info (user_edit)
 - [x] Change how is saved the avatar in csv 
-- [ ] Check what is better: enums, classes or the constant defined in config.php
-- [ ] Fix media-queries
-- [ ] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
-- [ ] Add error handling and exceptions
+- [x] Check what is better: enums, classes or the constant defined in config.php
+- [x] Fix media-queries
+- [x] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
+- [x] Add error handling and exceptions
 
 ## LOW
 
@@ -20,8 +20,11 @@
 - [x] Validation to create and edit
 - [x] See how to handle that each single user_* is opening the file. Maybe a util??
 - [x] Handle file upload
-- [ ] Check TECHNICAL_DOC.md in order to get ideas for improvements.
-- [ ] Check why sometimes it creates an Array in editing. Case => edited an user without avatar, added one, and a new user with Array in each field is created (did not check if it was in the csv).
-- [ ] Generate documentation ??.
-- [ ] Format correctly the documents.
-
+- [x] Remove sidebar-toggle in mobile devices and add the style to mobile-toggle
+- [x] Check if smoother animations are working on other browsers/devices
+- [x] Check why sometimes it creates an Array in editing. Case => edited an user without avatar, added one, and a new user with Array in each field is created (did not check if it was in the csv). **RESOLVED: Was a false alarm - never actually occurred. Added defensive type checking in sanitization functions to prevent similar issues.**
+- [x] Generate documentation.
+- [x] Format correctly the documents.
+- [x] Check deprecated.
+- [x] Style input type file.
+- [x] Add GitHub Icon in footer.
