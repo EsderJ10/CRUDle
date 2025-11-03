@@ -3067,6 +3067,7 @@ crontab -e
 </td>
 </tr>
 </table>
+
 - [PSR Standards](https://www.php-fig.org/psr/)
 - [PHP 8.1 Documentation](https://www.php.net/releases/8.1/)
 
