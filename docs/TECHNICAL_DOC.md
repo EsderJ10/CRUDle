@@ -3068,14 +3068,6 @@ crontab -e
 </tr>
 </table>
 
-**Security:**
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [PHP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html)
-
-**Architecture:**
-- [Clean Architecture (Robert C. Martin)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Domain-Driven Design](https://martinfowler.com/bliki/DomainDrivenDesign.html)
-
 ---
 
 ## Appendix A: File Reference
