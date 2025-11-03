@@ -3068,9 +3068,6 @@ crontab -e
 </tr>
 </table>
 
-- [PSR Standards](https://www.php-fig.org/psr/)
-- [PHP 8.1 Documentation](https://www.php.net/releases/8.1/)
-
 **Security:**
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [PHP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html)
