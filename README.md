@@ -7,7 +7,7 @@ CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.1.0-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white" alt="PHP">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
 </p>
@@ -393,7 +393,7 @@ Edit `config/config.php`:
 ```php
 // Application
 define('APP_NAME', 'CRUD PHP Application');
-define('APP_VERSION', '1.0.0');
+define('APP_VERSION', '1.1.0');
 define('APP_ENV', 'development'); // 'production' for live
 
 // Data
@@ -486,9 +486,9 @@ SOFTWARE.
 
 ## Project Status
 
-**Current Version:** 1.0.0  
+**Current Version:** 1.1.0  
 **Status:** Active Development  
-**Last Updated:** November 1, 2025
+**Last Updated:** November 4, 2025
 
 ### Completed Features 
 
@@ -501,6 +501,9 @@ SOFTWARE.
 - Dashboard with statistics
 - Confirmation dialogs
 - Smooth animations
+- Docker and Docker Compose support
+- Environment-aware configuration
+- Avatar path normalization
 
 ### Planned Features 
 

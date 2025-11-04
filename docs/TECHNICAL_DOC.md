@@ -2,7 +2,7 @@
 
 # CRUDle - Technical Documentation
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg?style=for-the-badge)
 ![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)
 
@@ -400,7 +400,7 @@ CRUDle/
 <?php
 // Application metadata
 define('APP_NAME', 'CRUD PHP Application');
-define('APP_VERSION', '1.0.0');
+define('APP_VERSION', '1.1.0');
 define('APP_ENV', 'development'); // 'production' for live
 
 // Data layer configuration
@@ -2380,7 +2380,7 @@ const ModuleName = {
 const CrudApp = {
     config: {
         debug: false,      // Enable console logging
-        version: '1.0.0'   // App version
+        version: '1.1.0'   // App version
     },
     
     modules: {},  // Module registry
@@ -3281,6 +3281,6 @@ SOFTWARE.
 </p>
 
 <p align="center">
-<sub>Documentation Version 1.0.0 | Last Updated: November 1, 2025</sub>
+<sub>Documentation Version 1.1.0 | Last Updated: November 4, 2025</sub>
 </p>
 
