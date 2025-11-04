@@ -214,6 +214,7 @@ cd CRUDle
 ```bash
 git clone https://github.com/EsderJ10/CRUDle.git
 cd CRUDle
+docker-compose build
 docker-compose up -d
 ```
 
