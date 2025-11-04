@@ -21,7 +21,6 @@ CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create
 - [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Docker Setup](#docker-setup)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
@@ -123,12 +122,20 @@ cd CRUDle
 cp .env.example .env
 
 # Build and run with Docker Compose
+docker-compose build
 docker-compose up -d
 
 # Application is now available at http://localhost
 ```
 
 **That's it!** No PHP, Apache, or configuration needed. All dependencies are containerized.
+
+### Docker Features
+
+- **No dependencies needed** - Everything is containerized  
+- **Easy deployment** - Push to Docker Hub or cloud platforms  
+- **Data persistence** - `data/`, `uploads/`, and `logs/` are preserved  
+- **Development friendly** - Hot reload on code changes  
 
 ### Option 2: Clone the Repository (Traditional)
 
@@ -202,49 +209,6 @@ cd CRUDle
    - **Docker:** `http://localhost`
    - **XAMPP:** `http://localhost/CRUDle/`
    - **PHP Server:** `http://localhost:8000/`
-
----
-
-## Docker Setup
-
-### Quick Start with Docker
-
-**One-command setup:**
-
-```bash
-git clone https://github.com/EsderJ10/CRUDle.git
-cd CRUDle
-docker-compose build
-docker-compose up -d
-```
-
-Then access the app at **`http://localhost`**
-
-### Common Docker Commands
-
-```bash
-# View running containers
-docker-compose ps
-
-# View logs
-docker-compose logs -f
-
-# Stop the application
-docker-compose down
-
-# Rebuild the image
-docker-compose up -d --build
-
-# Access container shell
-docker-compose exec web bash
-```
-
-### Docker Features
-
-- **No dependencies needed** - Everything is containerized  
-- **Easy deployment** - Push to Docker Hub or cloud platforms  
-- **Data persistence** - `data/`, `uploads/`, and `logs/` are preserved  
-- **Development friendly** - Hot reload on code changes  
 
 ---
 
