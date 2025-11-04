@@ -28,6 +28,7 @@ CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create
 - [Configuration](#configuration)
 - [License](#license)
 - [Author](#author)
+- [FAQ](#faq)
 
 ---
 
@@ -538,19 +539,19 @@ SOFTWARE.
 
 ### Planned Features 
 
-- 🔄 Database migration (SQLite/MySQL)
-- 🔄 User authentication
-- 🔄 Role-based permissions
-- 🔄 Search and filter functionality
-- 🔄 Pagination for large datasets
-- 🔄 Export users (CSV, JSON)
-- 🔄 Bulk operations
-- 🔄 Activity logging
-- 🔄 Unit and integration tests
+- [ ] Database migration (SQLite/MySQL)
+- [ ] User authentication
+- [ ] Role-based permissions
+- [ ] Search and filter functionality
+- [ ] Pagination for large datasets
+- [ ] Export users (CSV, JSON)
+- [ ] Bulk operations
+- [ ] Activity logging
+- [ ] Unit and integration tests
 
 ---
 
-## ❓ FAQ
+## FAQ
 
 **Q: Can I use this in production?**  
 A: While the code is production-ready in terms of quality, CSV storage is not recommended for high-traffic applications. Consider migrating to a database for production use.
