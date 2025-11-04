@@ -121,11 +121,10 @@ cd CRUDle
 # Copy environment configuration (optional)
 cp .env.example .env
 
-# Build and run with Docker Compose
-docker-compose build
+# Start with Docker Compose (builds automatically on first run)
 docker-compose up -d
 
-# Application is now available at http://localhost
+# Application is now available at http://localhost:8080
 ```
 
 **That's it!** No PHP, Apache, or configuration needed. All dependencies are containerized.
@@ -194,7 +193,7 @@ cd CRUDle
    **Docker:**
    ```bash
    docker-compose up -d
-   # Access at http://localhost
+   # Access at http://localhost:8080
    ```
 
    **Traditional (XAMPP):**
@@ -206,7 +205,7 @@ cd CRUDle
 
 5. **Access the Application**
 
-   - **Docker:** `http://localhost`
+   - **Docker:** `http://localhost:8080`
    - **XAMPP:** `http://localhost/CRUDle/`
    - **PHP Server:** `http://localhost:8000/`
 

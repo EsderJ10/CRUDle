@@ -13,10 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Docker Support** - Full containerization with Docker and Docker Compose
   - `Dockerfile` with PHP 8.1, Apache, and GD extension
-  - `docker-compose.yml` for easy container orchestration
+  - `docker-compose.yml` for easy container orchestration with automatic build
   - `.dockerignore` to optimize Docker build context
   - `.env` and `.env.example` for environment configuration
   - Apache VirtualHost configuration in `docker/apache-config.conf`
+  - One-command deployment: `docker-compose up -d`
 
 - **Environment-Aware Path Configuration**
   - Auto-detection of execution environment (Docker vs local)
