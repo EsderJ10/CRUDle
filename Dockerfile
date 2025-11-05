@@ -30,8 +30,8 @@ RUN mkdir -p data logs uploads/avatars \
     && chmod -R 755 data logs uploads \
     && chown -R www-data:www-data /var/www/html
 
-# Expose port 80
-EXPOSE 80
+# Expose port 8080
+EXPOSE 8080
 
 # Start Apache
 CMD ["apache2-foreground"]
