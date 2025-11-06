@@ -530,7 +530,7 @@ A: All modern browsers (Chrome, Firefox, Safari, Edge) with ES6 support.
 A: Edit `assets/js/theme-init.js` and change the default theme setting, or simply toggle it in the UI—your preference is saved.
 
 **Q: Can I customize the roles?**  
-A: Yes, edit the role options in `lib/core/validation.php` and update the form in `views/components/forms/user_form.php`.
+A: Yes, you can edit the role options in `lib/helpers/enums.php`.
 
 **Q: How do I migrate to a database?**  
 A: Replace the CSV operations in `lib/core/csv.php` with database queries. The business logic layer can remain largely unchanged.
