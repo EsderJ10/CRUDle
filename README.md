@@ -1,6 +1,6 @@
 # CRUDle
 
-CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create, Read, Update, Delete) application for user management with a clean UI, dark theme support, and CSV-based data storage.
+CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create, Read, Update, Delete) application for user management with a clean UI, dark theme support, and database-based data storage.
 
 <p align="center">
   <img src="public/banner.png" alt="CRUDle Banner" width="100%">
