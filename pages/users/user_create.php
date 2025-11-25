@@ -6,13 +6,11 @@
  * Autor: José Antonio Cortés Ferre
  */
 
-require_once '../../config/paths.php'; 
+require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
-require_once getPath('lib/core/exceptions.php');
-require_once getPath('lib/core/error_handler.php');
 
 $pageTitle = "Crear Usuario";
 $pageHeader = "Crear Nuevo Usuario";
@@ -70,18 +68,9 @@ try {
                 }
             }
             
-            // Éxito - mostrar mensaje de confirmación
-            include getPath('views/partials/header.php');
-            echo renderMessage("* Usuario creado exitosamente.", 'success');
-            
-            echo '<div class="card text-center">
-                    <div class="actions">
-                        <a href="user_index.php" class="btn btn-primary">Volver a la Lista de Usuarios</a>
-                        <a href="user_create.php" class="btn btn-secondary">Crear Otro Usuario</a>
-                    </div>
-                  </div>';
-            
-            include getPath('views/partials/footer.php');
+            // Éxito - redirigir con mensaje flash
+            Session::setFlash('success', 'Usuario creado exitosamente.');
+            header('Location: user_index.php');
             exit;
             
         } catch (ValidationException $e) {
@@ -100,17 +89,11 @@ try {
             include getPath('views/partials/footer.php');
             exit;
             
-        } catch (CSVException $e) {
+        } catch (AppException $e) {
+            // Errores de aplicación conocidos (CSV, UserOperation, etc.)
+            Session::setFlash('error', $e->getUserMessage());
             include getPath('views/partials/header.php');
-            echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-            echo '<p><a href="user_create.php">Volver al formulario</a></p>';
-            include getPath('views/partials/footer.php');
-            exit;
-            
-        } catch (UserOperationException $e) {
-            include getPath('views/partials/header.php');
-            echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-            echo '<p><a href="user_create.php">Volver al formulario</a></p>';
+            include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
             exit;
         }
@@ -121,13 +104,8 @@ try {
         include getPath('views/partials/footer.php');
     }
 } catch (Exception $e) {
-    // Error no esperado
-    include getPath('views/partials/header.php');
-    echo renderMessage('ERROR: Ocurrió un error inesperado. ' . $e->getMessage(), 'error');
-    echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-    include getPath('views/partials/footer.php');
-    error_log('Unexpected error in user_create.php: ' . $e->getMessage());
-    exit;
+    // Error no esperado (500) - Dejar que el Global Handler lo maneje
+    throw $e;
 }
 ?>
 

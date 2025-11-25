@@ -6,25 +6,21 @@
  * Autor: José Antonio Cortés Ferre
  */
 
-require_once '../../config/paths.php';
-require_once getPath('config/config.php');
+require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
-require_once getPath('lib/core/exceptions.php');
-require_once getPath('lib/core/error_handler.php');
 
 $pageTitle = "Editar Usuario";
 $pageHeader = "Editar Usuario";
 
 try {
     // Validar que se proporcione un ID
+    // Validar que se proporcione un ID
     if (!isset($_GET['id'])) {
-        include getPath('views/partials/header.php');
-        echo renderMessage('ERROR: No se ha proporcionado un ID de usuario.', 'error');
-        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-        include getPath('views/partials/footer.php');
+        Session::setFlash('error', 'No se ha proporcionado un ID de usuario.');
+        header('Location: user_index.php');
         exit;
     }
     
@@ -41,16 +37,12 @@ try {
             );
         }
     } catch (ResourceNotFoundException $e) {
-        include getPath('views/partials/header.php');
-        echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-        include getPath('views/partials/footer.php');
+        Session::setFlash('error', $e->getUserMessage());
+        header('Location: user_index.php');
         exit;
     } catch (CSVException $e) {
-        include getPath('views/partials/header.php');
-        echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-        include getPath('views/partials/footer.php');
+        Session::setFlash('error', $e->getUserMessage());
+        header('Location: user_index.php');
         exit;
     }
     
@@ -132,7 +124,8 @@ try {
             $success = updateUser($userId, $formData);
             
             if ($success) {
-                header('Location: user_index.php?message=' . urlencode('Usuario con ID ' . $userId . ' actualizado exitosamente.'));
+                Session::setFlash('success', 'Usuario con ID ' . $userId . ' actualizado exitosamente.');
+                header('Location: user_index.php');
                 exit;
             } else {
                 throw new UserOperationException(
@@ -159,25 +152,10 @@ try {
             include getPath('views/partials/footer.php');
             exit;
             
-        } catch (ResourceNotFoundException $e) {
-            include getPath('views/partials/header.php');
-            echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-            echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-            include getPath('views/partials/footer.php');
-            exit;
-            
-        } catch (CSVException $e) {
-            include getPath('views/partials/header.php');
-            echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-            echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-            include getPath('views/partials/footer.php');
-            exit;
-            
-        } catch (UserOperationException $e) {
-            include getPath('views/partials/header.php');
-            echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-            echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-            include getPath('views/partials/footer.php');
+        } catch (AppException $e) {
+            // Errores de aplicación conocidos
+            Session::setFlash('error', $e->getUserMessage());
+            header('Location: user_index.php');
             exit;
         }
     }
@@ -190,12 +168,7 @@ try {
     }
     
 } catch (Exception $e) {
-    // Error no esperado
-    include getPath('views/partials/header.php');
-    echo renderMessage('ERROR: Ocurrió un error inesperado. ' . $e->getMessage(), 'error');
-    echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-    include getPath('views/partials/footer.php');
-    error_log('Unexpected error in user_edit.php: ' . $e->getMessage());
-    exit;
+    // Error no esperado - Dejar que el Global Handler lo maneje
+    throw $e;
 }
 ?>
