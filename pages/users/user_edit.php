@@ -40,14 +40,17 @@ try {
         Session::setFlash('error', $e->getUserMessage());
         header('Location: user_index.php');
         exit;
-    } catch (CSVException $e) {
-        Session::setFlash('error', $e->getUserMessage());
-        header('Location: user_index.php');
-        exit;
     }
     
     // Procesar formulario POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Validar CSRF
+        if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
+            Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+            header('Location: user_edit.php?id=' . $userId);
+            exit;
+        }
+
         try {
             // Sanitizar datos
             $formData = sanitizeUserData([

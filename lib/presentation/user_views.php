@@ -139,12 +139,13 @@ function renderEditForm($user) {
             </div>';
 }
 
-function renderDeleteConfirmation($userId) {
+function renderDeleteConfirmation($userId, $csrfToken) {
     return '<div class="card page-transition text-center">
                 <h2>Confirmar Eliminación</h2>
                 <p class="mb-6">¿Estás seguro de que deseas eliminar el usuario con ID <strong>#' . htmlspecialchars($userId) . '</strong>?</p>
                 <p class="mb-6 text-center warning-text">Esta acción no se puede deshacer.</p>
                 <form method="POST" action="./user_delete.php">
+                    <input type="hidden" name="csrf_token" value="' . htmlspecialchars($csrfToken) . '">
                     <input type="hidden" name="id" value="' . htmlspecialchars($userId) . '">
                     <div class="actions">
                         <button type="submit" name="confirm" value="yes" class="btn btn-danger">Sí, Eliminar</button>

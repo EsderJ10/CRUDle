@@ -8,10 +8,6 @@ define('APP_NAME', 'CRUD PHP Application');
 define('APP_VERSION', '1.1.0');
 define('APP_ENV', 'development'); // Cambiar a 'production' en entorno de producción
 
-// Data
-define('DATA_FILE', 'data/usuarios.csv');
-define('DATA_DIR', 'data/');
-
 // Database
 define('DB_HOST', getenv('DB_HOST') ?: 'db');
 define('DB_NAME', getenv('DB_NAME') ?: 'crudle');

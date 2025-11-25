@@ -17,6 +17,17 @@ $pageHeader = "Crear Nuevo Usuario";
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Validar CSRF
+        if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
+            Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+            // Recargar formulario
+            include getPath('views/partials/header.php');
+            $user = $_POST; // Repoblar
+            include getPath('views/components/forms/user_form.php');
+            include getPath('views/partials/footer.php');
+            exit;
+        }
+
         try {
             // Sanitizar datos de entrada
             $formData = sanitizeUserData([

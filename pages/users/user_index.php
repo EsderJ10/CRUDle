@@ -22,9 +22,6 @@ try {
     try {
         $users = getAllUsers();
         echo renderUserTable($users);
-    } catch (CSVException $e) {
-        echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-        echo '<p><a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a></p>';
     } catch (UserOperationException $e) {
         echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
         echo '<p><a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a></p>';

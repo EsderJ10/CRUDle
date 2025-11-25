@@ -7,15 +7,11 @@
 require_once __DIR__ . '/../../config/paths.php';
 
 require_once getPath('lib/helpers/enums.php');
-require_once getPath('lib/core/csv.php');
 
 function getRoles() {
     return array_map(fn($role) => $role->value, Role::cases());    
 }
 
-function getID() {
-    return getNextId();
-}
 
 /**
  * Normaliza la ruta del avatar para que funcione tanto en Docker como en XAMPP

@@ -37,20 +37,6 @@ class AppException extends Exception {
     }
 }
 
-/**
- * Excepción de operación CSV
- * Se lanza cuando hay errores al manipular archivos CSV
- */
-class CSVException extends AppException {
-    public function __construct(
-        $message = 'CSV operation failed',
-        $userMessage = 'Error al acceder al archivo de datos. Por favor, intente de nuevo.',
-        $code = 0,
-        Throwable $previous = null
-    ) {
-        parent::__construct($message, $userMessage, $code, $previous);
-    }
-}
 
 /**
  * Excepción de Validación

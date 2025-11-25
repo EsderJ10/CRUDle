@@ -18,14 +18,6 @@ try {
     try {
         $stats = getUserStatistics();
         $systemStatus = checkSystemStatus();
-    } catch (CSVException $e) {
-        // Se esperan errores al cargar estadísticas, usar valores por defecto
-        $stats = [
-            'userCount' => 0,
-            'usersByRole' => ['admin' => 0, 'editor' => 0, 'viewer' => 0],
-            'recentUsers' => []
-        ];
-        $systemStatus = checkSystemStatus();
     } catch (UserOperationException $e) {
         $stats = [
             'userCount' => 0,

@@ -18,12 +18,19 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         include getPath('views/partials/header.php');
         $userId = $_GET['id'];
-        echo renderDeleteConfirmation($userId);
+        echo renderDeleteConfirmation($userId, CSRF::generate());
         include getPath('views/partials/footer.php');
     }
     
     // Procesar eliminación en POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['confirm'])) {
+        // Validar CSRF
+        if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
+            Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+            header('Location: user_index.php');
+            exit;
+        }
+
         $userId = $_POST['id'];
         
         try {

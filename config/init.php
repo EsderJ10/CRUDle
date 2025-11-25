@@ -4,24 +4,22 @@
  * Carga todas las dependencias necesarias y configura el entorno.
  */
 
-// 1. Cargar rutas
+// Rutas
 require_once __DIR__ . '/paths.php';
 
-// 2. Cargar configuración
+// Configuración
 require_once getPath('config/config.php');
 
-// 3. Cargar núcleo
+// Núcleo
 require_once getPath('lib/core/exceptions.php');
 require_once getPath('lib/core/error_handler.php');
-require_once getPath('lib/core/Database.php');
 require_once getPath('lib/core/Session.php');
+require_once getPath('lib/core/CSRF.php');
 
-// 4. Cargar helpers comunes
+// Helpers
 require_once getPath('lib/helpers/utils.php');
 
-// 5. Inicializar sesión
+// Sesión
 Session::init();
-
-// 6. Configurar zona horaria (opcional, buena práctica)
-date_default_timezone_set('Europe/Madrid'); // Ajustar según necesidad
+date_default_timezone_set('Europe/Madrid');
 ?>
