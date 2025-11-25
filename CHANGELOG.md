@@ -7,6 +7,185 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2025-11-25
+
+### Added
+
+- **Database Support**
+  - Migrated from CSV to **MariaDB** for robust data storage.
+  - Implemented `Database` class with PDO and Singleton pattern.
+  - Automatic schema initialization via Docker (`docker/init.sql`).
+
+- **Security Hardening**
+  - **CSRF Protection**: Added `CSRF` class and token validation on all forms.
+  - **Secure Sessions**: Implemented `Session` class for session management and "Flash Messages".
+  - **Upload Hardening**: Added `.htaccess` to `uploads/` to prevent script execution.
+
+- **Error Handling**
+  - **Global Error Handler**: Centralized exception handling for unexpected errors.
+  - **User-Friendly Error Page**: Dedicated `error_page.php` for production environments.
+  - **Flash Messages**: Replaced URL-based error messages with session-based notifications.
+
+- **Architecture**
+  - **Centralized Initialization**: New `config/init.php` to bootstrap the application.
+  - **Refactored Controllers**: Simplified logic in all `user_*.php` files.
+
+### Changed
+
+- **Data Layer**: Completely replaced CSV file operations with SQL queries.
+- **Configuration**: Updated `config.php` to include database credentials and removed CSV paths.
+- **Dependencies**: Added `pdo_mysql` extension to Dockerfile.
+
+### Removed
+
+- **CSV Support**: Removed `lib/core/csv.php` and `CSVException`.
+- **Legacy Code**: Removed unused helper functions and redundant try-catch blocks.
+
+### Migration Guide (v1.1.0 → v1.2.0)
+
+> [!WARNING]
+> **Breaking Change**: This version migrates from CSV file storage to MariaDB database. Follow these steps carefully to preserve your data.
+
+#### For Docker Users (Recommended)
+
+1. **Backup Your Data**
+   ```bash
+   # Backup existing CSV data
+   cp data/usuarios.csv data/usuarios.csv.backup
+   
+   # Backup avatars
+   tar -czf avatars_backup.tar.gz uploads/avatars/
+   ```
+
+2. **Stop Existing Containers**
+   ```bash
+   docker-compose down
+   ```
+
+3. **Pull Latest Code**
+   ```bash
+   git pull origin main
+   # Or download the latest release
+   ```
+
+4. **Start New Stack**
+   ```bash
+   docker-compose up -d
+   ```
+   The database will be automatically initialized with the schema from `docker/init.sql`.
+
+5. **Migrate CSV Data to Database** (if you have existing users)
+   
+   Create a migration script `migrate_csv_to_db.php`:
+   ```php
+   <?php
+   require_once 'config/init.php';
+   
+   $csvFile = 'data/usuarios.csv.backup';
+   if (!file_exists($csvFile)) {
+       die("No CSV backup found. Skipping migration.\n");
+   }
+   
+   $db = Database::getInstance();
+   $handle = fopen($csvFile, 'r');
+   
+   // Skip header if exists
+   fgetcsv($handle);
+   
+   $count = 0;
+   while (($row = fgetcsv($handle)) !== false) {
+       if (count($row) >= 5) {
+           $sql = "INSERT INTO users (id, name, email, role, created_at, avatar_path) 
+                   VALUES (?, ?, ?, ?, ?, ?)";
+           $db->query($sql, [
+               $row[0], // id
+               $row[1], // name
+               $row[2], // email
+               $row[3], // role
+               $row[4], // created_at
+               $row[5] ?? null // avatar_path
+           ]);
+           $count++;
+       }
+   }
+   
+   fclose($handle);
+   echo "Migrated $count users successfully!\n";
+   ```
+   
+   Run the migration:
+   ```bash
+   docker exec -it crudle-web php migrate_csv_to_db.php
+   ```
+
+6. **Verify Migration**
+   - Access the application at `http://localhost:8080`
+   - Check that all users are displayed correctly
+   - Verify avatars are loading properly
+
+#### For Traditional Installation (XAMPP/Apache)
+
+1. **Backup Your Data** (same as Docker step 1)
+
+2. **Install MariaDB/MySQL**
+   - Ensure you have MariaDB or MySQL installed
+   - Create a database: `CREATE DATABASE crudle;`
+   - Create a user with appropriate permissions
+
+3. **Update Configuration**
+   ```bash
+   # Edit config/config.php
+   # Set your database credentials:
+   define('DB_HOST', 'localhost');
+   define('DB_NAME', 'crudle');
+   define('DB_USER', 'your_user');
+   define('DB_PASSWORD', 'your_password');
+   ```
+
+4. **Initialize Database Schema**
+   ```bash
+   mysql -u your_user -p crudle < docker/init.sql
+   ```
+
+5. **Migrate CSV Data** (if you have existing users)
+   - Use the same migration script from Docker step 5
+   - Run: `php migrate_csv_to_db.php`
+
+6. **Update Dependencies**
+   - Ensure `pdo_mysql` extension is enabled in `php.ini`
+   - Restart Apache
+
+#### Post-Migration Cleanup
+
+Once you've verified everything works:
+
+```bash
+# Optional: Remove old CSV file
+rm data/usuarios.csv
+
+# Keep the backup for safety
+# You can delete it later: rm data/usuarios.csv.backup
+```
+
+#### Rollback (if needed)
+
+If you encounter issues and need to rollback to v1.1.0:
+
+```bash
+# Stop containers
+docker-compose down
+
+# Checkout previous version
+git checkout v1.1.0
+
+# Restore CSV backup
+cp data/usuarios.csv.backup data/usuarios.csv
+
+# Start old version
+docker-compose up -d
+```
+
+
 ## [1.1.0] - 2025-11-04
 
 ### Added

@@ -2,7 +2,7 @@
 
 # CRUDle - Technical Documentation
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.2.0-blue.svg?style=for-the-badge)
 ![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)
 
@@ -79,7 +79,7 @@ CRUDle implements a **layered architecture** inspired by Domain-Driven Design (D
 | **PHP 8.1 Enums** | Type-safe role management | Requires PHP 8.1+ |
 | **Custom exception hierarchy** | Domain-specific error handling | More exception classes to maintain |
 | **Clear layer separation** | Maintainability, testability | More files, explicit dependencies |
-| **CSV data layer** | Zero database setup, portable | Limited scalability |
+| **MariaDB Database** | Robust, scalable data storage | Requires database server |
 
 ### 1.2 Layered Architecture
 
@@ -111,18 +111,18 @@ CRUDle implements a **layered architecture** inspired by Domain-Driven Design (D
                       ║ depends on
 ╔═════════════════════╩═══════════════════════════════════╗
 ║                Core Layer                               ║
-║  lib/core/{csv, validation, sanitization, exceptions}   ║
-║  • Data persistence operations                          ║
+║  lib/core/{Database, Session, CSRF, validation}         ║
+║  • Database abstraction (PDO)                           ║
+║  • Session & Flash messaging                            ║
+║  • CSRF protection                                      ║
 ║  • Input validation rules                               ║
-║  • Data transformation                                  ║
-║  • Exception definitions                                ║
 ╚═════════════════════╦═══════════════════════════════════╝
                       ║ operates on
 ╔═════════════════════╩═══════════════════════════════════╗
 ║               Data Storage Layer                        ║
-║  data/usuarios.csv, uploads/avatars/*                   ║
-║  • CSV file storage                                     ║
-║  • File system storage                                  ║
+║  MariaDB (Docker Service), uploads/avatars/*            ║
+║  • Relational data storage                              ║
+║  • File system storage (avatars)                        ║
 ╚═════════════════════════════════════════════════════════╝
 ```
 
@@ -142,10 +142,10 @@ graph LR
     A[User Request] --> B[GET /user_info.php?id=5]
     B --> C[Validate ID Parameter]
     C --> D[getUserById<br/>Business Layer]
-    D --> E[findRecordById<br/>Core/CSV Layer]
-    E --> F[getCSVRecords<br/>Read CSV File]
-    F --> G[Array Search<br/>Match ID]
-    G --> H[Return User<br/>or null]
+    D --> E[Database::query<br/>Core Layer]
+    E --> F[PDO::execute<br/>MariaDB]
+    F --> G[Return Row]
+    G --> H[Return User Array]
     H --> I[renderUserInfo<br/>Presentation Layer]
     I --> J[HTML Output<br/>Escaped Data]
     
@@ -165,11 +165,9 @@ user_info.php validates ID parameter
   ↓
 getUserById(5) [business layer]
   ↓
-findRecordById(5) [core/csv.php]
+Database::getInstance()->query(...) [core/Database.php]
   ↓
-getCSVRecords() reads entire CSV
-  ↓
-Array search for ID match
+SELECT * FROM users WHERE id = 5
   ↓
 Return user array or null
   ↓
@@ -183,24 +181,22 @@ HTML output with escaped data
 ```mermaid
 graph TB
     A[Form Submit] --> B[POST /user_create.php]
-    B --> C[Sanitize Input<br/>sanitizeUserData]
-    C --> D[Validate Input<br/>validateUserData]
-    D --> E{Validation<br/>Errors?}
-    E -->|Yes| F[Display Errors<br/>Return to Form]
-    E -->|No| G[createUser<br/>Business Layer]
-    G --> H[getNextId<br/>Core Layer]
-    H --> I[appendToCSV<br/>Write Record]
+    B --> C[Validate CSRF Token]
+    C --> D[Sanitize Input<br/>sanitizeUserData]
+    D --> E[Validate Input<br/>validateUserData]
+    E --> F{Validation<br/>Errors?}
+    F -->|Yes| G[Display Errors<br/>Return to Form]
+    F -->|No| H[createUser<br/>Business Layer]
+    H --> I[Database::query<br/>INSERT]
     I --> J{Avatar<br/>Uploaded?}
     J -->|Yes| K[handleAvatarUpload]
-    J -->|No| L[Redirect]
+    J -->|No| L[Set Flash Message]
     K --> L
-    L --> M[Success Message]
+    L --> M[Redirect to Index]
     
     style A fill:#e3f2fd
     style C fill:#fff9c4
-    style D fill:#ffe0b2
-    style F fill:#ffcdd2
-    style G fill:#fff3e0
+    style H fill:#fff3e0
     style I fill:#f3e5f5
     style M fill:#c8e6c9
 ```
@@ -210,21 +206,19 @@ graph TB
 // Example: Creating a new user
 POST /pages/users/user_create.php
   ↓
-Validate $_POST data (validateUserData)
+Validate CSRF Token
   ↓
-Sanitize input (sanitizeUserData)
+Validate & Sanitize $_POST data
   ↓
 createUser($sanitizedData) [business layer]
   ↓
-getNextId() [core/csv.php]
-  ↓
-appendToCSV($newRecord) [core/csv.php]
-  ↓
-fopen('a') → fputcsv() → fclose()
+Database::getInstance()->query("INSERT INTO users...")
   ↓
 if avatar: handleAvatarUpload()
   ↓
-Redirect with success message
+Session::setFlash('success', 'User created')
+  ↓
+Redirect to user_index.php
 ```
 
 ### 1.4 Dependency Management
@@ -241,7 +235,9 @@ Redirect with success message
 require_once __DIR__ . '/../../config/paths.php';
 
 // Then require dependencies in order
-require_once getPath('lib/core/csv.php');
+require_once getPath('lib/core/Database.php');
+require_once getPath('lib/core/Session.php');
+require_once getPath('lib/core/CSRF.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
 ```
@@ -283,10 +279,18 @@ CRUDle/
 │   │       └── Statistics: getUserStatistics()
 │   │
 │   ├── core/                  # Core infrastructure layer
-│   │   ├── csv.php
-│   │   │   ├── File operations: getCSVRecords(), writeCSVRecords()
-│   │   │   ├── CRUD primitives: findRecordById(), updateRecordById()
-│   │   │   └── Utilities: getNextId(), checkCSVStatus()
+│   │   ├── Database.php
+│   │   │   ├── Singleton connection: getInstance()
+│   │   │   ├── Query execution: query()
+│   │   │   └── ID generation: lastInsertId()
+│   │   │
+│   │   ├── Session.php
+│   │   │   ├── Session management: init()
+│   │   │   └── Flash messages: setFlash(), getFlashes()
+│   │   │
+│   │   ├── CSRF.php
+│   │   │   ├── Token generation: generate()
+│   │   │   └── Token validation: validate()
 │   │   │
 │   │   ├── validation.php
 │   │   │   ├── Field validators: validateName(), validateEmail()
@@ -403,9 +407,11 @@ define('APP_NAME', 'CRUD PHP Application');
 define('APP_VERSION', '1.1.0');
 define('APP_ENV', 'development'); // 'production' for live
 
-// Data layer configuration
-define('DATA_FILE', 'data/usuarios.csv');
-define('DATA_DIR', 'data/');
+// Database configuration
+define('DB_HOST', getenv('DB_HOST') ?: 'db');
+define('DB_NAME', getenv('DB_NAME') ?: 'crudle');
+define('DB_USER', getenv('DB_USER') ?: 'crudle_user');
+define('DB_PASSWORD', getenv('DB_PASSWORD') ?: 'crudle_password');
 
 // Date/time formatting
 define('DATE_FORMAT', 'Y-m-d H:i:s');          // Storage format
@@ -512,473 +518,36 @@ $userAvatar = getWebUploadPath('avatars/user_5_john_avatar.jpg');
 
 ---
 
-### 3.1 CSV Data Persistence Layer
+### 3.1 Database Abstraction Layer
+ 
+ > **File:** `lib/core/Database.php` | **Pattern:** Singleton
+ 
+ #### 3.1.1 Design Rationale
+ 
+ The `Database` class provides a lightweight wrapper around PHP's PDO (PHP Data Objects). It uses the **Singleton pattern** to ensure a single database connection is reused throughout the request lifecycle, reducing overhead.
+ 
+ #### 3.1.2 Core Functions
+ 
+ - `getInstance()`: Returns the singleton instance.
+ - `getConnection()`: Returns the raw PDO object.
+ - `query($sql, $params)`: Executes a prepared statement and returns the result.
+ - `lastInsertId()`: Returns the ID of the last inserted record (from PDO).
+ 
+ ### 3.2 Session Management
+ 
+ > **File:** `lib/core/Session.php`
+ 
+ Handles PHP session initialization and "Flash Messages" (temporary messages that persist for one redirect, useful for success/error notifications).
+ 
+ ### 3.3 Security Layer
+ 
+ > **File:** `lib/core/CSRF.php`
+ 
+ Implements Cross-Site Request Forgery (CSRF) protection by generating and validating unique tokens for every form submission.
 
-> **File:** `lib/core/csv.php` | **LOC:** ~250 | **Functions:** 8 core operations
+### 3.4 Input Validation (lib/core/validation.php)
 
-#### 3.1.1 Design Rationale
-
-**Why CSV over Database?**
-
-<table>
-<tr>
-<td width="50%" valign="top">
-
-##### Advantages
-
-- Zero configuration required
-- Human-readable format
-- Version control friendly
-- Fast for < 10,000 records
-- Portable (no database dump needed)
-- Easy debugging (open in Excel/text editor)
-
-</td>
-<td width="50%" valign="top">
-
-##### Trade-offs
-
-- No ACID guarantees
-- No built-in indexing
-- Linear search complexity O(n)
-- Concurrent access risks
-- Limited to tabular data
-- No referential integrity
-
-</td>
-</tr>
-</table>
-
-**Performance Characteristics:**
-
-| Operation | Time Complexity | Space Complexity | Notes |
-|-----------|----------------|------------------|-------|
-| Read all records | O(n) | O(n) | Loads entire file |
-| Find by ID | O(n) | O(n) | Linear search |
-| Append record | O(1) | O(1) | ✅ Optimal |
-| Update record | O(n) | O(n) | Read + filter + write |
-| Delete record | O(n) | O(n) | Read + filter + write |
-
-> **Performance Tip:** For read-heavy workloads with >1000 records, consider migrating to SQLite for better indexed searches.
-
-#### 3.1.2 Data Format Specification
-
-**CSV File Structure:**
-
-```csv
-ID,Nombre,Email,Rol,FechaAlta,Avatar
-1,Juan Pérez,juan@example.com,admin,"2025-10-15 14:32:10",/CRUDle/uploads/avatars/user_1_juan_avatar.jpg
-2,María García,maria@example.com,editor,"2025-10-16 09:15:42",
-3,Carlos López,carlos@example.com,viewer,"2025-10-17 18:22:55",/CRUDle/uploads/avatars/user_3_carlos_avatar.png
-```
-
-**Field Specifications:**
-
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| **ID** | Integer | Primary key, auto-increment | Unique user identifier |
-| **Nombre** | String | 2-100 chars, letters/spaces | User's full name |
-| **Email** | String | Max 150 chars, RFC 5322 valid | Email address (unique recommended) |
-| **Rol** | Enum | `admin`\|`editor`\|`viewer` | User role (PHP 8.1 enum) |
-| **FechaAlta** | DateTime | `Y-m-d H:i:s` format | Registration timestamp |
-| **Avatar** | String/Null | Optional, web path | Avatar URL or empty string |
-
----
-
-#### 3.1.3 Core Functions Reference
-
-##### `getCSVRecords()` - Read All Records
-
-<details>
-<summary><strong>View Complete Implementation</strong></summary>
-
-**Function Signature:**
-
-```php
-/**
- * Read all records from CSV file
- * 
- * @param string|null $filePath Path to CSV file (defaults to DATA_FILE)
- * @return array Array of arrays, each inner array is a CSV row
- * @throws CSVException If file cannot be read
- * 
- * ⏱️ Time Complexity: O(n) where n = number of records
- * 💾 Space Complexity: O(n) - entire file loaded into memory
- */
-function getCSVRecords($filePath = null): array {
-    if ($filePath === null) {
-        $filePath = getPath(DATA_FILE);
-    }
-    
-    $records = [];
-    
-    // Early return if file doesn't exist
-    if (!file_exists($filePath)) {
-        return $records;
-    }
-    
-    try {
-        $handle = @fopen($filePath, 'r');
-        if ($handle === false) {
-            throw new CSVException(
-                'Unable to open CSV file for reading: ' . $filePath,
-                'Error al acceder al archivo de datos.'
-            );
-        }
-        
-        // Read line by line using fgetcsv for proper CSV parsing
-        while (($data = fgetcsv($handle)) !== FALSE) {
-            // Validate row has minimum required columns (5)
-            // Columns: ID, Nombre, Email, Rol, FechaAlta (Avatar optional)
-            if (count($data) >= 5) {
-                $records[] = $data;
-            }
-        }
-        
-        fclose($handle);
-    } catch (CSVException $e) {
-        throw $e;
-    } catch (Exception $e) {
-        throw new CSVException(
-            'CSV reading error: ' . $e->getMessage(),
-            'Error al leer el archivo de datos.',
-            0,
-            $e
-        );
-    }
-    
-    return $records;
-}
-```
-
-**Usage:**
-```php
-try {
-    $users = getCSVRecords();
-    // $users = [
-    //   [1, "Juan", "juan@email.com", "admin", "2025-10-15 14:32:10", "/path/avatar.jpg"],
-    //   [2, "María", "maria@email.com", "editor", "2025-10-16 09:15:42", ""],
-    //   ...
-    // ]
-} catch (CSVException $e) {
-    // Handle read error
-    error_log($e->getTechnicalMessage());
-    die($e->getUserMessage());
-}
-```
-
-##### writeCSVRecords()
-```php
-/**
- * Write all records to CSV file (full rewrite)
- * 
- * @param array $records Array of arrays to write
- * @param string|null $filePath Path to CSV file
- * @return bool True on success
- * @throws CSVException If write fails
- * 
- * Time Complexity: O(n) where n = number of records
- * Space Complexity: O(1) - writes line by line
- * 
- * WARNING: This function truncates the file before writing.
- *          Ensure $records contains ALL data, not just changes.
- */
-function writeCSVRecords($records, $filePath = null): bool {
-    if ($filePath === null) {
-        $filePath = getPath(DATA_FILE);
-    }
-    
-    try {
-        // Ensure directory exists
-        $dir = dirname($filePath);
-        if (!is_dir($dir)) {
-            if (!@mkdir($dir, 0755, true)) {
-                throw new CSVException(
-                    'Unable to create CSV directory: ' . $dir,
-                    'Error al crear el directorio de datos.'
-                );
-            }
-        }
-        
-        // Open in write mode (truncates file)
-        $handle = @fopen($filePath, 'w');
-        if ($handle === FALSE) {
-            throw new CSVException(
-                'Unable to open CSV file for writing: ' . $filePath,
-                'Error al escribir en el archivo de datos.'
-            );
-        }
-        
-        // Write records line by line
-        foreach ($records as $record) {
-            if (fputcsv($handle, $record) === FALSE) {
-                fclose($handle);
-                throw new CSVException(
-                    'Error writing record to CSV file',
-                    'Error al guardar datos en el archivo.'
-                );
-            }
-        }
-        
-        fclose($handle);
-        return true;
-    } catch (CSVException $e) {
-        throw $e;
-    } catch (Exception $e) {
-        throw new CSVException(
-            'CSV writing error: ' . $e->getMessage(),
-            'Error al guardar el archivo de datos.',
-            0,
-            $e
-        );
-    }
-}
-```
-
-##### appendToCSV()
-```php
-/**
- * Append a single record to CSV file
- * 
- * @param array $record Single record to append
- * @param string|null $filePath Path to CSV file
- * @return bool True on success
- * @throws CSVException If append fails
- * 
- * Time Complexity: O(1) - single write operation
- * Space Complexity: O(1)
- * 
- * Preferred for CREATE operations (doesn't read entire file)
- */
-function appendToCSV($record, $filePath = null): bool {
-    if ($filePath === null) {
-        $filePath = getPath(DATA_FILE);
-    }
-    
-    try {
-        $dir = dirname($filePath);
-        if (!is_dir($dir)) {
-            if (!@mkdir($dir, 0755, true)) {
-                throw new CSVException(
-                    'Unable to create CSV directory: ' . $dir,
-                    'Error al crear el directorio de datos.'
-                );
-            }
-        }
-        
-        // Open in append mode (preserves existing content)
-        $handle = @fopen($filePath, 'a');
-        if ($handle === FALSE) {
-            throw new CSVException(
-                'Unable to open CSV file for appending: ' . $filePath,
-                'Error al acceder al archivo de datos.'
-            );
-        }
-        
-        if (fputcsv($handle, $record) === FALSE) {
-            fclose($handle);
-            throw new CSVException(
-                'Error appending record to CSV file',
-                'Error al guardar los datos.'
-            );
-        }
-        
-        fclose($handle);
-        return true;
-    } catch (CSVException $e) {
-        throw $e;
-    } catch (Exception $e) {
-        throw new CSVException(
-            'CSV append error: ' . $e->getMessage(),
-            'Error al guardar el archivo de datos.',
-            0,
-            $e
-        );
-    }
-}
-```
-
-##### findRecordById()
-```php
-/**
- * Find a single record by ID
- * 
- * @param mixed $id Record ID to search for
- * @param string|null $filePath Path to CSV file
- * @return array|null Record array or null if not found
- * 
- * Time Complexity: O(n) - linear search
- * Space Complexity: O(n) - loads all records
- * 
- * Optimization opportunity: Binary search if IDs are sorted
- */
-function findRecordById($id, $filePath = null): ?array {
-    $records = getCSVRecords($filePath);
-    
-    foreach ($records as $record) {
-        // Loose comparison (==) intentional: "5" == 5
-        if (isset($record[0]) && $record[0] == $id) {
-            return $record;
-        }
-    }
-    
-    return null;
-}
-```
-
-##### updateRecordById()
-```php
-/**
- * Update a record by ID
- * 
- * @param mixed $id Record ID to update
- * @param array $newRecord Complete new record data
- * @param string|null $filePath Path to CSV file
- * @return bool True if record was found and updated
- * 
- * Time Complexity: O(n) read + O(n) write = O(n)
- * Space Complexity: O(n)
- * 
- * Process:
- * 1. Read all records into memory
- * 2. Find and replace matching record
- * 3. Write entire file back
- */
-function updateRecordById($id, $newRecord, $filePath = null): bool {
-    $records = getCSVRecords($filePath);
-    $updated = false;
-    
-    // Linear search for record
-    for ($i = 0; $i < count($records); $i++) {
-        if (isset($records[$i][0]) && $records[$i][0] == $id) {
-            $records[$i] = $newRecord;
-            $updated = true;
-            break; // Stop after first match (IDs should be unique)
-        }
-    }
-    
-    // Only rewrite file if record was found
-    if ($updated) {
-        return writeCSVRecords($records, $filePath);
-    }
-    
-    return false;
-}
-```
-
-##### deleteRecordById()
-```php
-/**
- * Delete a record by ID
- * 
- * @param mixed $id Record ID to delete
- * @param string|null $filePath Path to CSV file
- * @return bool True if record was found and deleted
- * 
- * Time Complexity: O(n) read + O(n) filter + O(n) write = O(n)
- * Space Complexity: O(n)
- * 
- * Process:
- * 1. Read all records
- * 2. Filter out matching record
- * 3. Rewrite file with remaining records
- */
-function deleteRecordById($id, $filePath = null): bool {
-    $records = getCSVRecords($filePath);
-    $filteredRecords = [];
-    $found = false;
-    
-    foreach ($records as $record) {
-        if (isset($record[0]) && $record[0] == $id) {
-            $found = true;
-            continue; // Skip this record (delete it)
-        }
-        $filteredRecords[] = $record;
-    }
-    
-    if ($found) {
-        return writeCSVRecords($filteredRecords, $filePath);
-    }
-    
-    return false;
-}
-```
-
-##### getNextId()
-```php
-/**
- * Calculate next available ID (max + 1)
- * 
- * @param string|null $filePath Path to CSV file
- * @return int Next ID to use
- * 
- * Time Complexity: O(n)
- * Space Complexity: O(n)
- * 
- * Algorithm: Find maximum numeric ID and increment
- * Note: Not thread-safe for concurrent inserts
- */
-function getNextId($filePath = null): int {
-    $records = getCSVRecords($filePath);
-    $maxId = 0;
-    
-    foreach ($records as $record) {
-        if (isset($record[0]) && is_numeric($record[0])) {
-            $maxId = max($maxId, (int)$record[0]);
-        }
-    }
-    
-    return $maxId + 1;
-}
-```
-
-##### checkCSVStatus()
-```php
-/**
- * Get diagnostic information about CSV file
- * 
- * @param string|null $filePath Path to CSV file
- * @return array Status information
- * 
- * Useful for:
- * - Startup checks
- * - Dashboard status display
- * - Troubleshooting
- */
-function checkCSVStatus($filePath = null): array {
-    if ($filePath === null) {
-        $filePath = getPath(DATA_FILE);
-    }
-    
-    $dir = dirname($filePath);
-    
-    return [
-        'fileExists' => file_exists($filePath),
-        'dirExists' => is_dir($dir),
-        'dirWritable' => is_writable($dir),
-        'fileWritable' => file_exists($filePath) ? is_writable($filePath) : is_writable($dir),
-        'filePath' => $filePath
-    ];
-}
-```
-
-**Usage Example:**
-```php
-$status = checkCSVStatus();
-
-if (!$status['fileExists']) {
-    echo "WARNING: Data file does not exist. Creating...";
-    writeCSVRecords([]); // Create empty file
-}
-
-if (!$status['fileWritable']) {
-    die("ERROR: Cannot write to data file. Check permissions.");
-}
-```
-
-### 3.2 Input Validation (lib/core/validation.php)
-
-#### 3.2.1 Validation Philosophy
+#### 3.4.1 Validation Philosophy
 
 **Principles:**
 1. **Fail Fast**: Validate as early as possible (before business logic)
@@ -987,7 +556,7 @@ if (!$status['fileWritable']) {
 4. **User-Friendly Messages**: Errors in Spanish, technical details in logs
 5. **Exception-Based**: Use custom exceptions for structural errors
 
-#### 3.2.2 Field Validators
+#### 3.4.2 Field Validators
 
 ##### validateName()
 ```php
@@ -1149,12 +718,12 @@ deleteUserById($id)        // Delete user and cleanup
 // Layered try-catch hierarchy for granular error handling
 try {
     // Attempt operation
-} catch (CSVException $e) {
-    // Data layer specific errors
+} catch (PDOException $e) {
+    // Database layer specific errors
     logException($e);
     throw new UserOperationException(
-        'Data layer failed: ' . $e->getMessage(),
-        $e->getUserMessage()
+        'Database error: ' . $e->getMessage(),
+        'Error de base de datos.'
     );
 } catch (UserOperationException $e) {
     // Business logic errors
@@ -1276,11 +845,11 @@ function handleAvatarUpload($file, $userId = null, $userName = null): ?string {
 **Filename Generation Strategy:**
 ```php
 // Example filenames generated:
-// User ID: 5, Name: "Juan Pérez" → user_5_juan_perez_avatar.jpg
-// User ID: 12, Name: "María José!" → user_12_maria_jose_avatar.png
-// User ID: null, Name: "Test" → user_temp_test_avatar.gif
+// User ID: 5, Name: "John Doe" → user_5_john_doe_avatar.jpg
+// User ID: 12, Name: "Doe John!" → user_12_doe_john_avatar.png
+// User ID: 17, Name: "Test" → user_17_test_avatar.png
 
-// Why this pattern?
+// Why this pattern and not others?
 // 1. Predictable (easy to find/debug)
 // 2. Unique per user (ID prefix)
 // 3. Human-readable (includes username)
@@ -1386,51 +955,28 @@ function removeExistingUserAvatar($userId): bool {
  */
 function getUserStatistics(): array {
     try {
-        $userCount = 0;
+        $db = Database::getInstance();
+        
+        // Count total users
+        $stmt = $db->query("SELECT COUNT(*) as count FROM users");
+        $userCount = $stmt->fetch()['count'];
+        
+        // Count by role
+        $stmt = $db->query("SELECT rol, COUNT(*) as count FROM users GROUP BY rol");
         $usersByRole = ['admin' => 0, 'editor' => 0, 'viewer' => 0];
-        $recentUsers = [];
-        
-        $records = getCSVRecords();
-        
-        // Single pass through records
-        foreach ($records as $record) {
-            if (count($record) >= 5) {
-                $userCount++;
-                
-                // Count by role
-                $role = $record[3];
-                if (isset($usersByRole[$role])) {
-                    $usersByRole[$role]++;
-                }
-                
-                // Collect all users for recent list
-                $recentUsers[] = [
-                    'id' => $record[0],
-                    'nombre' => $record[1],
-                    'email' => $record[2],
-                    'rol' => $record[3],
-                    'fecha_alta' => $record[4],
-                    'avatar' => $record[5] ?? null
-                ];
-            }
+        while ($row = $stmt->fetch()) {
+            $usersByRole[$row['rol']] = $row['count'];
         }
         
-        // Sort by ID descending (higher ID = more recent)
-        // Assumption: IDs are auto-incrementing
-        usort($recentUsers, function($a, $b) {
-            return (int)$b['id'] - (int)$a['id'];
-        });
-        
-        // Take top 5
-        $recentUsers = array_slice($recentUsers, 0, 5);
+        // Get recent users
+        $stmt = $db->query("SELECT * FROM users ORDER BY id DESC LIMIT 5");
+        $recentUsers = $stmt->fetchAll();
         
         return [
             'userCount' => $userCount,
             'usersByRole' => $usersByRole,
             'recentUsers' => $recentUsers
         ];
-    } catch (CSVException $e) {
-        throw $e;
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error calculating statistics: ' . $e->getMessage(),
@@ -1459,7 +1005,6 @@ Exception (PHP built-in)
     │
     └─── AppException (Custom base)
             │
-            ├─── CSVException (Data layer)
             │
             ├─── ValidationException (Input validation)
             │
@@ -1998,48 +1543,11 @@ sanitizeOutput('Juan <script>alert("XSS")</script>');
 
 sanitizeOutput("O'Reilly");
 // Output: O&#039;Reilly
+```
+{{ ... }}
 
 sanitizeOutput('Price: $50 & "free" shipping');
 // Output: Price: $50 &amp; &quot;free&quot; shipping
-```
-
-##### sanitizeForCSV()
-```php
-/**
- * Sanitize value for CSV storage
- * 
- * Removes characters that could break CSV format
- * Note: fputcsv() handles most escaping, but this adds safety
- * 
- * @param string $value Value to sanitize
- * @return string CSV-safe string
- */
-function sanitizeForCSV($value): string {
-    if (empty($value)) {
-        return '';
-    }
-    
-    // Replace newlines with spaces (prevents row breaks)
-    $value = str_replace(["\r", "\n"], ' ', $value);
-    
-    // Trim excess whitespace
-    $value = trim($value);
-    
-    return $value;
-}
-```
-
-**CSV Injection Prevention:**
-```php
-// Dangerous input (CSV formula injection)
-$malicious = '=SUM(A1:A10)';
-$safe = sanitizeForCSV($malicious);
-// Result: '=SUM(A1:A10)' (still dangerous!)
-
-// Additional protection needed:
-if (preg_match('/^[=+\-@]/', $value)) {
-    $value = "'" . $value; // Prefix with single quote
-}
 ```
 
 ### 6.2 Sanitization vs Validation
@@ -2711,30 +2219,27 @@ initDragAndDrop(dropZone, input) {
 ## 9. Performance & Optimization
 
 ### 9.1 Current Performance Characteristics
-
-#### 9.1.1 CSV Operations Complexity
-
-| Operation | Time Complexity | Space Complexity | Notes |
-|-----------|----------------|------------------|-------|
-| Read all users | O(n) | O(n) | Linear scan |
-| Find by ID | O(n) | O(n) | No indexing |
-| Create user | O(1) | O(1) | Append only |
-| Update user | O(n) | O(n) | Read + write |
-| Delete user | O(n) | O(n) | Read + filter + write |
-| Get statistics | O(n log n) | O(n) | Includes sort |
-
-**Bottleneck Analysis:**
-```php
-// Current: Every read operation loads entire file
-function getUserById($id) {
-    $records = getCSVRecords();  // O(n) - reads ALL records
-    foreach ($records as $record) {
-        if ($record[0] == $id) {
-            return $record;  // Found, but already read everything
-        }
-    }
-}
-```
+ 
+ #### 9.1.1 Database Operations Complexity
+ 
+ | Operation | Time Complexity | Notes |
+ |-----------|----------------|-------|
+ | Read all users | O(n) | Pagination recommended for large datasets |
+ | Find by ID | O(1) | Indexed lookup (Primary Key) |
+ | Create user | O(1) | Direct INSERT |
+ | Update user | O(1) | Direct UPDATE by ID |
+ | Delete user | O(1) | Direct DELETE by ID |
+ | Get statistics | O(1) / O(n) | Aggregations (COUNT, GROUP BY) are optimized by DB engine |
+ 
+ **Optimization Analysis:**
+ ```sql
+ -- Current: Efficient Indexed Lookups
+ SELECT * FROM users WHERE id = 5; -- Uses Primary Key Index
+ 
+ -- Future Optimizations:
+ -- Add index on 'email' for faster login/search
+ CREATE INDEX idx_email ON users(email);
+ ```
 
 ---
 
@@ -2743,16 +2248,15 @@ function getUserById($id) {
 ### 10.1 Security Checklist
 
 #### 10.1.1 Input Security
-
-| Threat | Mitigation | Status |
-|--------|-----------|--------|
-| **XSS** | htmlspecialchars() on all output | Implemented |
-| **SQL Injection** | N/A (no database) | N/A |
-| **CSV Injection** | sanitizeForCSV() | Partial |
-| **Path Traversal** | getPath() validation | Implemented |
-| **File Upload** | Type/size validation, safe naming | Implemented |
-| **CSRF** | No protection | Missing |
-| **Session Hijacking** | No sessions | N/A |
+ 
+ | Threat | Mitigation | Status |
+ |--------|-----------|--------|
+ | **XSS** | htmlspecialchars() on all output | Implemented |
+ | **SQL Injection** | PDO Prepared Statements | Implemented |
+ | **Path Traversal** | getPath() validation | Implemented |
+ | **File Upload** | Type/size validation, safe naming | Implemented |
+ | **CSRF** | CSRF Token Validation | Implemented |
+ | **Session Hijacking** | Secure Session Config | Implemented |
 
 #### 10.1.2 XSS Prevention
 
@@ -3070,19 +2574,59 @@ crontab -e
 
 ---
 
-## Appendix A: File Reference
+---
+ 
+ <div align="center">
+ 
+ ## 14. Release Process
+ 
+ *Standardized procedure for versioning and deployment*
+ 
+ </div>
+ 
+ ---
+ 
+ ### 14.1 Steps to Release v1.2.0 (and future versions)
+ 
+ 1.  **Code Freeze & Testing**: Ensure all features are implemented and tests pass (manual verification + automated scripts).
+ 2.  **Update Version Numbers**:
+     *   `config/config.php`: Update `APP_VERSION`.
+     *   `README.md`: Update version badges and "Project Status".
+     *   `docs/TECHNICAL_DOC.md`: Update version badges.
+ 3.  **Update Documentation**:
+     *   `CHANGELOG.md`: Move "Unreleased" changes to the new version section.
+     *   Verify all new features are documented in `README.md` and `TECHNICAL_DOC.md`.
+ 4.  **Database Migration**:
+     *   Ensure `docker/init.sql` reflects the current schema.
+ 5.  **Git Tagging**:
+     *   Commit all changes: `git commit -m "Release v1.2.0"`
+     *   Create tag: `git tag v1.2.0`
+     *   Push: `git push origin main --tags`
+ 6.  **Release**:
+     *   Create a GitHub Release from the tag.
+     *   Attach a ZIP archive of the source code.
+ 
+ ---
+ 
+ ## Appendix A: File Reference
 
 ### Complete Function Index
 
-#### lib/core/csv.php
-- `getCSVRecords($filePath = null): array`
-- `writeCSVRecords($records, $filePath = null): bool`
-- `appendToCSV($record, $filePath = null): bool`
-- `findRecordById($id, $filePath = null): ?array`
-- `updateRecordById($id, $newRecord, $filePath = null): bool`
-- `deleteRecordById($id, $filePath = null): bool`
-- `getNextId($filePath = null): int`
-- `checkCSVStatus($filePath = null): array`
+#### lib/core/Database.php
+ - `getInstance(): Database`
+ - `getConnection(): PDO`
+ - `query($sql, $params = []): PDOStatement`
+ - `lastInsertId(): string`
+ 
+ #### lib/core/Session.php
+ - `init(): void`
+ - `setFlash($key, $message): void`
+ - `getFlashes(): array`
+ 
+ #### lib/core/CSRF.php
+ - `generate(): string`
+ - `validate($token): bool`
+ - `renderInput(): string`
 
 #### lib/core/validation.php
 - `validateName($name): array`
@@ -3098,7 +2642,6 @@ crontab -e
 - `sanitizeUserData($data): array`
 - `sanitizeOutput($value): string`
 - `sanitizeUrl($value): string`
-- `sanitizeForCSV($value): string`
 
 #### lib/business/user_operations.php
 - `getAllUsers(): array`
@@ -3137,18 +2680,32 @@ crontab -e
 ### Core Layer Functions
 
 <details>
-<summary><strong>lib/core/csv.php (8 functions)</strong></summary>
-
-- `getCSVRecords($filePath = null): array` - Read all records
-- `writeCSVRecords($records, $filePath = null): bool` - Write all records
-- `appendToCSV($record, $filePath = null): bool` - Append single record
-- `findRecordById($id, $filePath = null): ?array` - Find by ID
-- `updateRecordById($id, $newRecord, $filePath = null): bool` - Update by ID
-- `deleteRecordById($id, $filePath = null): bool` - Delete by ID
-- `getNextId($filePath = null): int` - Generate next ID
-- `checkCSVStatus($filePath = null): array` - Diagnostic info
-
-</details>
+ <summary><strong>lib/core/Database.php (4 functions)</strong></summary>
+ 
+ - `getInstance(): Database` - Singleton instance
+ - `getConnection(): PDO` - Raw PDO connection
+ - `query($sql, $params): PDOStatement` - Execute query
+ - `lastInsertId(): string` - Get last ID
+ 
+ </details>
+ 
+ <details>
+ <summary><strong>lib/core/Session.php (3 functions)</strong></summary>
+ 
+ - `init(): void` - Start session
+ - `setFlash($key, $message): void` - Set flash message
+ - `getFlashes(): array` - Get and clear messages
+ 
+ </details>
+ 
+ <details>
+ <summary><strong>lib/core/CSRF.php (3 functions)</strong></summary>
+ 
+ - `generate(): string` - Generate token
+ - `validate($token): bool` - Validate token
+ - `renderInput(): string` - Render hidden input
+ 
+ </details>
 
 <details>
 <summary><strong>lib/core/validation.php (4 functions)</strong></summary>
@@ -3170,7 +2727,7 @@ crontab -e
 - `sanitizeUserData($data): array` - Clean all user data
 - `sanitizeOutput($value): string` - Escape HTML output
 - `sanitizeUrl($value): string` - Clean URL
-- `sanitizeForCSV($value): string` - Escape CSV special chars
+- `sanitizeUrl($value): string` - Clean URL
 
 </details>
 
@@ -3281,6 +2838,6 @@ SOFTWARE.
 </p>
 
 <p align="center">
-<sub>Documentation Version 1.1.0 | Last Updated: November 4, 2025</sub>
+<sub>Documentation Version 1.2.0 | Last Updated: November 25, 2025</sub>
 </p>
 

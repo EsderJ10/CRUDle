@@ -5,7 +5,7 @@
 
 // Aplicación
 define('APP_NAME', 'CRUD PHP Application');
-define('APP_VERSION', '1.1.0');
+define('APP_VERSION', '1.2.0');
 define('APP_ENV', 'development'); // Cambiar a 'production' en entorno de producción
 
 // Database
