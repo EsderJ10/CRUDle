@@ -43,13 +43,7 @@ try {
         echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
         include getPath('views/partials/footer.php');
         exit;
-    } catch (CSVException $e) {
-        include getPath('views/partials/header.php');
-        echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
-        include getPath('views/partials/footer.php');
-        exit;
-    } catch (UserOperationException $e) {
+    }catch (UserOperationException $e) {
         include getPath('views/partials/header.php');
         echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
         echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';

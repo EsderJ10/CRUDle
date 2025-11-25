@@ -7,7 +7,7 @@ CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.0-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.2.0-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white" alt="PHP">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
 </p>
@@ -50,8 +50,9 @@ CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create
 ### Technical Features
 - **Input Validation** - Server-side validation for all user inputs
 - **XSS Protection** - Output escaping and sanitization
-- **CSV Storage** - Lightweight file-based data persistence
-- **Error Handling** - Comprehensive error management system
+- **Database Storage** - Robust MariaDB/MySQL data persistence
+- **Security Hardening** - CSRF protection and secure session management
+- **Error Handling** - Global error management with user-friendly feedback
 - **MVC-Inspired** - Clean separation of concerns
 - **Modular JavaScript** - Organized, reusable ES6 modules
 
@@ -76,8 +77,8 @@ CRUDle (CRUD + simpLE) is the prototype of a modern, responsive PHP CRUD (Create
 
 ### Backend
 - **PHP 8.1+** - Server-side scripting
-- **CSV** - Data storage format
-- **Apache** - Web server (containerized)
+- **MariaDB** - Relational database chosen for its simplicity and performance (and well, it's open source)
+- **Apache** - Web server (containerized via Docker)
 
 ### Frontend
 - **HTML5** - Semantic markup
@@ -154,7 +155,7 @@ cd CRUDle
 
 1. Download the [latest release](https://github.com/EsderJ10/CRUDle/releases)
 2. Extract to your web server's document root
-3. Rename the folder to `CRUDle` (optional)
+3. Rename the folder to `CRUDle` (optional but recommended)
 
 ### Setup Steps
 
@@ -180,13 +181,7 @@ cd CRUDle
    chmod 755 logs/
    ```
 
-3. **Initialize Data File** (Traditional Installation Only)
-
-   The `data/usuarios.csv` file should already exist. If not, create it:
-
-   ```csv
-   ID,Nombre,Email,Rol,FechaAlta,Avatar
-   ```
+   **Note:** The application now uses a database. The schema is automatically initialized by the Docker container using `docker/init.sql`.
 
 4. **Start Your Server**
 
@@ -290,7 +285,9 @@ CRUDle/
 │   ├── business/              # Business logic layer
 │   │   └── user_operations.php # User CRUD operations
 │   ├── core/                  # Core functionality
-│   │   ├── csv.php            # CSV file operations
+│   │   ├── Database.php       # Database connection (Singleton)
+│   │   ├── Session.php        # Session and Flash messages
+│   │   ├── CSRF.php           # CSRF protection
 │   │   ├── validation.php     # Input validation
 │   │   ├── sanitization.php   # Data sanitization
 │   │   ├── exceptions.php     # Custom exceptions
@@ -360,7 +357,7 @@ CRUDle follows an **MVC-inspired architecture** with clear separation of concern
                   │
 ┌─────────────────▼───────────────────────────┐
 │            Data Layer                       │
-│  (usuarios.csv, avatar files)               │
+│        (MariaDB Database)                   │
 └─────────────────────────────────────────────┘
 ```
 
@@ -395,8 +392,11 @@ define('APP_NAME', 'CRUD PHP Application');
 define('APP_VERSION', '1.1.0');
 define('APP_ENV', 'development'); // 'production' for live
 
-// Data
-define('DATA_FILE', 'data/usuarios.csv');
+// Database
+define('DB_HOST', getenv('DB_HOST') ?: 'db');
+define('DB_NAME', getenv('DB_NAME') ?: 'crudle');
+define('DB_USER', getenv('DB_USER') ?: 'crudle_user');
+define('DB_PASSWORD', getenv('DB_PASSWORD') ?: 'crudle_password');
 
 // Date Format
 define('DATE_FORMAT', 'Y-m-d H:i:s');
@@ -485,9 +485,9 @@ SOFTWARE.
 
 ## Project Status
 
-**Current Version:** 1.1.0  
-**Status:** Active Development  
-**Last Updated:** November 4, 2025
+**Current Version:** 1.2.0  
+**Status:** Stable Release  
+**Last Updated:** November 25, 2025
 
 ### Completed Features 
 
@@ -504,9 +504,17 @@ SOFTWARE.
 - Environment-aware configuration
 - Avatar path normalization
 
+### Version History
+
+| Version | Date       | Type    | Description                                   |
+| :------ | :--------- | :------ | :-------------------------------------------- |
+| 1.2.0   | 2025-11-25 | Minor   | Database migration & Security hardening       |
+| 1.1.0   | 2025-11-04 | Minor   | Docker support & path normalization           |
+| 1.0.0   | 2025-10-31 | Major   | Initial stable release                        |
+
 ### Planned Features 
 
-- [ ] Database migration (SQLite/MySQL)
+- [x] Database migration (MariaDB)
 - [ ] User authentication
 - [ ] Role-based permissions
 - [ ] Search and filter functionality
@@ -521,7 +529,7 @@ SOFTWARE.
 ## FAQ
 
 **Q: Can I use this in production?**  
-A: While the code is production-ready in terms of quality, CSV storage is not recommended for high-traffic applications. Consider migrating to a database for production use.
+A: I don't recommend using this in production. The project still in development and testing. Anyways, use at your own risk.
 
 **Q: What browsers are supported?**  
 A: All modern browsers (Chrome, Firefox, Safari, Edge) with ES6 support.
@@ -533,7 +541,7 @@ A: Edit `assets/js/theme-init.js` and change the default theme setting, or simpl
 A: Yes, you can edit the role options in `lib/helpers/enums.php`.
 
 **Q: How do I migrate to a database?**  
-A: Replace the CSV operations in `lib/core/csv.php` with database queries. The business logic layer can remain largely unchanged.
+A: v1.2.0 has already migrated to MariaDB. If you need to migrate legacy CSV data, a custom script would be required to parse the CSV and insert records into the database.
 
 **Q: Can I extend the user model with more fields?**  
 A: Yes, add the new fields to the CSV structure, update the validation and sanitization functions, and modify the user forms and views accordingly. The idea is to keep the architecture flexible for such extensions.

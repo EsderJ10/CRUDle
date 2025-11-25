@@ -89,3 +89,18 @@
         <!-- Page Content -->
         <main class="page-content">
             <div class="content-container">
+                <?php
+                // Mostrar mensajes flash
+                if (class_exists('Session') && Session::hasFlashes()) {
+                    $flashes = Session::getFlashes();
+                    foreach ($flashes as $flash) {
+                        echo renderMessage($flash['message'], $flash['type']);
+                    }
+                }
+                
+                // Mostrar mensajes de URL (compatibilidad hacia atrás)
+                if (isset($_GET['message'])) {
+                    $type = $_GET['type'] ?? 'success';
+                    echo renderMessage($_GET['message'], $type);
+                }
+                ?>

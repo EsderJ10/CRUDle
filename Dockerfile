@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-enable gd
+RUN docker-php-ext-install -j$(nproc) gd pdo pdo_mysql \
+    && docker-php-ext-enable gd pdo pdo_mysql
 
 # Enable Apache mod_rewrite for clean URLs
 RUN a2enmod rewrite

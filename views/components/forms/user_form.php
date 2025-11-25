@@ -21,6 +21,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
 
 <div class="card">
     <form method="post" action="<?php echo $action; ?>" class="page-transition" enctype="multipart/form-data">
+        <?php echo CSRF::renderInput(); ?>
         <div class="form-group">
             <label for="name">Nombre Completo</label>
             <input type="text" 

@@ -6,11 +6,9 @@
  * Autor: José Antonio Cortés Ferre
  */
 
-require_once '../../config/paths.php';
+require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
-require_once getPath('lib/core/exceptions.php');
-require_once getPath('lib/core/error_handler.php');
 
 $pageTitle = "Gestión de Usuarios";
 $pageHeader = "Lista de Usuarios";
@@ -18,21 +16,12 @@ $pageHeader = "Lista de Usuarios";
 try {
     include getPath('views/partials/header.php');
     
-    // Mostrar mensajes de éxito o error de operaciones anteriores
-    if (isset($_GET['message'])) {
-        echo renderMessage($_GET['message'], 'success');
-    }
-    if (isset($_GET['error'])) {
-        echo renderMessage($_GET['error'], 'error');
-    }
+    // Mensajes flash y de URL son manejados automáticamente en header.php
     
     // Obtener y mostrar usuarios
     try {
         $users = getAllUsers();
         echo renderUserTable($users);
-    } catch (CSVException $e) {
-        echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-        echo '<p><a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a></p>';
     } catch (UserOperationException $e) {
         echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
         echo '<p><a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a></p>';

@@ -14,6 +14,9 @@
 - [x] Check JS and how sidebbar is handled. Keep the state (collapsed or not)
 - [x] Add error handling and exceptions
 - [x] Check docker image (if it could be included or user must create it)
+- [ ] Migrate to database.
+- [ ] Add tests.
+- [ ] Implement authentication.
 
 ## LOW
 

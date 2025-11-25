@@ -89,15 +89,4 @@ function sanitizeOutput($value) {
 function sanitizeUrl($value) {
     return urlencode($value);
 }
-
-function sanitizeForCSV($value) {
-    if (empty($value)) {
-        return '';
-    }
-    // Se eliminan elementos que puedan romper el formato CSV
-    $value = str_replace(["\r", "\n"], ' ', $value);
-    $value = trim($value);
-    
-    return $value;
-}
 ?>

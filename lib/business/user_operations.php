@@ -2,13 +2,13 @@
 /*
  * Funciones para la lógica de negocio relacionada con los usuarios.
  * Maneja operaciones CRUD, validación y procesamiento de datos.
- * Utiliza funciones de los módulos core/csv, core/validation y core/sanitization.
+ * Utiliza la clase Database para la persistencia.
  * También maneja la carga y eliminación de avatares de usuario.
  * Autor: José Antonio Cortés Ferre
  */
 
 require_once __DIR__ . '/../../config/paths.php';
-require_once getPath('lib/core/csv.php');
+require_once getPath('lib/core/Database.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
 require_once getPath('lib/core/exceptions.php');
@@ -17,25 +17,18 @@ require_once getPath('lib/helpers/utils.php');
 
 function getAllUsers() {
     try {
-        $records = getCSVRecords();
-        $users = [];
+        $db = Database::getInstance();
+        $stmt = $db->query("SELECT * FROM users ORDER BY id DESC");
+        $users = $stmt->fetchAll();
         
-        foreach ($records as $record) {
-            if (count($record) >= 5) {
-                $users[] = [
-                    'id' => $record[0],
-                    'nombre' => $record[1],
-                    'email' => $record[2],
-                    'rol' => $record[3],
-                    'fecha_alta' => $record[4],
-                    'avatar' => normalizeAvatarPath($record[5] ?? null)
-                ];
-            }
+        foreach ($users as &$user) {
+            $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
+            $user['nombre'] = $user['name'];
+            $user['rol'] = $user['role'];
+            $user['fecha_alta'] = $user['created_at'];
         }
         
         return $users;
-    } catch (CSVException $e) {
-        throw $e;
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error fetching all users: ' . $e->getMessage(),
@@ -49,30 +42,22 @@ function getAllUsers() {
 function getUserById($userId) {
     try {
         if (empty($userId)) {
-            throw new InvalidStateException(
-                'Empty user ID provided',
-                'El ID de usuario no es válido.'
-            );
+            throw new InvalidStateException('Empty user ID provided', 'El ID de usuario no es válido.');
         }
         
-        $record = findRecordById($userId);
+        $db = Database::getInstance();
+        $stmt = $db->query("SELECT * FROM users WHERE id = ?", [$userId]);
+        $user = $stmt->fetch();
         
-        if ($record && count($record) >= 5) {
-            return [
-                'id' => $record[0],
-                'nombre' => $record[1],
-                'email' => $record[2],
-                'rol' => $record[3],
-                'fecha_alta' => $record[4],
-                'avatar' => normalizeAvatarPath($record[5] ?? null)
-            ];
+        if ($user) {
+            $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
+            $user['nombre'] = $user['name'];
+            $user['rol'] = $user['role'];
+            $user['fecha_alta'] = $user['created_at'];
+            return $user;
         }
         
         return null;
-    } catch (CSVException $e) {
-        throw $e;
-    } catch (InvalidStateException $e) {
-        throw $e;
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error fetching user by ID: ' . $e->getMessage(),
@@ -86,15 +71,12 @@ function getUserById($userId) {
 function createUser($formData) {
     try {
         if (empty($formData)) {
-            throw new InvalidStateException(
-                'Empty form data provided',
-                'Los datos del formulario no son válidos.'
-            );
+            throw new InvalidStateException('Empty form data provided', 'Los datos del formulario no son válidos.');
         }
         
-        $userId = getNextId();
-        $data = [
-            $userId,
+        $db = Database::getInstance();
+        $sql = "INSERT INTO users (name, email, role, created_at, avatar_path) VALUES (?, ?, ?, ?, ?)";
+        $params = [
             $formData['nombre'],
             $formData['email'],
             $formData['rol'],
@@ -102,21 +84,8 @@ function createUser($formData) {
             $formData['avatar'] ?? null
         ];
         
-        $success = appendToCSV($data);
-        if (!$success) {
-            throw new UserOperationException(
-                'Failed to create user record',
-                'Error al crear el usuario en la base de datos.'
-            );
-        }
-        
-        return $userId;
-    } catch (CSVException $e) {
-        throw $e;
-    } catch (UserOperationException $e) {
-        throw $e;
-    } catch (InvalidStateException $e) {
-        throw $e;
+        $db->query($sql, $params);
+        return $db->getConnection()->lastInsertId();
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error creating user: ' . $e->getMessage(),
@@ -129,58 +98,28 @@ function createUser($formData) {
 
 function updateUser($userId, $formData) {
     try {
-        if (empty($userId)) {
-            throw new InvalidStateException(
-                'Empty user ID provided',
-                'El ID de usuario no es válido.'
-            );
+        if (empty($userId) || empty($formData)) {
+            throw new InvalidStateException('Invalid data provided', 'Datos inválidos.');
         }
         
-        if (empty($formData)) {
-            throw new InvalidStateException(
-                'Empty form data provided',
-                'Los datos del formulario no son válidos.'
-            );
+        $db = Database::getInstance();
+        
+        $stmt = $db->query("SELECT id FROM users WHERE id = ?", [$userId]);
+        if (!$stmt->fetch()) {
+            throw new ResourceNotFoundException('User not found: ' . $userId, 'El usuario no existe.');
         }
         
-        // Preservación de fecha_alta debido a que no se puede modificar
-        $currentUser = getUserById($userId);
-        
-        if (!$currentUser) {
-            throw new ResourceNotFoundException(
-                'User not found: ' . $userId,
-                'El usuario no existe.'
-            );
-        }
-        
-        $fechaAlta = $formData['fecha_alta'] ?? $currentUser['fecha_alta'];
-        
-        $newRecord = [
-            $userId,
+        $sql = "UPDATE users SET name = ?, email = ?, role = ?, avatar_path = ? WHERE id = ?";
+        $params = [
             $formData['nombre'],
             $formData['email'],
             $formData['rol'],
-            $fechaAlta,
-            $formData['avatar'] ?? null
+            $formData['avatar'] ?? null,
+            $userId
         ];
         
-        $success = updateRecordById($userId, $newRecord);
-        if (!$success) {
-            throw new UserOperationException(
-                'Failed to update user record',
-                'Error al actualizar el usuario.'
-            );
-        }
-        
+        $db->query($sql, $params);
         return true;
-    } catch (ResourceNotFoundException $e) {
-        throw $e;
-    } catch (CSVException $e) {
-        throw $e;
-    } catch (UserOperationException $e) {
-        throw $e;
-    } catch (InvalidStateException $e) {
-        throw $e;
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error updating user: ' . $e->getMessage(),
@@ -194,29 +133,13 @@ function updateUser($userId, $formData) {
 function deleteUserById($userId) {
     try {
         if (empty($userId)) {
-            throw new InvalidStateException(
-                'Empty user ID provided',
-                'El ID de usuario no es válido.'
-            );
+            throw new InvalidStateException('Empty user ID provided', 'El ID de usuario no es válido.');
         }
         
-        $success = deleteRecordById($userId);
-        if (!$success) {
-            throw new UserOperationException(
-                'Failed to delete user record: ' . $userId,
-                'Error al eliminar el usuario.'
-            );
-        }
+        $db = Database::getInstance();
+        $db->query("DELETE FROM users WHERE id = ?", [$userId]);
         
         return true;
-    } catch (ResourceNotFoundException $e) {
-        throw $e;
-    } catch (CSVException $e) {
-        throw $e;
-    } catch (UserOperationException $e) {
-        throw $e;
-    } catch (InvalidStateException $e) {
-        throw $e;
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error deleting user: ' . $e->getMessage(),
@@ -229,44 +152,32 @@ function deleteUserById($userId) {
 
 function getUserStatistics() {
     try {
-        $userCount = 0;
+        $db = Database::getInstance();
+        
+        $stmt = $db->query("SELECT COUNT(*) as count FROM users");
+        $userCount = $stmt->fetch()['count'];
+        
+        $stmt = $db->query("SELECT role, COUNT(*) as count FROM users GROUP BY role");
+        $roles = $stmt->fetchAll();
         $usersByRole = ['admin' => 0, 'editor' => 0, 'viewer' => 0];
-        $recentUsers = [];
-        
-        $records = getCSVRecords();
-        
-        foreach ($records as $record) {
-            if (count($record) >= 5) {
-                $userCount++;
-                $role = $record[3];
-                if (isset($usersByRole[$role])) {
-                    $usersByRole[$role]++;
-                }
-                
-                $recentUsers[] = [
-                    'id' => $record[0],
-                    'nombre' => $record[1],
-                    'email' => $record[2],
-                    'rol' => $record[3],
-                    'fecha_alta' => $record[4],
-                    'avatar' => normalizeAvatarPath($record[5] ?? null)
-                ];
-            }
+        foreach ($roles as $row) {
+            $usersByRole[$row['role']] = $row['count'];
         }
         
-        // Se asume que un ID más alto = más reciente
-        usort($recentUsers, function($a, $b) {
-            return (int)$b['id'] - (int)$a['id'];
-        });
-        $recentUsers = array_slice($recentUsers, 0, 5); // Top 5 usuarios más recientes
+        $stmt = $db->query("SELECT * FROM users ORDER BY id DESC LIMIT 5");
+        $recentUsers = $stmt->fetchAll();
+        foreach ($recentUsers as &$user) {
+            $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
+            $user['nombre'] = $user['name'];
+            $user['rol'] = $user['role'];
+            $user['fecha_alta'] = $user['created_at'];
+        }
         
         return [
             'userCount' => $userCount,
             'usersByRole' => $usersByRole,
             'recentUsers' => $recentUsers
         ];
-    } catch (CSVException $e) {
-        throw $e;
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error calculating statistics: ' . $e->getMessage(),
@@ -439,6 +350,11 @@ function getDefaultAvatar() {
 }
 
 function checkSystemStatus() {
-    return checkCSVStatus();
+    try {
+        Database::getInstance();
+        return ['status' => 'OK', 'message' => 'Database connection successful'];
+    } catch (Exception $e) {
+        return ['status' => 'ERROR', 'message' => 'Database connection failed'];
+    }
 }
 ?>

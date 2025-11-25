@@ -14,7 +14,27 @@ services:
     networks:
       - crudle-network
     restart: unless-stopped
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:latest
+    container_name: crudle-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-crudle}
+      MYSQL_USER: ${DB_USER:-crudle_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-crudle_password}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - crudle-network
+    restart: unless-stopped
 
 networks:
   crudle-network:
     driver: bridge
+
+volumes:
+  db_data: 

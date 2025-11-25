@@ -6,11 +6,9 @@
  * Autor: José Antonio Cortés Ferre
  */
 
-require_once 'config/paths.php';
+require_once 'config/init.php';
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
-require_once getPath('lib/core/exceptions.php');
-require_once getPath('lib/core/error_handler.php');
 
 $pageTitle = "Dashboard - CRUDle";
 $pageHeader = "Dashboard";
@@ -19,14 +17,6 @@ $isInLibFolder = false;
 try {
     try {
         $stats = getUserStatistics();
-        $systemStatus = checkSystemStatus();
-    } catch (CSVException $e) {
-        // Se esperan errores al cargar estadísticas, usar valores por defecto
-        $stats = [
-            'userCount' => 0,
-            'usersByRole' => ['admin' => 0, 'editor' => 0, 'viewer' => 0],
-            'recentUsers' => []
-        ];
         $systemStatus = checkSystemStatus();
     } catch (UserOperationException $e) {
         $stats = [
