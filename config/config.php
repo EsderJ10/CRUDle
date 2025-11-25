@@ -12,6 +12,12 @@ define('APP_ENV', 'development'); // Cambiar a 'production' en entorno de produc
 define('DATA_FILE', 'data/usuarios.csv');
 define('DATA_DIR', 'data/');
 
+// Database
+define('DB_HOST', getenv('DB_HOST') ?: 'db');
+define('DB_NAME', getenv('DB_NAME') ?: 'crudle');
+define('DB_USER', getenv('DB_USER') ?: 'crudle_user');
+define('DB_PASSWORD', getenv('DB_PASSWORD') ?: 'crudle_password');
+
 // Formato de fecha
 define('DATE_FORMAT', 'Y-m-d H:i:s');
 define('DISPLAY_DATE_FORMAT', 'd/m/Y H:i');
