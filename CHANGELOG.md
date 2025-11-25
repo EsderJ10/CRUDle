@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Migration Guide (v1.1.0 → v1.2.0)
 
 > [!WARNING]
-> **Breaking Change**: This version migrates from CSV file storage to MariaDB database. Is recommended to follow these steps carefully to preserve your data.
+> **Breaking Change**: This version migrates from CSV file storage to MariaDB database. Follow these steps carefully to preserve your data.
 
 #### For Docker Users (Recommended)
 
@@ -76,7 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 5. **Migrate CSV Data to Database** (if you have existing users)
    
-   Create a migration script `migrate_csv_to_db.php`. An example:
+   Create a migration script `migrate_csv_to_db.php`:
    ```php
    <?php
    require_once 'config/init.php';
