@@ -75,13 +75,14 @@ function createUser($formData) {
         }
         
         $db = Database::getInstance();
-        $sql = "INSERT INTO users (name, email, role, created_at, avatar_path) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (name, email, role, created_at, avatar_path, password) VALUES (?, ?, ?, ?, ?, ?)";
         $params = [
             $formData['nombre'],
             $formData['email'],
             $formData['rol'],
             date(DATE_FORMAT),
-            $formData['avatar'] ?? null
+            $formData['avatar'] ?? null,
+            password_hash($formData['password'], PASSWORD_DEFAULT)
         ];
         
         $db->query($sql, $params);
@@ -109,14 +110,21 @@ function updateUser($userId, $formData) {
             throw new ResourceNotFoundException('User not found: ' . $userId, 'El usuario no existe.');
         }
         
-        $sql = "UPDATE users SET name = ?, email = ?, role = ?, avatar_path = ? WHERE id = ?";
+        $sql = "UPDATE users SET name = ?, email = ?, role = ?, avatar_path = ?";
         $params = [
             $formData['nombre'],
             $formData['email'],
             $formData['rol'],
-            $formData['avatar'] ?? null,
-            $userId
+            $formData['avatar'] ?? null
         ];
+
+        if (!empty($formData['password'])) {
+            $sql .= ", password = ?";
+            $params[] = password_hash($formData['password'], PASSWORD_DEFAULT);
+        }
+
+        $sql .= " WHERE id = ?";
+        $params[] = $userId;
         
         $db->query($sql, $params);
         return true;

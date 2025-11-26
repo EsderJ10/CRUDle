@@ -8,9 +8,12 @@
 
 require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
+require_once getPath('lib/business/auth_operations.php');
 require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
+
+requireLogin();
 
 $pageTitle = "Editar Usuario";
 $pageHeader = "Editar Usuario";

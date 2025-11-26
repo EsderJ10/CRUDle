@@ -8,7 +8,10 @@
 
 require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
+require_once getPath('lib/business/auth_operations.php');
 require_once getPath('lib/presentation/user_views.php');
+
+requireLogin();
 
 $pageTitle = "Gestión de Usuarios";
 $pageHeader = "Lista de Usuarios";

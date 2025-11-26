@@ -53,15 +53,28 @@
             </ul>
             
             <div class="sidebar-footer">
+                <?php if (isset($_SESSION['user_id'])): ?>
                 <div class="user-profile">
                     <div class="profile-avatar">
-                        <i class="fas fa-user-circle"></i>
+                        <?php if (isset($_SESSION['user_avatar']) && $_SESSION['user_avatar']): ?>
+                            <img src="<?php echo htmlspecialchars($_SESSION['user_avatar']); ?>" alt="Avatar">
+                        <?php else: ?>
+                            <i class="fas fa-user-circle"></i>
+                        <?php endif; ?>
                     </div>
                     <div class="profile-info">
-                        <span class="profile-name">Admin</span>
-                        <span class="profile-role">Administrador</span>
+                        <span class="profile-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuario'); ?></span>
+                        <span class="profile-role"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Rol'); ?></span>
                     </div>
+                    <a href="<?php echo getWebPath('pages/auth/logout.php'); ?>" class="btn-logout" title="Cerrar Sesión" style="margin-left: auto; color: var(--text-secondary);">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
                 </div>
+                <?php else: ?>
+                <div class="user-profile justify-content-center">
+                    <a href="<?php echo getWebPath('pages/auth/login.php'); ?>" class="btn btn-primary btn-sm w-100">Iniciar Sesión</a>
+                </div>
+                <?php endif; ?>
             </div>
         </nav>
     </aside>

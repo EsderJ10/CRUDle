@@ -1,0 +1,264 @@
+[2025-11-26 21:31:16] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:16] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:18] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:18] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:19] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:19] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:21] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:21] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:22] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:22] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:31:24] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:34:28] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:35:00] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:35:45] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:36:29] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:36:29] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:39:42] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:40:37] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:40:44] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:40:48] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:41:21] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:41:26] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:41:29] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-26 21:41:32] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function renderMessage()
+Stack Trace:
+#0 /var/www/html/pages/auth/login.php(34): include()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/partials\/header.php",
+    "line": 110,
+    "code": 0
+}
+--------------------------------------------------------------------------------

@@ -41,6 +41,15 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
                    value="<?php echo htmlspecialchars($isEdit ? $user['email'] : $formData['email']); ?>" 
                    required>
         </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña <?php echo $isEdit ? '<small class="text-neutral-600 font-normal">(Dejar en blanco para mantener la actual)</small>' : ''; ?></label>
+            <input type="password" 
+                   id="password" 
+                   name="password" 
+                   placeholder="<?php echo $isEdit ? '••••••••' : 'Ingrese una contraseña segura'; ?>" 
+                   <?php echo $isEdit ? '' : 'required'; ?>>
+        </div>
         
         <div class="form-group">
             <label for="role">Rol del Usuario</label>

@@ -9,6 +9,9 @@
 require_once 'config/init.php';
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
+require_once getPath('lib/business/auth_operations.php');
+
+requireLogin();
 
 $pageTitle = "Dashboard - CRUDle";
 $pageHeader = "Dashboard";

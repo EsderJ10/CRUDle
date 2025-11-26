@@ -143,4 +143,19 @@ class InvalidStateException extends AppException {
         parent::__construct($message, $userMessage, $code, $previous);
     }
 }
+
+/**
+ * Excepción de Autenticación
+ * Se lanza cuando fallan las operaciones de autenticación
+ */
+class AuthException extends AppException {
+    public function __construct(
+        $message = 'Authentication failed',
+        $userMessage = 'Error de autenticación.',
+        $code = 401,
+        Throwable $previous = null
+    ) {
+        parent::__construct($message, $userMessage, $code, $previous);
+    }
+}
 ?>
