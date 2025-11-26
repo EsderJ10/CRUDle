@@ -28,7 +28,7 @@ const DashboardModule = {
         this.restoreSidebarState(sidebar, body);
 
         if (sidebarToggle && sidebar) {
-            sidebarToggle.addEventListener('click', function (e) {
+            sidebarToggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 sidebar.classList.toggle('collapsed');
                 body.classList.toggle('sidebar-collapsed');
@@ -38,7 +38,7 @@ const DashboardModule = {
         }
 
         if (mobileToggle && sidebar) {
-            mobileToggle.addEventListener('click', function (e) {
+            mobileToggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 sidebar.classList.toggle('mobile-open');
                 if (sidebarOverlay) {
@@ -50,7 +50,7 @@ const DashboardModule = {
 
         // Cierra la barra lateral móvil al hacer clic en el overlay
         if (sidebarOverlay) {
-            sidebarOverlay.addEventListener('click', function () {
+            sidebarOverlay.addEventListener('click', () => {
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
                 body.classList.remove('sidebar-mobile-open');
