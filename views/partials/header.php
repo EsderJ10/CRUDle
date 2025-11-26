@@ -54,7 +54,7 @@
             
             <div class="sidebar-footer">
                 <?php if (isset($_SESSION['user_id'])): ?>
-                <div class="user-profile">
+                <div class="user-profile" id="userProfileDropdown">
                     <div class="profile-avatar">
                         <?php if (isset($_SESSION['user_avatar']) && $_SESSION['user_avatar']): ?>
                             <img src="<?php echo htmlspecialchars($_SESSION['user_avatar']); ?>" alt="Avatar">
@@ -66,9 +66,29 @@
                         <span class="profile-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuario'); ?></span>
                         <span class="profile-role"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Rol'); ?></span>
                     </div>
-                    <a href="<?php echo getWebPath('pages/auth/logout.php'); ?>" class="btn-logout" title="Cerrar Sesión" style="margin-left: auto; color: var(--text-secondary);">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </a>
+                    <i class="fas fa-chevron-down profile-chevron"></i>
+                    
+                    <div class="profile-dropdown-menu">
+                        <div class="dropdown-user-header">
+                            <span class="dropdown-user-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuario'); ?></span>
+                            <span class="dropdown-user-email"><?php echo htmlspecialchars($_SESSION['user_email'] ?? ''); ?></span>
+                        </div>
+                        <ul class="dropdown-list">
+                            <li>
+                                <a href="<?php echo getWebPath('pages/users/user_info.php?id=' . $_SESSION['user_id']); ?>" class="dropdown-item">
+                                    <i class="fas fa-user"></i> Ver Perfil
+                                </a>
+                            </li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                            <li>
+                                <a href="<?php echo getWebPath('pages/auth/logout.php'); ?>" class="dropdown-item text-danger">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <?php else: ?>
                 <div class="user-profile justify-content-center">
