@@ -118,35 +118,6 @@ try {
         </div>
     </div>
     
-    <script>
-        // Simple password toggle script
-        document.querySelectorAll('.toggle-password').forEach(button => {
-            button.addEventListener('click', () => {
-                const input = button.previousElementSibling;
-                const icon = button.querySelector('i');
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.replace('fa-eye', 'fa-eye-slash');
-                } else {
-                    input.type = 'password';
-                    icon.classList.replace('fa-eye-slash', 'fa-eye');
-                }
-            });
-        });
-
-        // Password match validation
-        const form = document.querySelector('.auth-form');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirm_password').value;
-                
-                if (password !== confirmPassword) {
-                    e.preventDefault();
-                    alert('Las contraseñas no coinciden.');
-                }
-            });
-        }
-    </script>
+    <script src="<?php echo getWebPath('assets/js/auth.js'); ?>"></script>
 </body>
 </html>
