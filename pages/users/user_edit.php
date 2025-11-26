@@ -59,7 +59,8 @@ try {
             $formData = sanitizeUserData([
                 'nombre' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
-                'rol' => $_POST['role'] ?? ''
+                'rol' => $_POST['role'] ?? '',
+                'password' => $_POST['password'] ?? ''
             ]);
             
             // Validar datos básicos

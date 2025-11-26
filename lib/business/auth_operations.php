@@ -8,6 +8,7 @@ require_once __DIR__ . '/../../config/paths.php';
 require_once getPath('lib/core/Database.php');
 require_once getPath('lib/core/Session.php');
 require_once getPath('lib/core/exceptions.php');
+require_once getPath('lib/helpers/utils.php');
 
 /**
  * Intenta autenticar a un usuario con email y contraseña.
@@ -37,6 +38,7 @@ function login($email, $password) {
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['user_role'] = $user['role'];
         $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_avatar'] = normalizeAvatarPath($user['avatar_path']);
         $_SESSION['last_activity'] = time();
 
         return true;

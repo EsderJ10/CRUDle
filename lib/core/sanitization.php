@@ -77,6 +77,11 @@ function sanitizeUserData($data) {
     if (isset($data['id'])) {
         $sanitized['id'] = sanitizeUserId($data['id']);
     }
+
+    if (isset($data['password'])) {
+        // Only ensure it's a string
+        $sanitized['password'] = (string)$data['password'];
+    }
     
     return $sanitized;
 }
