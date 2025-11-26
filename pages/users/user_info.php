@@ -5,7 +5,7 @@
  * Autor: José Antonio Cortés Ferre
  */
 
-require_once '../../config/paths.php';
+require_once '../../config/init.php';
 require_once getPath('config/config.php');
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
