@@ -6,11 +6,8 @@
  */
 
 require_once '../../config/init.php';
-require_once getPath('config/config.php');
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
-require_once getPath('lib/core/error_handler.php');
-require_once getPath('lib/core/exceptions.php');
 
 $pageTitle = "Información del Usuario";
 $pageHeader = "Detalles del Usuario";
