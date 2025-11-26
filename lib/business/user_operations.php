@@ -7,13 +7,11 @@
  * Autor: José Antonio Cortés Ferre
  */
 
-require_once __DIR__ . '/../../config/paths.php';
+require_once __DIR__ . '/../../config/init.php';
 require_once getPath('lib/core/Database.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
-require_once getPath('lib/core/exceptions.php');
-require_once getPath('config/config.php');
-require_once getPath('lib/helpers/utils.php');
+require_once getPath('lib/core/Mailer.php');
 
 function getAllUsers() {
     try {
@@ -363,6 +361,170 @@ function checkSystemStatus() {
         return ['status' => 'OK', 'message' => 'Database connection successful'];
     } catch (Exception $e) {
         return ['status' => 'ERROR', 'message' => 'Database connection failed'];
+    }
+}
+function inviteUser($name, $email, $role) {
+    try {
+        if (empty($name) || empty($email) || empty($role)) {
+            throw new InvalidStateException('Missing required fields', 'Faltan datos requeridos.');
+        }
+
+        $db = Database::getInstance();
+        
+        // Check if email already exists
+        $stmt = $db->query("SELECT id FROM users WHERE email = ?", [$email]);
+        if ($stmt->fetch()) {
+            throw new UserOperationException('Email already exists', 'El correo electrónico ya está registrado.');
+        }
+
+        // Generate secure token
+        $token = bin2hex(random_bytes(32));
+        $expiresAt = date('Y-m-d H:i:s', strtotime('+48 hours'));
+
+        $sql = "INSERT INTO users (name, email, role, status, invitation_token, invitation_expires_at, created_at, password) VALUES (?, ?, ?, 'pending', ?, ?, ?, NULL)";
+        $params = [
+            $name,
+            $email,
+            $role,
+            $token,
+            $expiresAt,
+            date(DATE_FORMAT)
+        ];
+
+        $db->query($sql, $params);
+        $userId = $db->getConnection()->lastInsertId();
+
+        // Send invitation email
+        sendInvitationEmail($email, $name, $token);
+
+        return $userId;
+    } catch (Exception $e) {
+        throw new UserOperationException(
+            'Error inviting user: ' . $e->getMessage(),
+            'Error al invitar al usuario.',
+            0,
+            $e
+        );
+    }
+}
+
+function resendInvitation($userId) {
+    try {
+        $db = Database::getInstance();
+        
+        // Get user details
+        $stmt = $db->query("SELECT name, email, status FROM users WHERE id = ?", [$userId]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            throw new ResourceNotFoundException('User not found', 'Usuario no encontrado.');
+        }
+
+        if ($user['status'] !== 'pending') {
+            throw new InvalidStateException('User is not pending', 'El usuario no está en estado pendiente.');
+        }
+
+        // Generate new token
+        $token = bin2hex(random_bytes(32));
+        $expiresAt = date('Y-m-d H:i:s', strtotime('+48 hours'));
+
+        $sql = "UPDATE users SET invitation_token = ?, invitation_expires_at = ? WHERE id = ?";
+        $db->query($sql, [$token, $expiresAt, $userId]);
+
+        // Send new email
+        sendInvitationEmail($user['email'], $user['name'], $token);
+
+        return true;
+    } catch (Exception $e) {
+        throw new UserOperationException(
+            'Error resending invitation: ' . $e->getMessage(),
+            'Error al reenviar la invitación.',
+            0,
+            $e
+        );
+    }
+}
+
+function getInvitation($token) {
+    try {
+        $db = Database::getInstance();
+        $stmt = $db->query("SELECT * FROM users WHERE invitation_token = ? AND status = 'pending'", [$token]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            return null;
+        }
+
+        // Check expiration
+        if (strtotime($user['invitation_expires_at']) < time()) {
+            return null; // Token expired
+        }
+
+        return $user;
+    } catch (Exception $e) {
+        throw new UserOperationException(
+            'Error fetching invitation: ' . $e->getMessage(),
+            'Error al verificar la invitación.',
+            0,
+            $e
+        );
+    }
+}
+
+function activateUser($token, $password) {
+    try {
+        $user = getInvitation($token);
+        if (!$user) {
+            throw new InvalidStateException('Invalid or expired token', 'El enlace de invitación no es válido o ha expirado.');
+        }
+
+        $db = Database::getInstance();
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Update user: set password, activate, clear token
+        $sql = "UPDATE users SET password = ?, status = 'active', invitation_token = NULL, invitation_expires_at = NULL WHERE id = ?";
+        $db->query($sql, [$hashedPassword, $user['id']]);
+
+        return true;
+    } catch (Exception $e) {
+        throw new UserOperationException(
+            'Error activating user: ' . $e->getMessage(),
+            'Error al activar la cuenta.',
+            0,
+            $e
+        );
+    }
+}
+
+function sendInvitationEmail($email, $name, $token) {
+    $invitePath = getWebPath("pages/auth/accept_invite.php?token=" . $token);
+    $inviteLink = APP_URL . $invitePath;
+    
+    $subject = "Invitación a CRUDle";
+    $body = "
+    <html>
+    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+        <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;'>
+            <h2 style='color: #2563eb;'>Bienvenido a CRUDle</h2>
+            <p>Hola <strong>" . htmlspecialchars($name) . "</strong>,</p>
+            <p>Has sido invitado a unirte a la plataforma CRUDle. Para activar tu cuenta y establecer tu contraseña, por favor haz clic en el siguiente enlace:</p>
+            <p style='text-align: center; margin: 30px 0;'>
+                <a href='" . $inviteLink . "' style='background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;'>Aceptar Invitación</a>
+            </p>
+            <p>Este enlace expirará en 48 horas.</p>
+            <p style='font-size: 12px; color: #666;'>Si no esperabas esta invitación, puedes ignorar este correo.</p>
+        </div>
+    </body>
+    </html>
+    ";
+
+    $mailer = new Mailer();
+    if ($mailer->send($email, $subject, $body)) {
+        return true;
+    } else {
+        // Fallback logging if email fails
+        error_log("FAILED TO SEND EMAIL to $email. Link: $inviteLink");
+        return false;
     }
 }
 ?>

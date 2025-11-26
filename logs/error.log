@@ -262,3 +262,33 @@ Context: {
     "code": 0
 }
 --------------------------------------------------------------------------------
+[2025-11-26 23:12:25] [CRITICAL] Uncaught Exception
+Exception: Error - Class "Database" not found
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "\/var\/www\/html\/migration.php",
+    "line": 5,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 00:20:21] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function requireLogin()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "\/var\/www\/html\/pages\/users\/user_resend_invite.php",
+    "line": 9,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 00:20:31] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function requireLogin()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "\/var\/www\/html\/pages\/users\/user_resend_invite.php",
+    "line": 9,
+    "code": 0
+}
+--------------------------------------------------------------------------------

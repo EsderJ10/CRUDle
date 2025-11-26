@@ -32,6 +32,10 @@ function login($email, $password) {
             throw new AuthException('Invalid credentials', 'Credenciales incorrectas.');
         }
 
+        if ($user['status'] !== 'active') {
+            throw new AuthException('Account not active', 'Tu cuenta no está activa. Por favor, revisa tu correo para activarla.');
+        }
+
         // Iniciar sesión
         Session::init();
         $_SESSION['user_id'] = $user['id'];
@@ -90,6 +94,51 @@ function requireLogin() {
     if (!isLoggedIn()) {
         Session::setFlash('warning', 'Debes iniciar sesión para acceder a esta página.');
         header('Location: ' . getWebPath('pages/auth/login.php'));
+        exit;
+    }
+}
+
+/**
+ * Verifica si el usuario actual es administrador.
+ */
+function isAdmin() {
+    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+}
+
+/**
+ * Verifica si el usuario actual es editor.
+ */
+function isEditor() {
+    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'editor';
+}
+
+/**
+ * Verifica si el usuario actual es visualizador.
+ */
+function isViewer() {
+    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'viewer';
+}
+
+/**
+ * Requiere que el usuario sea administrador.
+ */
+function requireAdmin() {
+    requireLogin();
+    if (!isAdmin()) {
+        Session::setFlash('error', 'Acceso denegado. Se requieren permisos de administrador.');
+        header('Location: ' . getWebPath('index.php'));
+        exit;
+    }
+}
+
+/**
+ * Requiere que el usuario sea editor o administrador.
+ */
+function requireEditorOrAdmin() {
+    requireLogin();
+    if (!isAdmin() && !isEditor()) {
+        Session::setFlash('error', 'Acceso denegado. Se requieren permisos de edición.');
+        header('Location: ' . getWebPath('index.php'));
         exit;
     }
 }

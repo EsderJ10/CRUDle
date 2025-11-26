@@ -20,6 +20,7 @@ function renderUserTable($users) {
                                 <th>Nombre</th>
                                 <th>Email</th>
                                 <th>Rol</th>
+                                <th>Estado</th>
                                 <th>Fecha de Alta</th>
                                 <th>Operaciones</th>
                             </tr>
@@ -28,6 +29,17 @@ function renderUserTable($users) {
                 
     foreach ($users as $user) {
         $avatarSrc = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : getDefaultAvatar();
+        $status = $user['status'] ?? 'active'; // Default to active for old users
+        $statusBadge = '';
+        
+        if ($status === 'active') {
+            $statusBadge = '<span class="badge badge-success">Activo</span>';
+        } elseif ($status === 'pending') {
+            $statusBadge = '<span class="badge badge-warning">Pendiente</span>';
+        } else {
+            $statusBadge = '<span class="badge badge-secondary">Inactivo</span>';
+        }
+
         $html .= '<tr>
                     <td data-label="Avatar">
                         <img src="' . $avatarSrc . '" 
@@ -39,12 +51,14 @@ function renderUserTable($users) {
                     <td data-label="Nombre"><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
                     <td data-label="Email">' . htmlspecialchars($user['email']) . '</td>
                     <td data-label="Rol"><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
+                    <td data-label="Estado">' . $statusBadge . '</td>
                     <td data-label="Fecha">' . htmlspecialchars($user['fecha_alta']) . '</td>
                     <td data-label="Acciones">
                         <div class="actions">
-                            <a href="user_info.php?id=' . urlencode($user['id']) . '" class="action-view">Ver</a>
-                            <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="action-edit">Editar</a>
-                            <a href="user_delete.php?id=' . urlencode($user['id']) . '" class="action-delete">Eliminar</a>
+                            <a href="user_info.php?id=' . urlencode($user['id']) . '" class="action-view" title="Ver"><i class="fas fa-eye"></i></a>
+                            <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="action-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                            <a href="user_delete.php?id=' . urlencode($user['id']) . '" class="action-delete" title="Eliminar"><i class="fas fa-trash"></i></a>
+                            ' . ($status === 'pending' ? '<a href="user_resend_invite.php?id=' . urlencode($user['id']) . '" class="action-resend" title="Reenviar Invitación"><i class="fas fa-paper-plane"></i></a>' : '') . '
                         </div>
                     </td>
                   </tr>';

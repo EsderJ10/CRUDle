@@ -32,6 +32,16 @@ services:
       - crudle-network
     restart: unless-stopped
 
+  mailhog:
+    image: mailhog/mailhog
+    container_name: crudle-mailhog
+    ports:
+      - "1025:1025" # SMTP server
+      - "8025:8025" # Web UI
+    networks:
+      - crudle-network
+    restart: unless-stopped
+
 networks:
   crudle-network:
     driver: bridge
