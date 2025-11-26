@@ -47,7 +47,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
             <input type="password" 
                    id="password" 
                    name="password" 
-                   placeholder="<?php echo $isEdit ? '••••••••' : 'Ingrese una contraseña segura'; ?>" 
+                   placeholder="<?php echo $isEdit ? '••••••••' : 'Ingrese una contraseña'; ?>" 
                    <?php echo $isEdit ? '' : 'required'; ?>>
         </div>
         
