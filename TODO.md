@@ -3,6 +3,8 @@
 ## MUST DO FIRST
 - [ ] Think what to do if the database has no users (first run of the app).
 - [ ] Implement a migration script to migrate the old csv to new database structure?.
+- [ ] Specify what admin/editor/viewer can do.
+- [ ] redirect from email verification must take the port from WEB_PORT (to avoid mismatch)
 
 ## HIGH
 
