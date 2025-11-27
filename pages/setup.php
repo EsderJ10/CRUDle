@@ -50,7 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $userId = createUser($formData);
         
         // Auto-login
-        login($email, $password);
+        try {
+            login($email, $password);
+        } catch (Exception $e) {
+            header('Location: auth/login.php?setup_success=1');
+            exit;
+        }
 
         header('Location: setup.php?step=3');
         exit;

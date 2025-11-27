@@ -693,3 +693,20 @@ Context: {
     "code": 401
 }
 --------------------------------------------------------------------------------
+[2025-11-27 20:03:57] [WARNING] session_start(): Session cannot be started after headers have already been sent
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Session.php",
+    "line": 14,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 21:03:57] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined function authenticateUser()
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "\/var\/www\/html\/reproduce_issue.php",
+    "line": 46,
+    "code": 0
+}
+--------------------------------------------------------------------------------
