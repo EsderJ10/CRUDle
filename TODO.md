@@ -1,10 +1,13 @@
 # TODO
 
 ## MUST DO FIRST
-- [ ] Think what to do if the database has no users (first run of the app).
+- [ ] Think what to do if the database has no users (first run of the app) - maybe a page with create admin user?.
 - [ ] Implement a migration script to migrate the old csv to new database structure?.
 - [ ] Specify what admin/editor/viewer can do.
 - [ ] redirect from email verification must take the port from WEB_PORT (to avoid mismatch)
+- [ ] think about avatars, if users are not being shared between each 'deploy', avatars shouldn't be?.
+- [ ] check styles: actions a must be equally displayed, user-profile...
+- [ ] security & design: saving the path in the database, null values...
 
 ## HIGH
 
