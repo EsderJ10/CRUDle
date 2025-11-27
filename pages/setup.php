@@ -3,7 +3,6 @@ require_once __DIR__ . '/../config/init.php';
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/business/auth_operations.php');
 
-// LOCKING: If users exist, setup is disabled.
 if (getUserCount() > 0) {
     header('Location: auth/login.php');
     exit;
@@ -13,9 +12,7 @@ $step = isset($_GET['step']) ? (int)$_GET['step'] : 1;
 $error = '';
 $success = '';
 
-// Handle Form Submission (Step 2 -> 3)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_admin') {
-    // RACE CONDITION CHECK
     if (getUserCount() > 0) {
         header('Location: auth/login.php');
         exit;
@@ -39,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             throw new ValidationException('La contraseña debe tener al menos 8 caracteres.');
         }
 
-        // Create Admin User
         $formData = [
             'name' => $name,
             'email' => $email,
@@ -53,17 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         // Auto-login
         login($email, $password);
 
-        // Redirect to Step 3
         header('Location: setup.php?step=3');
         exit;
 
     } catch (Exception $e) {
         $error = $e instanceof AppException ? $e->getUserMessage() : $e->getMessage();
-        $step = 2; // Stay on step 2
+        $step = 2;
     }
 }
 
-// System Checks for Step 1
+// System Checks
 $checks = [];
 if ($step === 1) {
     // DB Connection
@@ -76,17 +71,19 @@ if ($step === 1) {
 
     // Write Permissions
     $uploadDir = getAvatarPath();
-    $isWritable = is_writable(dirname($uploadDir)) || (file_exists($uploadDir) && is_writable($uploadDir));
+    $parentDir = dirname($uploadDir);
+
     // Try to create if not exists
-    if (!file_exists($uploadDir)) {
+    if (!file_exists($uploadDir) && is_writable($parentDir)) {
         @mkdir($uploadDir, 0755, true);
-        $isWritable = is_writable($uploadDir);
     }
+    
+    $isWritable = file_exists($uploadDir) && is_writable($uploadDir);
     
     $checks[] = [
         'name' => 'Permisos de Escritura (Uploads)',
         'status' => $isWritable,
-        'message' => $isWritable ? 'Directorio escribible' : 'No se puede escribir en ' . $uploadDir
+        'message' => $isWritable ? 'Directorio escribible' : 'No se puede escribir en ' . $uploadDir . ' (o no se puede crear)'
     ];
 
     $allChecksPassed = !in_array(false, array_column($checks, 'status'));
@@ -102,20 +99,6 @@ if ($step === 1) {
     <link rel="stylesheet" href="<?php echo getWebPath('assets/css/styles.css'); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .setup-card { background: white; padding: 2rem; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 500px; }
-        .step-indicator { display: flex; justify-content: space-between; margin-bottom: 2rem; position: relative; }
-        .step-indicator::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: #e5e7eb; z-index: 0; transform: translateY(-50%); }
-        .step { width: 30px; height: 30px; border-radius: 50%; background: #e5e7eb; color: #6b7280; display: flex; align-items: center; justify-content: center; font-weight: 600; position: relative; z-index: 1; }
-        .step.active { background: #2563eb; color: white; }
-        .step.completed { background: #10b981; color: white; }
-        .check-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; border-bottom: 1px solid #f3f4f6; }
-        .check-item:last-child { border-bottom: none; }
-        .status-icon { font-size: 1.25rem; }
-        .text-success { color: #10b981; }
-        .text-danger { color: #ef4444; }
-    </style>
 </head>
 <body>
     <div class="setup-card">
