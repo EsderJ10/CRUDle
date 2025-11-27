@@ -39,6 +39,18 @@ function getAllUsers() {
     }
 }
 
+function getUserCount() {
+    try {
+        $db = Database::getInstance();
+        $stmt = $db->query("SELECT COUNT(*) as count FROM users");
+        return (int)$stmt->fetch()['count'];
+    } catch (Exception $e) {
+        // If table doesn't exist or DB error, return 0 to trigger setup (or handle error)
+        // For setup purposes, 0 is safe as it redirects to setup which will do checks
+        return 0;
+    }
+}
+
 function getUserById($userId) {
     try {
         if (empty($userId)) {

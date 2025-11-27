@@ -32,15 +32,16 @@ try {
     // Cargar usuario existente
     try {
         $user = getUserById($userId);
-        
-        if ($user === null) {
-            throw new ResourceNotFoundException(
-                'User not found: ' . $userId,
-                'El usuario no existe.'
-            );
-        }
-    } catch (ResourceNotFoundException $e) {
-        Session::setFlash('error', $e->getUserMessage());
+    $user = getUserById($userId);
+    if (!$user) {
+        Session::setFlash('error', 'Usuario no encontrado.');
+        header('Location: user_index.php');
+        exit;
+    }
+
+    // SECURITY: Prevent Editors from editing Admins
+    if ($user['rol'] === 'admin' && !Permissions::checkCurrent(Permissions::USER_DELETE)) {
+        Session::setFlash('error', 'No tienes permisos para editar a un administrador.');
         header('Location: user_index.php');
         exit;
     }

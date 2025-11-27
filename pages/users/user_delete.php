@@ -19,8 +19,16 @@ $pageHeader = "Confirmar Eliminación";
 try {
     // Mostrar confirmación en GET
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
-        include getPath('views/partials/header.php');
         $userId = $_GET['id'];
+        
+        // SECURITY: Prevent Self-Deletion
+        if ($userId == Session::get('user_id')) {
+            Session::setFlash('error', 'No puedes eliminar tu propia cuenta.');
+            header('Location: user_index.php');
+            exit;
+        }
+
+        include getPath('views/partials/header.php');
         echo renderDeleteConfirmation($userId, CSRF::generate());
         include getPath('views/partials/footer.php');
     }

@@ -13,8 +13,7 @@ require_once getPath('lib/business/auth_operations.php');
 
 // Check for first run
 try {
-    $users = getAllUsers();
-    if (empty($users)) {
+    if (getUserCount() === 0) {
         header('Location: pages/setup.php');
         exit;
     }
