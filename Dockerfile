@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    shadow \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -25,6 +26,10 @@ COPY docker/apache-config.conf /etc/apache2/sites-available/000-default.conf
 # Copy application files
 COPY . .
 
+# Copy and set up entrypoint
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Create necessary directories and set permissions
 RUN mkdir -p data logs uploads/avatars \
     && chmod -R 755 data logs uploads \
@@ -33,5 +38,6 @@ RUN mkdir -p data logs uploads/avatars \
 # Expose port 8080
 EXPOSE 8080
 
-# Start Apache
+# Start Apache via entrypoint
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]
