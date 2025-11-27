@@ -618,3 +618,23 @@ Context: {
     "errno": 2
 }
 --------------------------------------------------------------------------------
+[2025-11-27 18:28:09] [CRITICAL] Uncaught Exception
+Exception: ParseError - syntax error, unexpected end of file, expecting "elseif" or "else" or "endif"
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/components\/forms\/user_form.php",
+    "line": 142,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:28:12] [CRITICAL] Uncaught Exception
+Exception: ParseError - syntax error, unexpected end of file, expecting "elseif" or "else" or "endif"
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "\/var\/www\/html\/views\/components\/forms\/user_form.php",
+    "line": 142,
+    "code": 0
+}
+--------------------------------------------------------------------------------

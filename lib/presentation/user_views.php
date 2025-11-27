@@ -119,9 +119,9 @@ function renderUserInfo($user) {
                             <table>
                                 <tbody>
                                     <tr><th width="150">ID</th><td><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td></tr>
-                                    <tr><th>name</th><td><span class="font-semibold">' . htmlspecialchars($user['name']) . '</span></td></tr>
+                                    <tr><th>Nombre</th><td><span class="font-semibold">' . htmlspecialchars($user['name']) . '</span></td></tr>
                                     <tr><th>Email</th><td>' . htmlspecialchars($user['email']) . '</td></tr>
-                                    <tr><th>role</th><td><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td></tr>
+                                    <tr><th>Rol</th><td><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td></tr>
                                     <tr><th>Fecha de Alta</th><td>' . htmlspecialchars($user['fecha_alta']) . '</td></tr>
                                 </tbody>
                             </table>
@@ -242,7 +242,7 @@ function renderRecentUsers($recentUsers) {
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
-                                <th>role</th>
+                                <th>Rol</th>
                                 <th>Fecha de Alta</th>
                                 <th>Acciones</th>
                             </tr>

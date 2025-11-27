@@ -21,7 +21,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         $userId = $_GET['id'];
         
-        // SECURITY: Prevent Self-Deletion
+        // Prevent Self-Deletion
         if ($userId == Session::get('user_id')) {
             Session::setFlash('error', 'No puedes eliminar tu propia cuenta.');
             header('Location: user_index.php');
