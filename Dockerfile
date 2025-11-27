@@ -28,10 +28,15 @@ COPY . .
 # Create necessary directories and set permissions
 RUN mkdir -p data logs uploads/avatars \
     && chmod -R 755 data logs uploads \
-    && chown -R www-data:www-data /var/www/html
+    && chown -R www-data:www-data /var/www/html \
+
+# Copy entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose port 8080
 EXPOSE 8080
 
-# Start Apache
+# Start Apache via entrypoint
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]
