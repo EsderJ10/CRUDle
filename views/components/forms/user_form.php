@@ -9,14 +9,14 @@ require_once getPath('lib/helpers/utils.php');
 require_once getPath('config/config.php');
 
 $formData = $formData ?? [
-    'nombre' => '',
+    'name' => '',
     'email' => '',
-    'rol' => ''
+    'role' => ''
 ];
 
 $isEdit = isset($user) && !empty($user) && isset($user['id']);
 $action = $isEdit ? 'user_edit.php?id=' . urlencode($user['id']) : 'user_create.php';
-$buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
+$buttonText = $isEdit ? 'Actualizar Usuario' : 'Invitar Usuario';
 ?>
 
 <div class="card">
@@ -28,7 +28,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
                    id="name" 
                    name="name" 
                    placeholder="Ingrese el nombre completo" 
-                   value="<?php echo htmlspecialchars($isEdit ? $user['nombre'] : $formData['nombre']); ?>" 
+                   value="<?php echo htmlspecialchars($isEdit ? $user['name'] : $formData['name']); ?>" 
                    required>
         </div>
         
@@ -45,10 +45,10 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
         <div class="form-group">
             <label for="role">Rol del Usuario</label>
             <select id="role" name="role" required>
-                <option value="">Seleccione un rol</option>
+                <option value="">Seleccione un role</option>
                 <?php 
                 $roles = getRoles();
-                $currentRole = $isEdit ? $user['rol'] : $formData['rol'];
+                $currentRole = $isEdit ? $user['role'] : $formData['role'];
                 foreach ($roles as $role): 
                 ?>
                     <option value="<?php echo htmlspecialchars($role); ?>" 

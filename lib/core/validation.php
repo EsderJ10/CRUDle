@@ -180,7 +180,7 @@ function validateAvatar($file) {
 function validateUserData($data) {
     $errors = [];
     
-    if (isset($data['nombre'])) {
+    if (isset($data['name'])) {
         $errors = array_merge($errors, validateName($data['nombre']));
     }
     

@@ -20,7 +20,6 @@ $pageHeader = "Editar Usuario";
 
 try {
     // Validar que se proporcione un ID
-    // Validar que se proporcione un ID
     if (!isset($_GET['id'])) {
         Session::setFlash('error', 'No se ha proporcionado un ID de usuario.');
         header('Location: user_index.php');
@@ -32,15 +31,19 @@ try {
     // Cargar usuario existente
     try {
         $user = getUserById($userId);
-    $user = getUserById($userId);
+    } catch (Exception $e) {
+        Session::setFlash('error', 'Error al cargar el usuario: ' . $e->getMessage());
+        header('Location: user_index.php');
+        exit;
+    }
     if (!$user) {
         Session::setFlash('error', 'Usuario no encontrado.');
         header('Location: user_index.php');
         exit;
     }
 
-    // SECURITY: Prevent Editors from editing Admins
-    if ($user['rol'] === 'admin' && !Permissions::checkCurrent(Permissions::USER_DELETE)) {
+    // Prevent Editors from editing Admins
+    if ($user['role'] === 'admin' && !Permissions::checkCurrent(Permissions::USER_DELETE)) {
         Session::setFlash('error', 'No tienes permisos para editar a un administrador.');
         header('Location: user_index.php');
         exit;
@@ -58,15 +61,15 @@ try {
         try {
             // Sanitizar datos
             $formData = sanitizeUserData([
-                'nombre' => $_POST['name'] ?? '',
+                'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
-                'rol' => $_POST['role'] ?? '',
+                'role' => $_POST['role'] ?? '',
                 'password' => $_POST['password'] ?? ''
             ]);
 
-            // Security: Only Admins (who can delete) can change roles
+            // Only Admins can change roles
             if (!Permissions::checkCurrent(Permissions::USER_DELETE)) {
-                $formData['rol'] = $user['rol'];
+                $formData['role'] = $user['role'];
             }
             
             // Validar datos básicos
@@ -116,7 +119,7 @@ try {
             } else if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 // Usuario está subiendo un nuevo avatar
                 try {
-                    $newAvatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['nombre']);
+                    $newAvatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['name']);
                     if ($newAvatarPath) {
                         $formData['avatar'] = $newAvatarPath;
                         // El avatar antiguo se elimina automáticamente en handleAvatarUpload
@@ -157,9 +160,9 @@ try {
             }
             
             // Actualizar datos del formulario
-            $user['nombre'] = $formData['nombre'];
+            $user['name'] = $formData['name'];
             $user['email'] = $formData['email'];
-            $user['rol'] = $formData['rol'];
+            $user['role'] = $formData['role'];
             
             include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');

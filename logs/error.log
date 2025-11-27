@@ -534,3 +534,87 @@ Context: {
     "code": 401
 }
 --------------------------------------------------------------------------------
+[2025-11-27 17:55:22] [WARNING] Undefined array key "nombre"
+Context: {
+    "file": "\/var\/www\/html\/lib\/business\/user_operations.php",
+    "line": 92,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 17:55:22] [WARNING] Undefined array key "role"
+Context: {
+    "file": "\/var\/www\/html\/lib\/business\/user_operations.php",
+    "line": 94,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:36] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 81,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:36] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 89,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:36] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 90,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:39] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 81,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:39] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 89,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:39] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 90,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:39] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 81,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:39] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 89,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:05:39] [WARNING] Undefined variable $isWritable
+Context: {
+    "file": "\/var\/www\/html\/pages\/setup.php",
+    "line": 90,
+    "errno": 2
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:12:12] [WARNING] Undefined array key "nombre"
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/sanitization.php",
+    "line": 66,
+    "errno": 2
+}
+--------------------------------------------------------------------------------

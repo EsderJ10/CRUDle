@@ -1,3 +1,4 @@
 docs/notes/
 .env
-uploads/
+uploads
+uploads/avatars

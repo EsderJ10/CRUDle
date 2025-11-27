@@ -62,16 +62,16 @@ function sanitizeUserId($id) {
 function sanitizeUserData($data) {
     $sanitized = [];
     
-    if (isset($data['nombre'])) {
-        $sanitized['nombre'] = sanitizeName($data['nombre']);
+    if (isset($data['name'])) {
+        $sanitized['name'] = sanitizeName($data['name']);
     }
     
     if (isset($data['email'])) {
         $sanitized['email'] = sanitizeEmail($data['email']);
     }
     
-    if (isset($data['rol'])) {
-        $sanitized['rol'] = sanitizeRole($data['rol']);
+    if (isset($data['role'])) {
+        $sanitized['role'] = sanitizeRole($data['role']);
     }
     
     if (isset($data['id'])) {

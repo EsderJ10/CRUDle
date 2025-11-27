@@ -57,14 +57,14 @@ function renderUserTable($users) {
         $html .= '<tr>
                     <td data-label="Avatar">
                         <img src="' . $avatarSrc . '" 
-                             alt="Avatar de ' . htmlspecialchars($user['nombre']) . '" 
+                             alt="Avatar de ' . htmlspecialchars($user['name']) . '" 
                              class="avatar avatar-small"
                              onerror="this.src=\'' . getDefaultAvatar() . '\'">
                     </td>
                     <td data-label="ID"><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
-                    <td data-label="Nombre"><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
+                    <td data-label="name"><span class="font-semibold">' . htmlspecialchars($user['name']) . '</span></td>
                     <td data-label="Email">' . htmlspecialchars($user['email']) . '</td>
-                    <td data-label="Rol"><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
+                    <td data-label="role"><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td>
                     <td data-label="Estado">' . $statusBadge . '</td>
                     <td data-label="Fecha">' . htmlspecialchars($user['fecha_alta']) . '</td>
                     <td data-label="Acciones">
@@ -110,7 +110,7 @@ function renderUserInfo($user) {
                 <div class="user-info-layout">
                     <div>
                         <img src="' . $avatarSrc . '" 
-                             alt="Avatar de ' . htmlspecialchars($user['nombre']) . '" 
+                             alt="Avatar de ' . htmlspecialchars($user['name']) . '" 
                              class="avatar avatar-large"
                              onerror="this.src=\'' . getDefaultAvatar() . '\'">
                     </div>
@@ -119,9 +119,9 @@ function renderUserInfo($user) {
                             <table>
                                 <tbody>
                                     <tr><th width="150">ID</th><td><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td></tr>
-                                    <tr><th>Nombre</th><td><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td></tr>
+                                    <tr><th>name</th><td><span class="font-semibold">' . htmlspecialchars($user['name']) . '</span></td></tr>
                                     <tr><th>Email</th><td>' . htmlspecialchars($user['email']) . '</td></tr>
-                                    <tr><th>Rol</th><td><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td></tr>
+                                    <tr><th>role</th><td><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td></tr>
                                     <tr><th>Fecha de Alta</th><td>' . htmlspecialchars($user['fecha_alta']) . '</td></tr>
                                 </tbody>
                             </table>
@@ -140,15 +140,15 @@ function renderEditForm($user) {
     // Handle the logic for the hidden input regarding permissions outside the return string
     $roleHiddenInput = '';
     if (!Permissions::checkCurrent(Permissions::USER_DELETE)) {
-        $roleHiddenInput = '<input type="hidden" name="rol" value="' . htmlspecialchars($user['rol']) . '">';
+        $roleHiddenInput = '<input type="hidden" name="role" value="' . htmlspecialchars($user['role']) . '">';
     }
 
     return '<div class="card page-transition">
                 <h2>Editar Usuario</h2>
                 <form action="user_edit.php?id=' . urlencode($user['id']) . '" method="post">
                     <div class="form-group">
-                        <label for="nombre">Nombre Completo</label>
-                        <input type="text" id="nombre" name="nombre" value="' . htmlspecialchars($user['nombre']) . '" required>
+                        <label for="name">name Completo</label>
+                        <input type="text" id="name" name="name" value="' . htmlspecialchars($user['name']) . '" required>
                     </div>
                     
                     <div class="form-group">
@@ -157,11 +157,11 @@ function renderEditForm($user) {
                     </div>
                     
                     <div class="form-group">
-                        <label for="rol">Rol del Usuario</label>
-                        <select id="rol" name="rol" required ' . (!Permissions::checkCurrent(Permissions::USER_DELETE) ? 'disabled' : '') . '>
-                            <option value="admin"' . ($user['rol'] === 'admin' ? ' selected' : '') . '>Administrador</option>
-                            <option value="editor"' . ($user['rol'] === 'editor' ? ' selected' : '') . '>Editor</option>
-                            <option value="viewer"' . ($user['rol'] === 'viewer' ? ' selected' : '') . '>Visualizador</option>
+                        <label for="role">Rol del Usuario</label>
+                        <select id="role" name="role" required ' . (!Permissions::checkCurrent(Permissions::USER_DELETE) ? 'disabled' : '') . '>
+                            <option value="admin"' . ($user['role'] === 'admin' ? ' selected' : '') . '>Administrador</option>
+                            <option value="editor"' . ($user['role'] === 'editor' ? ' selected' : '') . '>Editor</option>
+                            <option value="viewer"' . ($user['role'] === 'viewer' ? ' selected' : '') . '>Visualizador</option>
                         </select>
                         ' . $roleHiddenInput . '
                     </div>
@@ -242,7 +242,7 @@ function renderRecentUsers($recentUsers) {
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
-                                <th>Rol</th>
+                                <th>role</th>
                                 <th>Fecha de Alta</th>
                                 <th>Acciones</th>
                             </tr>
@@ -252,9 +252,9 @@ function renderRecentUsers($recentUsers) {
     foreach ($recentUsers as $user) {
         $html .= '<tr>
                     <td data-label="ID"><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
-                    <td data-label="Nombre"><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
+                    <td data-label="name"><span class="font-semibold">' . htmlspecialchars($user['name']) . '</span></td>
                     <td data-label="Email">' . htmlspecialchars($user['email']) . '</td>
-                    <td data-label="Rol"><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
+                    <td data-label="role"><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td>
                     <td data-label="Fecha">' . htmlspecialchars($user['fecha_alta']) . '</td>
                     <td data-label="Acciones"><a href="pages/users/user_info.php?id=' . urlencode($user['id']) . '" class="action-view">Ver Detalles</a></td>
                   </tr>';

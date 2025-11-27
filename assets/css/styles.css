@@ -338,6 +338,9 @@ html {
 }
 
 body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-family: var(--font-family);
     line-height: 1.6;
     color: var(--text-primary);

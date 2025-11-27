@@ -50,7 +50,7 @@ try {
                 <h3>Gestión de Usuarios</h3>
                 <div class="actions mt-4">
                     <a href="pages/users/user_index.php" class="btn btn-primary">Ver Todos los Usuarios</a>
-                    <a href="pages/users/user_create.php" class="btn btn-success">Crear Nuevo Usuario</a>
+                    <a href="pages/users/user_create.php" class="btn btn-success">Invitar Nuevo Usuario</a>
                 </div>
             </div>
         </div>

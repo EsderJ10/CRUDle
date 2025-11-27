@@ -355,7 +355,7 @@ CRUDle/
 │       └── user-form.js       # Avatar upload interactions
 │
 ├── data/                      # Data storage
-│   └── usuarios.csv           # User records (ID,Nombre,Email,Rol,FechaAlta,Avatar)
+│   └── usuarios.csv           # User records (ID,Nombre,Email,role,FechaAlta,Avatar)
 │
 ├── uploads/                   # User-uploaded files
 │   └── avatars/               # Avatar images (user_ID_name_avatar.ext)
@@ -962,10 +962,10 @@ function getUserStatistics(): array {
         $userCount = $stmt->fetch()['count'];
         
         // Count by role
-        $stmt = $db->query("SELECT rol, COUNT(*) as count FROM users GROUP BY rol");
+        $stmt = $db->query("SELECT role, COUNT(*) as count FROM users GROUP BY role");
         $usersByRole = ['admin' => 0, 'editor' => 0, 'viewer' => 0];
         while ($row = $stmt->fetch()) {
-            $usersByRole[$row['rol']] = $row['count'];
+            $usersByRole[$row['role']] = $row['count'];
         }
         
         // Get recent users
@@ -1490,7 +1490,7 @@ function sanitizeRole($role): string {
 **Role Validation (separate step):**
 ```php
 // After sanitization, validate against enum
-$role = sanitizeRole($_POST['rol']);
+$role = sanitizeRole($_POST['role']);
 
 // Check if valid (could use PHP 8.1 enum)
 $validRoles = ['admin', 'editor', 'viewer'];
@@ -1683,7 +1683,7 @@ function renderUserTable($users): string {
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
-                                <th>Rol</th>
+                                <th>role</th>
                                 <th>Fecha de Alta</th>
                                 <th>Acciones</th>
                             </tr>
@@ -1705,7 +1705,7 @@ function renderUserTable($users): string {
                     <td data-label="ID"><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
                     <td data-label="Nombre"><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
                     <td data-label="Email">' . htmlspecialchars($user['email']) . '</td>
-                    <td data-label="Rol"><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
+                    <td data-label="role"><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td>
                     <td data-label="Fecha">' . date(DISPLAY_DATE_FORMAT, strtotime($user['fecha_alta'])) . '</td>
                     <td data-label="Acciones">
                         <div class="actions">

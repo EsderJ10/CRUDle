@@ -47,7 +47,7 @@
                 <li class="nav-item">
                     <a href="<?php echo getWebPath('pages/users/user_create.php'); ?>" class="nav-link" data-page="create">
                         <i class="fas fa-user-plus nav-icon"></i>
-                        <span class="nav-text">Crear Usuario</span>
+                        <span class="nav-text">Invitar Usuario</span>
                     </a>
                 </li>
             </ul>
@@ -64,7 +64,7 @@
                     </div>
                     <div class="profile-info">
                         <span class="profile-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuario'); ?></span>
-                        <span class="profile-role"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Rol'); ?></span>
+                        <span class="profile-role"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'role'); ?></span>
                     </div>
                     <i class="fas fa-chevron-down profile-chevron"></i>
                     

@@ -23,8 +23,8 @@ function getAllUsers() {
         
         foreach ($users as &$user) {
             $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
-            $user['nombre'] = $user['name'];
-            $user['rol'] = $user['role'];
+            $user['name'] = $user['name'];
+            $user['role'] = $user['role'];
             $user['fecha_alta'] = $user['created_at'];
         }
         
@@ -63,8 +63,8 @@ function getUserById($userId) {
         
         if ($user) {
             $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
-            $user['nombre'] = $user['name'];
-            $user['rol'] = $user['role'];
+            $user['name'] = $user['name'];
+            $user['role'] = $user['role'];
             $user['fecha_alta'] = $user['created_at'];
             return $user;
         }
@@ -87,14 +87,31 @@ function createUser($formData) {
         }
         
         $db = Database::getInstance();
-        $sql = "INSERT INTO users (name, email, role, created_at, avatar_path, password) VALUES (?, ?, ?, ?, ?, ?)";
+        
+        // Default values
+        $password = null;
+        if (!empty($formData['password'])) {
+            $password = password_hash($formData['password'], PASSWORD_DEFAULT, ['cost' => 10]);
+        }
+
+        // If password is provided, default to active. Otherwise pending.
+        $defaultStatus = $password ? 'active' : 'pending';
+        $status = $formData['status'] ?? $defaultStatus;
+        
+        $token = $formData['invitation_token'] ?? null;
+        $expiresAt = $formData['invitation_expires_at'] ?? null;
+        
+        $sql = "INSERT INTO users (name, email, role, status, invitation_token, invitation_expires_at, created_at, avatar_path, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = [
-            $formData['nombre'],
+            $formData['name'],
             $formData['email'],
-            $formData['rol'],
+            $formData['role'],
+            $status,
+            $token,
+            $expiresAt,
             date(DATE_FORMAT),
             $formData['avatar'] ?? null,
-            password_hash($formData['password'], PASSWORD_DEFAULT, ['cost' => 10])
+            $password
         ];
         
         $db->query($sql, $params);
@@ -124,9 +141,9 @@ function updateUser($userId, $formData) {
         
         $sql = "UPDATE users SET name = ?, email = ?, role = ?, avatar_path = ?";
         $params = [
-            $formData['nombre'],
+            $formData['name'],
             $formData['email'],
-            $formData['rol'],
+            $formData['role'],
             $formData['avatar'] ?? null
         ];
 
@@ -188,8 +205,8 @@ function getUserStatistics() {
         $recentUsers = $stmt->fetchAll();
         foreach ($recentUsers as &$user) {
             $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
-            $user['nombre'] = $user['name'];
-            $user['rol'] = $user['role'];
+            $user['name'] = $user['name'];
+            $user['role'] = $user['role'];
             $user['fecha_alta'] = $user['created_at'];
         }
         
@@ -395,19 +412,17 @@ function inviteUser($name, $email, $role, $avatarPath = null) {
         $token = bin2hex(random_bytes(32));
         $expiresAt = date('Y-m-d H:i:s', strtotime('+48 hours'));
 
-        $sql = "INSERT INTO users (name, email, role, status, invitation_token, invitation_expires_at, created_at, password, avatar_path) VALUES (?, ?, ?, 'pending', ?, ?, ?, NULL, ?)";
-        $params = [
-            $name,
-            $email,
-            $role,
-            $token,
-            $expiresAt,
-            date(DATE_FORMAT),
-            $avatarPath
+        $formData = [
+            'name' => $name,
+            'email' => $email,
+            'role' => $role,
+            'avatar' => $avatarPath,
+            'status' => 'pending',
+            'invitation_token' => $token,
+            'invitation_expires_at' => $expiresAt
         ];
 
-        $db->query($sql, $params);
-        $userId = $db->getConnection()->lastInsertId();
+        $userId = createUser($formData);
 
         // Send invitation email
         sendInvitationEmail($email, $name, $token);

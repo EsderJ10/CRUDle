@@ -34,18 +34,18 @@ try {
         try {
             // Sanitizar datos de entrada
             $formData = sanitizeUserData([
-                'nombre' => $_POST['name'] ?? '',
+                'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
-                'rol' => $_POST['role'] ?? ''
+                'role' => $_POST['role'] ?? ''
             ]);
             
-            // Validar datos básicos (nombre, email, rol)
+            // Validar datos básicos (nombre, email, role)
             // Usamos validateUserData pero ignoramos password y avatar
             $errors = [];
-            if (empty($formData['nombre'])) $errors[] = "El nombre es obligatorio.";
+            if (empty($formData['name'])) $errors[] = "El name es obligatorio.";
             if (empty($formData['email'])) $errors[] = "El email es obligatorio.";
             if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) $errors[] = "El email no es válido.";
-            if (empty($formData['rol'])) $errors[] = "El rol es obligatorio.";
+            if (empty($formData['role'])) $errors[] = "El role es obligatorio.";
             
             if (!empty($errors)) {
                 throw new ValidationException(
@@ -59,7 +59,7 @@ try {
             $avatarPath = null;
             if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 try {
-                    $avatarPath = handleAvatarUpload($_FILES['avatar'], null, $formData['nombre']);
+                    $avatarPath = handleAvatarUpload($_FILES['avatar'], null, $formData['name']);
                 } catch (Exception $e) {
                     // Si falla el avatar, advertimos pero continuamos con la invitación
                     Session::setFlash('warning', 'Usuario invitado, pero hubo un error al subir el avatar: ' . $e->getMessage());
@@ -67,7 +67,7 @@ try {
             }
             
             // Invitar usuario
-            $userId = inviteUser($formData['nombre'], $formData['email'], $formData['rol'], $avatarPath);
+            $userId = inviteUser($formData['name'], $formData['email'], $formData['role'], $avatarPath);
             
             // Éxito - redirigir con mensaje flash
             Session::setFlash('success', 'Invitación enviada exitosamente.');

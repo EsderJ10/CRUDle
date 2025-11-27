@@ -18,9 +18,9 @@ class Permissions {
     public const USER_DELETE = 'user_delete';
     
     /**
-     * Verifica si un rol tiene permiso para realizar una acción.
+     * Verifica si un role tiene permiso para realizar una acción.
      *
-     * @param string $role El rol del usuario.
+     * @param string $role El role del usuario.
      * @param string $action La acción a realizar.
      * @return bool True si tiene permiso, false en caso contrario.
      */

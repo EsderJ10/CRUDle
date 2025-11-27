@@ -41,7 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             'email' => $email,
             'role' => 'admin',
             'password' => $password,
-            'avatar' => null
+            'avatar' => null,
+            'status' => 'active'
         ];
 
         $userId = createUser($formData);
@@ -71,19 +72,29 @@ if ($step === 1) {
 
     // Write Permissions
     $uploadDir = getAvatarPath();
-    $parentDir = dirname($uploadDir);
-
+    
     // Try to create if not exists
-    if (!file_exists($uploadDir) && is_writable($parentDir)) {
+    if (!file_exists($uploadDir)) {
         @mkdir($uploadDir, 0755, true);
     }
     
-    $isWritable = file_exists($uploadDir) && is_writable($uploadDir);
+    $testFile = $uploadDir . 'perm_test.tmp';
+    $isWritable = @file_put_contents($testFile, 'test') !== false;
+    if ($isWritable) {
+        @unlink($testFile);
+    }
+    
+    $debugInfo = '';
+    if (!$isWritable) {
+        $currentUser = get_current_user();
+        $processUser = posix_getpwuid(posix_geteuid())['name'];
+        $debugInfo = " (Path: $uploadDir, User: $processUser)";
+    }
     
     $checks[] = [
         'name' => 'Permisos de Escritura (Uploads)',
         'status' => $isWritable,
-        'message' => $isWritable ? 'Directorio escribible' : 'No se puede escribir en ' . $uploadDir . ' (o no se puede crear)'
+        'message' => $isWritable ? 'Directorio escribible' : 'No se puede escribir en el directorio de subidas' . $debugInfo
     ];
 
     $allChecksPassed = !in_array(false, array_column($checks, 'status'));

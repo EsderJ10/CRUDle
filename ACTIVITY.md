@@ -12,7 +12,7 @@ Cada usuario tendrá al menos los siguientes campos:
 - id (numérico incremental)
 - nombre
 - email
-- rol (por ejemplo: “administrador”, “editor”, “visitante”)
+- role (por ejemplo: “administrador”, “editor”, “visitante”)
 - fecha de alta
 
 El sistema debe permitir crear, listar, ver, editar y eliminar usuarios mediante los siguientes archivos:

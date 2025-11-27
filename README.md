@@ -222,7 +222,7 @@ The dashboard provides an overview of your user database:
 2. Fill in the required fields:
    - **Nombre** (Name): 2-100 characters, letters only
    - **Email**: Valid email format
-   - **Rol** (Role): Admin, Editor, or Viewer
+   - **role** (Role): Admin, Editor, or Viewer
    - **Avatar**: Optional image upload (max 2MB)
 3. Click **"Crear Usuario"**
 4. View success message and user details
