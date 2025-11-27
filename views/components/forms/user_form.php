@@ -45,7 +45,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Invitar Usuario';
         <div class="form-group">
             <label for="role">Rol del Usuario</label>
             <select id="role" name="role" required>
-                <option value="">Seleccione un role</option>
+                <option value="">Seleccione un rol</option>
                 <?php 
                 $roles = getRoles();
                 $currentRole = $isEdit ? $user['role'] : $formData['role'];

@@ -79,8 +79,17 @@ function sanitizeUserData($data) {
     }
 
     if (isset($data['password'])) {
-        // Only ensure it's a string
-        $sanitized['password'] = (string)$data['password'];
+        if (!is_array($data['password']) && !is_object($data['password']) && !empty($data['password'])) {
+            $password = (string)$data['password'];
+            $password = trim($password);
+            if (strlen($password) >= 8 && strlen($password) <= 128) {
+                $sanitized['password'] = $password;
+            } else {
+                $sanitized['password'] = '';
+            }
+        } else {
+            $sanitized['password'] = '';
+        }
     }
     
     return $sanitized;

@@ -147,7 +147,7 @@ function renderEditForm($user) {
                 <h2>Editar Usuario</h2>
                 <form action="user_edit.php?id=' . urlencode($user['id']) . '" method="post">
                     <div class="form-group">
-                        <label for="name">name Completo</label>
+                        <label for="name">Nombre Completo</label>
                         <input type="text" id="name" name="name" value="' . htmlspecialchars($user['name']) . '" required>
                     </div>
                     

@@ -638,3 +638,58 @@ Context: {
     "code": 0
 }
 --------------------------------------------------------------------------------
+[2025-11-27 18:33:41] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:34:17] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:34:30] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:34:34] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 18:34:43] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------

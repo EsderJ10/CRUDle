@@ -23,8 +23,6 @@ function getAllUsers() {
         
         foreach ($users as &$user) {
             $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
-            $user['name'] = $user['name'];
-            $user['role'] = $user['role'];
             $user['fecha_alta'] = $user['created_at'];
         }
         
@@ -63,8 +61,6 @@ function getUserById($userId) {
         
         if ($user) {
             $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
-            $user['name'] = $user['name'];
-            $user['role'] = $user['role'];
             $user['fecha_alta'] = $user['created_at'];
             return $user;
         }
@@ -205,8 +201,6 @@ function getUserStatistics() {
         $recentUsers = $stmt->fetchAll();
         foreach ($recentUsers as &$user) {
             $user['avatar'] = normalizeAvatarPath($user['avatar_path']);
-            $user['name'] = $user['name'];
-            $user['role'] = $user['role'];
             $user['fecha_alta'] = $user['created_at'];
         }
         

@@ -71,6 +71,7 @@ class Permissions {
      * @throws AuthException
      */
     public static function require(string $action): void {
+        requireLogin();
         if (!self::checkCurrent($action)) {
             throw new AuthException(
                 "User does not have permission for action: $action",

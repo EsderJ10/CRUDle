@@ -49,7 +49,6 @@ function initPasswordValidation() {
 
     const passInput = document.getElementById('password');
     const confirmInput = document.getElementById('confirm_password');
-    const submitBtn = form.querySelector('button[type="submit"]');
 
     if (!passInput || !confirmInput) return;
 

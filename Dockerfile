@@ -28,7 +28,7 @@ COPY . .
 # Create necessary directories and set permissions
 RUN mkdir -p data logs uploads/avatars \
     && chmod -R 755 data logs uploads \
-    && chown -R www-data:www-data /var/www/html \
+    && chown -R www-data:www-data /var/www/html
 
 # Expose port 8080
 EXPOSE 8080

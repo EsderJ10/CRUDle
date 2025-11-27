@@ -24,6 +24,13 @@ if (!$userId) {
     exit;
 }
 
+// Validate CSRF
+if (!isset($_GET['csrf_token']) || !CSRF::validate($_GET['csrf_token'])) {
+    Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+    header('Location: user_index.php');
+    exit;
+}
+
 try {
     resendInvitation($userId);
     Session::setFlash('success', 'Invitación reenviada exitosamente.');

@@ -22,7 +22,7 @@ try {
         $userId = $_GET['id'];
         
         // Prevent Self-Deletion
-        if ($userId == Session::get('user_id')) {
+        if ($userId === Session::get('user_id')) {
             Session::setFlash('error', 'No puedes eliminar tu propia cuenta.');
             header('Location: user_index.php');
             exit;

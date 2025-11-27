@@ -18,8 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         exit;
     }
 
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    require_once getPath('lib/core/sanitization.php');
+    
+    $name = sanitizeName($_POST['name'] ?? '');
+    $email = sanitizeEmail($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
