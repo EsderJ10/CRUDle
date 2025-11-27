@@ -1,5 +1,9 @@
 # TODO
 
+## MUST DO FIRST
+- [ ] Think what to do if the database has no users (first run of the app).
+- [ ] Implement a migration script to migrate the old csv to new database structure?.
+
 ## HIGH
 
 - [x] Form to add user (user_create and form)
