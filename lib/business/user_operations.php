@@ -392,8 +392,16 @@ function checkSystemStatus() {
 function checkDatabaseSchema() {
     try {
         $db = Database::getInstance();
+        // Check if table exists
         $db->query("SELECT 1 FROM users LIMIT 1");
-        return ['status' => 'OK', 'message' => 'Tabla de usuarios encontrada'];
+        
+        // Check if status column exists
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'status'");
+        if (!$stmt->fetch()) {
+            return ['status' => 'WARNING', 'message' => 'La tabla existe pero falta la columna "status"'];
+        }
+        
+        return ['status' => 'OK', 'message' => 'Esquema de base de datos correcto'];
     } catch (Exception $e) {
         return ['status' => 'ERROR', 'message' => 'La tabla "users" no existe'];
     }
@@ -402,6 +410,8 @@ function checkDatabaseSchema() {
 function initializeDatabase() {
     try {
         $db = Database::getInstance();
+        
+        // Create table if not exists
         $sql = "CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
@@ -415,6 +425,23 @@ function initializeDatabase() {
             password VARCHAR(255) NULL
         )";
         $db->query($sql);
+        
+        // Check for missing columns and add them (Migration)
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'status'");
+        if (!$stmt->fetch()) {
+            $db->query("ALTER TABLE users ADD COLUMN status ENUM('active', 'pending', 'inactive') DEFAULT 'pending' AFTER role");
+        }
+        
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'invitation_token'");
+        if (!$stmt->fetch()) {
+            $db->query("ALTER TABLE users ADD COLUMN invitation_token VARCHAR(64) NULL AFTER status");
+        }
+        
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'invitation_expires_at'");
+        if (!$stmt->fetch()) {
+            $db->query("ALTER TABLE users ADD COLUMN invitation_expires_at DATETIME NULL AFTER invitation_token");
+        }
+
         return true;
     } catch (Exception $e) {
         throw new UserOperationException(
