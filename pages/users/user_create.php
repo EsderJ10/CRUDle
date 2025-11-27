@@ -26,7 +26,7 @@ try {
             // Recargar formulario
             include getPath('views/partials/header.php');
             $formData = $_POST; // Repoblar
-            include getPath('views/components/forms/invite_form.php');
+            include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
             exit;
         }
@@ -55,8 +55,19 @@ try {
                 );
             }
             
+            // Procesar avatar si se subió uno
+            $avatarPath = null;
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                try {
+                    $avatarPath = handleAvatarUpload($_FILES['avatar'], null, $formData['nombre']);
+                } catch (Exception $e) {
+                    // Si falla el avatar, advertimos pero continuamos con la invitación
+                    Session::setFlash('warning', 'Usuario invitado, pero hubo un error al subir el avatar: ' . $e->getMessage());
+                }
+            }
+            
             // Invitar usuario
-            $userId = inviteUser($formData['nombre'], $formData['email'], $formData['rol']);
+            $userId = inviteUser($formData['nombre'], $formData['email'], $formData['rol'], $avatarPath);
             
             // Éxito - redirigir con mensaje flash
             Session::setFlash('success', 'Invitación enviada exitosamente.');
@@ -75,7 +86,7 @@ try {
             
             // Repoblar datos del formulario
             // $formData ya tiene los datos sanitizados
-            include getPath('views/components/forms/invite_form.php');
+            include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
             exit;
             
@@ -83,14 +94,14 @@ try {
             // Errores de aplicación conocidos (UserOperation, etc.)
             Session::setFlash('error', $e->getUserMessage());
             include getPath('views/partials/header.php');
-            include getPath('views/components/forms/invite_form.php');
+            include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
             exit;
         }
     } else {
         // GET request - mostrar formulario vacío
         include getPath('views/partials/header.php');
-        include getPath('views/components/forms/invite_form.php');
+        include getPath('views/components/forms/user_form.php');
         include getPath('views/partials/footer.php');
     }
 } catch (Exception $e) {

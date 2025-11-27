@@ -8,9 +8,15 @@
 if (getenv('APP_ENV') === 'development' || isset($_SERVER['APP_ENV'])) {
     // Ejecución en Docker
     define('WEB_ROOT', '');
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 } else {
-    // Ejecución local (XAMPP, WAMP, etc.)
+    // Producción / Ejecución local
     define('WEB_ROOT', '/CRUDle');
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+    error_reporting(E_ALL);
 }
 
 // Directorios

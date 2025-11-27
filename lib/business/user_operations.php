@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Funciones para la lógica de negocio relacionada con los usuarios.
  * Maneja operaciones CRUD, validación y procesamiento de datos.
@@ -12,6 +13,7 @@ require_once getPath('lib/core/Database.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
 require_once getPath('lib/core/Mailer.php');
+require_once getPath('lib/core/Logger.php');
 
 function getAllUsers() {
     try {
@@ -80,7 +82,7 @@ function createUser($formData) {
             $formData['rol'],
             date(DATE_FORMAT),
             $formData['avatar'] ?? null,
-            password_hash($formData['password'], PASSWORD_DEFAULT)
+            password_hash($formData['password'], PASSWORD_DEFAULT, ['cost' => 10])
         ];
         
         $db->query($sql, $params);
@@ -118,7 +120,7 @@ function updateUser($userId, $formData) {
 
         if (!empty($formData['password'])) {
             $sql .= ", password = ?";
-            $params[] = password_hash($formData['password'], PASSWORD_DEFAULT);
+            $params[] = password_hash($formData['password'], PASSWORD_DEFAULT, ['cost' => 10]);
         }
 
         $sql .= " WHERE id = ?";
@@ -235,7 +237,7 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
                 removeExistingUserAvatar($userId);
             } catch (Exception $e) {
                 // Se hace un log del error pero no se detiene el proceso de subida
-                error_log('Avatar cleanup warning: ' . $e->getMessage());
+                Logger::warning('Avatar cleanup warning', ['error' => $e->getMessage()]);
             }
         }
         
@@ -363,7 +365,7 @@ function checkSystemStatus() {
         return ['status' => 'ERROR', 'message' => 'Database connection failed'];
     }
 }
-function inviteUser($name, $email, $role) {
+function inviteUser($name, $email, $role, $avatarPath = null) {
     try {
         if (empty($name) || empty($email) || empty($role)) {
             throw new InvalidStateException('Missing required fields', 'Faltan datos requeridos.');
@@ -381,14 +383,15 @@ function inviteUser($name, $email, $role) {
         $token = bin2hex(random_bytes(32));
         $expiresAt = date('Y-m-d H:i:s', strtotime('+48 hours'));
 
-        $sql = "INSERT INTO users (name, email, role, status, invitation_token, invitation_expires_at, created_at, password) VALUES (?, ?, ?, 'pending', ?, ?, ?, NULL)";
+        $sql = "INSERT INTO users (name, email, role, status, invitation_token, invitation_expires_at, created_at, password, avatar_path) VALUES (?, ?, ?, 'pending', ?, ?, ?, NULL, ?)";
         $params = [
             $name,
             $email,
             $role,
             $token,
             $expiresAt,
-            date(DATE_FORMAT)
+            date(DATE_FORMAT),
+            $avatarPath
         ];
 
         $db->query($sql, $params);
@@ -471,7 +474,7 @@ function getInvitation($token) {
     }
 }
 
-function activateUser($token, $password) {
+function activateUser($token, $password, $avatarPath = null) {
     try {
         $user = getInvitation($token);
         if (!$user) {
@@ -479,11 +482,11 @@ function activateUser($token, $password) {
         }
 
         $db = Database::getInstance();
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT, ['cost' => 10]);
 
-        // Update user: set password, activate, clear token
-        $sql = "UPDATE users SET password = ?, status = 'active', invitation_token = NULL, invitation_expires_at = NULL WHERE id = ?";
-        $db->query($sql, [$hashedPassword, $user['id']]);
+        // Update user: set password, activate, clear token, set avatar
+        $sql = "UPDATE users SET password = ?, status = 'active', invitation_token = NULL, invitation_expires_at = NULL, avatar_path = ? WHERE id = ?";
+        $db->query($sql, [$hashedPassword, $avatarPath, $user['id']]);
 
         return true;
     } catch (Exception $e) {
@@ -503,7 +506,7 @@ function sendInvitationEmail($email, $name, $token) {
     $subject = "Invitación a CRUDle";
     $body = "
     <html>
-    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+    <body style='font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333;'>
         <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;'>
             <h2 style='color: #2563eb;'>Bienvenido a CRUDle</h2>
             <p>Hola <strong>" . htmlspecialchars($name) . "</strong>,</p>
@@ -523,7 +526,7 @@ function sendInvitationEmail($email, $name, $token) {
         return true;
     } else {
         // Fallback logging if email fails
-        error_log("FAILED TO SEND EMAIL to $email. Link: $inviteLink");
+        Logger::error('FAILED TO SEND EMAIL', ['email' => $email, 'link' => $inviteLink]);
         return false;
     }
 }

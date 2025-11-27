@@ -3344,6 +3344,7 @@ tbody tr:nth-child(even):hover {
 .toggle-password:hover {
     color: var(--primary);
 }
+
 /* Validation Styles */
 .is-valid {
     border-color: var(--success) !important;
@@ -3363,11 +3364,61 @@ tbody tr:nth-child(even):hover {
 
 /* Shake Animation */
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-5px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(5px);
+    }
 }
 
 .shake-animation {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+/* Sidebar Login Button */
+.btn-sidebar-login {
+    transition: all var(--transition);
+    overflow: hidden;
+}
+
+.sidebar.collapsed .btn-sidebar-login {
+    min-width: 40px !important;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar.collapsed .btn-sidebar-login .login-text {
+    display: none;
+}
+
+.sidebar.collapsed .btn-sidebar-login i {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.sidebar.collapsed .user-profile {
+    padding: 0;
+    background: transparent;
+    display: flex;
+    justify-content: center;
 }

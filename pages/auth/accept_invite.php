@@ -33,8 +33,19 @@ try {
         } elseif ($password !== $confirmPassword) {
             $error = "Las contraseñas no coinciden.";
         } else {
+            // Procesar avatar si se subió uno
+            $avatarPath = null;
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                try {
+                    // Usamos el ID del usuario ya que lo tenemos disponible en $user['id']
+                    $avatarPath = handleAvatarUpload($_FILES['avatar'], $user['id'], $user['name']);
+                } catch (Exception $e) {
+                    Logger::warning('Avatar upload failed during activation', ['error' => $e->getMessage()]);
+                }
+            }
+
             // Activar usuario
-            activateUser($token, $password);
+            activateUser($token, $password, $avatarPath);
             
             // Iniciar sesión automáticamente o redirigir a login
             Session::setFlash('success', 'Cuenta activada exitosamente. Por favor, inicie sesión.');
@@ -87,7 +98,7 @@ try {
             <?php endif; ?>
 
             <?php if ($user): ?>
-                <form method="post" action="accept_invite.php?token=<?php echo htmlspecialchars($token); ?>" class="auth-form">
+                <form method="post" action="accept_invite.php?token=<?php echo htmlspecialchars($token); ?>" class="auth-form" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="email">Correo Electrónico</label>
                         <input type="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" disabled class="disabled-input">
@@ -110,6 +121,36 @@ try {
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="avatar">Avatar (Opcional)</label>
+                        <div class="avatar-upload-section" id="avatarUploadSection">
+                            <label for="avatar" class="custom-file-upload" id="customFileUpload">
+                                <span class="file-icon fas fa-upload"></span>
+                                <span class="file-text">
+                                    <span class="file-text-main" id="fileTextMain">Seleccionar archivo</span>
+                                    <span class="file-text-sub" id="fileTextSub">o arrastra y suelta aquí</span>
+                                </span>
+                            </label>
+                            <input type="file" 
+                                   id="avatar" 
+                                   name="avatar" 
+                                   accept="image/jpeg,image/png,image/gif">
+                            <div class="file-preview" id="filePreview">
+                                <img src="" alt="Preview" class="file-preview-image" id="filePreviewImage">
+                                <div class="file-preview-info">
+                                    <div class="file-preview-name" id="filePreviewName"></div>
+                                    <div class="file-preview-size" id="filePreviewSize"></div>
+                                </div>
+                                <button type="button" class="file-preview-remove" id="filePreviewRemove">
+                                    <i class="fas fa-times"></i> Quitar
+                                </button>
+                            </div>
+                            <small class="text-neutral-600">
+                                Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB.
+                            </small>
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn btn-primary btn-block btn-lg">
                         Activar Cuenta
                     </button>
@@ -118,6 +159,7 @@ try {
         </div>
     </div>
     
+    <script src="<?php echo getWebPath('assets/js/user-form.js'); ?>"></script>
     <script src="<?php echo getWebPath('assets/js/auth.js'); ?>"></script>
 </body>
 </html>

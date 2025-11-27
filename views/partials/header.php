@@ -92,7 +92,10 @@
                 </div>
                 <?php else: ?>
                 <div class="user-profile justify-content-center">
-                    <a href="<?php echo getWebPath('pages/auth/login.php'); ?>" class="btn btn-primary btn-sm w-100">Iniciar Sesión</a>
+                    <a href="<?php echo getWebPath('pages/auth/login.php'); ?>" class="btn btn-primary btn-sm w-100 login-btn btn-sidebar-login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="login-text">Iniciar Sesión</span>
+                    </a>
                 </div>
                 <?php endif; ?>
             </div>
@@ -130,8 +133,7 @@
                         echo renderMessage($flash['message'], $flash['type']);
                     }
                 }
-                
-                // Mostrar mensajes de URL (compatibilidad hacia atrás)
+
                 if (isset($_GET['message'])) {
                     $type = $_GET['type'] ?? 'success';
                     echo renderMessage($_GET['message'], $type);
