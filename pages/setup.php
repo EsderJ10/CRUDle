@@ -59,6 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $error = $e instanceof AppException ? $e->getUserMessage() : $e->getMessage();
         $step = 2;
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'init_db') {
+    try {
+        initializeDatabase();
+        $success = 'Base de datos inicializada correctamente.';
+    } catch (Exception $e) {
+        $error = $e->getMessage();
+    }
 }
 
 // System Checks
@@ -71,6 +78,17 @@ if ($step === 1) {
         'status' => $dbStatus['status'] === 'OK',
         'message' => $dbStatus['message']
     ];
+
+    // Schema Check
+    if ($dbStatus['status'] === 'OK') {
+        $schemaStatus = checkDatabaseSchema();
+        $checks[] = [
+            'name' => 'Esquema de Base de Datos',
+            'status' => $schemaStatus['status'] === 'OK',
+            'message' => $schemaStatus['message'],
+            'action' => $schemaStatus['status'] !== 'OK' ? 'init_db' : null
+        ];
+    }
 
     // Write Permissions
     $uploadDir = getAvatarPath();
@@ -139,6 +157,12 @@ if ($step === 1) {
                         </div>
                         <?php if (!$check['status']): ?>
                             <p class="text-sm text-danger mt-1"><?php echo htmlspecialchars($check['message']); ?></p>
+                            <?php if (isset($check['action']) && $check['action'] === 'init_db'): ?>
+                                <form method="POST" action="setup.php" class="mt-2">
+                                    <input type="hidden" name="action" value="init_db">
+                                    <button type="submit" class="btn btn-sm btn-outline">Inicializar Base de Datos</button>
+                                </form>
+                            <?php endif; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>

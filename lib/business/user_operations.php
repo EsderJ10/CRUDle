@@ -383,9 +383,46 @@ function getDefaultAvatar() {
 function checkSystemStatus() {
     try {
         Database::getInstance();
-        return ['status' => 'OK', 'message' => 'Database connection successful'];
+        return ['status' => 'OK', 'message' => 'Conexión a base de datos exitosa'];
     } catch (Exception $e) {
-        return ['status' => 'ERROR', 'message' => 'Database connection failed'];
+        return ['status' => 'ERROR', 'message' => 'Fallo al conectar a la base de datos'];
+    }
+}
+
+function checkDatabaseSchema() {
+    try {
+        $db = Database::getInstance();
+        $db->query("SELECT 1 FROM users LIMIT 1");
+        return ['status' => 'OK', 'message' => 'Tabla de usuarios encontrada'];
+    } catch (Exception $e) {
+        return ['status' => 'ERROR', 'message' => 'La tabla "users" no existe'];
+    }
+}
+
+function initializeDatabase() {
+    try {
+        $db = Database::getInstance();
+        $sql = "CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(150) NOT NULL,
+            role ENUM('admin', 'editor', 'viewer') NOT NULL,
+            status ENUM('active', 'pending', 'inactive') DEFAULT 'pending',
+            invitation_token VARCHAR(64) NULL,
+            invitation_expires_at DATETIME NULL,
+            created_at DATETIME NOT NULL,
+            avatar_path VARCHAR(255) DEFAULT NULL,
+            password VARCHAR(255) NULL
+        )";
+        $db->query($sql);
+        return true;
+    } catch (Exception $e) {
+        throw new UserOperationException(
+            'Error initializing database: ' . $e->getMessage(),
+            'Error al inicializar la base de datos.',
+            0,
+            $e
+        );
     }
 }
 function inviteUser($name, $email, $role, $avatarPath = null) {
