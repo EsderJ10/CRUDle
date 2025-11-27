@@ -29,16 +29,14 @@ $message = $isProductionMode
         
         <?php if (!$isProductionMode): ?>
             <div class="error-code">
-                <strong>Detalles técnicos:</strong><br>
+                <strong>Detalles técnicos:</strong>
                 Tipo: <?php echo htmlspecialchars($exception::class); ?><br>
                 Archivo: <?php echo htmlspecialchars($exception->getFile()); ?><br>
                 Línea: <?php echo htmlspecialchars((string)$exception->getLine()); ?><br>
-                <br>
-                <strong>Mensaje:</strong><br>
+                <strong>Mensaje:</strong>
                 <?php echo htmlspecialchars($exception->getMessage()); ?>
             </div>
         <?php endif; ?>
-        
         <a href="<?php echo getWebPath('index.php'); ?>" class="btn">Volver a Inicio</a>
     </div>
 </body>

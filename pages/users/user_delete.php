@@ -11,7 +11,7 @@ require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/business/auth_operations.php');
 require_once getPath('lib/presentation/user_views.php');
 
-requireAdmin();
+Permissions::require(Permissions::USER_DELETE);
 
 $pageTitle = "Eliminar Usuario";
 $pageHeader = "Confirmar Eliminación";

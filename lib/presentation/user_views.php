@@ -6,7 +6,7 @@ function renderUserTable($users) {
         return '<div class="card text-center">
                     <h3>No hay usuarios registrados</h3>
                     <p class="mb-4">Comienza creando tu primer usuario del sistema.</p>
-                    <a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a>
+                    ' . (Permissions::checkCurrent(Permissions::USER_CREATE) ? '<a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a>' : '') . '
                 </div>';
     }
     
@@ -29,7 +29,7 @@ function renderUserTable($users) {
                 
     foreach ($users as $user) {
         $avatarSrc = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : getDefaultAvatar();
-        $status = $user['status'] ?? 'active'; // Default to active for old users
+        $status = $user['status'] ?? 'active';
         $statusBadge = '';
         
         if ($status === 'active') {
@@ -38,6 +38,20 @@ function renderUserTable($users) {
             $statusBadge = '<span class="badge badge-warning">Pendiente</span>';
         } else {
             $statusBadge = '<span class="badge badge-secondary">Inactivo</span>';
+        }
+
+        $actions = '<a href="user_info.php?id=' . urlencode($user['id']) . '" class="action-view" title="Ver"><i class="fas fa-eye"></i></a>';
+        
+        if (Permissions::checkCurrent(Permissions::USER_UPDATE)) {
+            $actions .= ' <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="action-edit" title="Editar"><i class="fas fa-edit"></i></a>';
+        }
+        
+        if (Permissions::checkCurrent(Permissions::USER_DELETE)) {
+            $actions .= ' <a href="user_delete.php?id=' . urlencode($user['id']) . '" class="action-delete" title="Eliminar"><i class="fas fa-trash"></i></a>';
+        }
+
+        if ($status === 'pending' && Permissions::checkCurrent(Permissions::USER_UPDATE)) {
+            $actions .= ' <a href="user_resend_invite.php?id=' . urlencode($user['id']) . '" class="action-resend" title="Reenviar Invitación"><i class="fas fa-paper-plane"></i></a>';
         }
 
         $html .= '<tr>
@@ -55,10 +69,7 @@ function renderUserTable($users) {
                     <td data-label="Fecha">' . htmlspecialchars($user['fecha_alta']) . '</td>
                     <td data-label="Acciones">
                         <div class="actions">
-                            <a href="user_info.php?id=' . urlencode($user['id']) . '" class="action-view" title="Ver"><i class="fas fa-eye"></i></a>
-                            <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="action-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                            <a href="user_delete.php?id=' . urlencode($user['id']) . '" class="action-delete" title="Eliminar"><i class="fas fa-trash"></i></a>
-                            ' . ($status === 'pending' ? '<a href="user_resend_invite.php?id=' . urlencode($user['id']) . '" class="action-resend" title="Reenviar Invitación"><i class="fas fa-paper-plane"></i></a>' : '') . '
+                            ' . $actions . '
                         </div>
                     </td>
                   </tr>';
@@ -66,19 +77,34 @@ function renderUserTable($users) {
     
     $html .= '</tbody>
               </table>
-              </div>
-              <div class="card-footer">
-                  <a href="user_create.php" class="btn btn-primary">
-                      <i class="fas fa-plus"></i> Añadir usuario
-                  </a>
-              </div>
               </div>';
+              
+    if (Permissions::checkCurrent(Permissions::USER_CREATE)) {
+        $html .= '<div class="card-footer">
+                      <a href="user_create.php" class="btn btn-primary">
+                          <i class="fas fa-plus"></i> Añadir usuario
+                      </a>
+                  </div>';
+    }
+    
+    $html .= '</div>';
     return $html;
 }
 
 function renderUserInfo($user) {
     $avatarSrc = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : getDefaultAvatar();
     
+    // Prepare buttons logic outside the string to keep syntax clean
+    $editButton = '';
+    if (Permissions::checkCurrent(Permissions::USER_UPDATE)) {
+        $editButton = '<a href="user_edit.php?id=' . urlencode($user['id']) . '" class="btn btn-primary">Editar Usuario</a>';
+    }
+
+    $deleteButton = '';
+    if (Permissions::checkCurrent(Permissions::USER_DELETE)) {
+        $deleteButton = '<a href="user_delete.php?id=' . urlencode($user['id']) . '" class="btn btn-danger">Eliminar Usuario</a>';
+    }
+
     return '<div class="card page-transition">
                 <h2>Información del Usuario</h2>
                 <div class="user-info-layout">
@@ -103,14 +129,20 @@ function renderUserInfo($user) {
                     </div>
                 </div>
                 <div class="actions mt-6">
-                    <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="btn btn-primary">Editar Usuario</a>
-                    <a href="user_delete.php?id=' . urlencode($user['id']) . '" class="btn btn-danger">Eliminar Usuario</a>
+                    ' . $editButton . '
+                    ' . $deleteButton . '
                     <a href="user_index.php" class="btn btn-secondary">Volver a la Lista</a>
                 </div>
             </div>';
 }
 
 function renderEditForm($user) {
+    // Handle the logic for the hidden input regarding permissions outside the return string
+    $roleHiddenInput = '';
+    if (!Permissions::checkCurrent(Permissions::USER_DELETE)) {
+        $roleHiddenInput = '<input type="hidden" name="rol" value="' . htmlspecialchars($user['rol']) . '">';
+    }
+
     return '<div class="card page-transition">
                 <h2>Editar Usuario</h2>
                 <form action="user_edit.php?id=' . urlencode($user['id']) . '" method="post">
@@ -126,11 +158,12 @@ function renderEditForm($user) {
                     
                     <div class="form-group">
                         <label for="rol">Rol del Usuario</label>
-                        <select id="rol" name="rol" required>
+                        <select id="rol" name="rol" required ' . (!Permissions::checkCurrent(Permissions::USER_DELETE) ? 'disabled' : '') . '>
                             <option value="admin"' . ($user['rol'] === 'admin' ? ' selected' : '') . '>Administrador</option>
                             <option value="editor"' . ($user['rol'] === 'editor' ? ' selected' : '') . '>Editor</option>
                             <option value="viewer"' . ($user['rol'] === 'viewer' ? ' selected' : '') . '>Visualizador</option>
                         </select>
+                        ' . $roleHiddenInput . '
                     </div>
                     
                     <div class="form-group">

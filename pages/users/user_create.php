@@ -13,7 +13,7 @@ require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
 
-requireAdmin();
+Permissions::require(Permissions::USER_CREATE);
 
 $pageTitle = "Invitar Usuario";
 $pageHeader = "Invitar Nuevo Usuario";

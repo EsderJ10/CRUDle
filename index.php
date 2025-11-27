@@ -11,6 +11,18 @@ require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/business/auth_operations.php');
 
+// Check for first run
+try {
+    $users = getAllUsers();
+    if (empty($users)) {
+        header('Location: pages/setup.php');
+        exit;
+    }
+} catch (Exception $e) {
+    // If DB fails, we might be in trouble, but let's try to proceed or show error
+    // For now, let it fall through to requireLogin which might fail too
+}
+
 requireLogin();
 
 $pageTitle = "Dashboard - CRUDle";

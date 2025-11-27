@@ -50,5 +50,15 @@ class Session {
         self::init();
         return !empty($_SESSION['flash_messages']);
     }
+
+    /**
+     * Obtiene un valor de sesión.
+     * @param string $variable El nombre de la variable de sesión.
+     * @return mixed El valor de la variable de sesión o null si no existe.
+     */
+    public static function get($variable = null) {
+        self::init();
+        return $_SESSION[$variable] ?? null;
+    }
 }
 ?>

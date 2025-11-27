@@ -32,6 +32,7 @@ body::before {
     0% {
         transform: translate(0, 0);
     }
+
     100% {
         transform: translate(50px, 50px);
     }
@@ -42,7 +43,7 @@ body::before {
     backdrop-filter: blur(10px);
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
     max-width: 650px;
     width: 100%;
     padding: 50px 40px;
@@ -57,6 +58,7 @@ body::before {
         opacity: 0;
         transform: translateY(30px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -72,9 +74,12 @@ body::before {
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
@@ -84,7 +89,6 @@ body::before {
     font-size: 32px;
     font-weight: 700;
     color: #2d3748;
-    margin-bottom: 12px;
     letter-spacing: -0.5px;
 }
 
@@ -126,7 +130,7 @@ body::before {
     margin-bottom: 8px;
 }
 
-.error-code br + strong {
+.error-code br+strong {
     margin-top: 12px;
 }
 
@@ -182,33 +186,33 @@ body::before {
     body {
         padding: 15px;
     }
-    
+
     .error-container {
         padding: 40px 30px;
         border-radius: 16px;
         max-width: 550px;
     }
-    
+
     .error-icon {
         font-size: 72px;
         margin-bottom: 20px;
     }
-    
+
     .error-title {
         font-size: 28px;
     }
-    
+
     .error-message {
         font-size: 16px;
         margin-bottom: 28px;
     }
-    
+
     .error-code {
         padding: 18px;
         font-size: 12px;
         margin: 24px 0;
     }
-    
+
     .btn {
         padding: 13px 32px;
         font-size: 15px;
@@ -219,35 +223,35 @@ body::before {
     body {
         padding: 12px;
     }
-    
+
     .error-container {
         padding: 35px 25px;
         border-radius: 14px;
     }
-    
+
     .error-icon {
         font-size: 64px;
         margin-bottom: 18px;
     }
-    
+
     .error-title {
         font-size: 26px;
         margin-bottom: 10px;
     }
-    
+
     .error-message {
         font-size: 15px;
         margin-bottom: 26px;
         line-height: 1.6;
     }
-    
+
     .error-code {
         font-size: 11px;
         padding: 16px;
         margin: 22px 0;
         border-left-width: 4px;
     }
-    
+
     .btn {
         padding: 12px 28px;
         font-size: 15px;
@@ -260,37 +264,37 @@ body::before {
     body {
         padding: 10px;
     }
-    
+
     .error-container {
         padding: 30px 20px;
         border-radius: 12px;
     }
-    
+
     .error-icon {
         font-size: 56px;
         margin-bottom: 16px;
     }
-    
+
     .error-title {
         font-size: 24px;
     }
-    
+
     .error-message {
         font-size: 14px;
         margin-bottom: 24px;
     }
-    
+
     .error-code {
         font-size: 11px;
         padding: 14px;
         margin: 20px 0;
         border-radius: 6px;
     }
-    
+
     .error-code strong {
         font-size: 12px;
     }
-    
+
     .btn {
         padding: 11px 24px;
         font-size: 14px;
@@ -303,19 +307,19 @@ body::before {
     .error-container {
         padding: 25px 18px;
     }
-    
+
     .error-icon {
         font-size: 48px;
     }
-    
+
     .error-title {
         font-size: 22px;
     }
-    
+
     .error-message {
         font-size: 14px;
     }
-    
+
     .error-code {
         font-size: 10px;
         padding: 12px;
@@ -327,39 +331,40 @@ body::before {
     body {
         padding: 15px;
     }
-    
+
     .error-container {
         padding: 25px 30px;
         max-height: 90vh;
         overflow-y: auto;
     }
-    
+
     .error-icon {
         font-size: 48px;
         margin-bottom: 12px;
     }
-    
+
     .error-title {
         font-size: 22px;
         margin-bottom: 8px;
     }
-    
+
     .error-message {
         font-size: 14px;
         margin-bottom: 16px;
     }
-    
+
     .error-code {
         margin: 16px 0;
         padding: 14px;
     }
-    
+
     .btn {
         padding: 10px 24px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {

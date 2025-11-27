@@ -292,3 +292,245 @@ Context: {
     "code": 0
 }
 --------------------------------------------------------------------------------
+[2025-11-27 15:06:20] [CRITICAL] Uncaught Exception
+Exception: ParseError - syntax error, unexpected identifier "disabled", expecting ";"
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/presentation\/user_views.php",
+    "line": 148,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:06:20] [CRITICAL] Uncaught Exception
+Exception: ParseError - syntax error, unexpected identifier "disabled", expecting ";"
+Stack Trace:
+#0 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/presentation\/user_views.php",
+    "line": 148,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:08:54] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined method Session::get()
+Stack Trace:
+#0 /var/www/html/lib/core/Permissions.php(74): Permissions::checkCurrent('user_create')
+#1 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#2 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 59,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:09:34] [CRITICAL] Uncaught Exception
+Exception: Error - Call to undefined method Session::get()
+Stack Trace:
+#0 /var/www/html/lib/core/Permissions.php(74): Permissions::checkCurrent('user_create')
+#1 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#2 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 59,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 14:11:33] [CRITICAL] Uncaught Exception
+Exception: ParseError - syntax error, unexpected token "public", expecting end of file
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(9): require_once()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Session.php",
+    "line": 59,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 14:11:33] [CRITICAL] Uncaught Exception
+Exception: ParseError - syntax error, unexpected token "public", expecting end of file
+Stack Trace:
+#0 /var/www/html/index.php(9): require_once()
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Session.php",
+    "line": 59,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:12:01] [CRITICAL] Uncaught Exception
+Exception: Error - Class "AuthorizationException" not found
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:12:01] [CRITICAL] Uncaught Exception
+Exception: Error - Class "AuthorizationException" not found
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:12:11] [CRITICAL] Uncaught Exception
+Exception: Error - Class "AuthorizationException" not found
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 0
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:12:31] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:12:35] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:13:06] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:13:07] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:13:17] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:14:50] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:14:57] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:16:15] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:16:59] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:17:48] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:18:44] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:20:43] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------
+[2025-11-27 15:20:50] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 75,
+    "code": 401
+}
+--------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
 
-requireAdmin();
+Permissions::require(Permissions::USER_UPDATE);
 
 $pageTitle = "Editar Usuario";
 $pageHeader = "Editar Usuario";
@@ -62,6 +62,11 @@ try {
                 'rol' => $_POST['role'] ?? '',
                 'password' => $_POST['password'] ?? ''
             ]);
+
+            // Security: Only Admins (who can delete) can change roles
+            if (!Permissions::checkCurrent(Permissions::USER_DELETE)) {
+                $formData['rol'] = $user['rol'];
+            }
             
             // Validar datos básicos
             $errors = validateUserData($formData);

@@ -15,6 +15,7 @@ require_once getPath('lib/core/exceptions.php');
 require_once getPath('lib/core/error_handler.php');
 require_once getPath('lib/core/Session.php');
 require_once getPath('lib/core/CSRF.php');
+require_once getPath('lib/core/Permissions.php');
 
 // Helpers
 require_once getPath('lib/helpers/utils.php');
