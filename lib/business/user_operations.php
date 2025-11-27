@@ -395,10 +395,34 @@ function checkDatabaseSchema() {
         // Check if table exists
         $db->query("SELECT 1 FROM users LIMIT 1");
         
-        // Check if status column exists
+        // Check for status column
         $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'status'");
         if (!$stmt->fetch()) {
-            return ['status' => 'WARNING', 'message' => 'La tabla existe pero falta la columna "status"'];
+            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (status)'];
+        }
+
+        // Check for invitation_token column
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'invitation_token'");
+        if (!$stmt->fetch()) {
+            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (invitation_token)'];
+        }
+
+        // Check for invitation_expires_at column
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'invitation_expires_at'");
+        if (!$stmt->fetch()) {
+            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (invitation_expires_at)'];
+        }
+        
+        // Check for password column
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'password'");
+        if (!$stmt->fetch()) {
+            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (password)'];
+        }
+
+        // Check for avatar_path column
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'avatar_path'");
+        if (!$stmt->fetch()) {
+            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (avatar_path)'];
         }
         
         return ['status' => 'OK', 'message' => 'Esquema de base de datos correcto'];
@@ -426,7 +450,7 @@ function initializeDatabase() {
         )";
         $db->query($sql);
         
-        // Check for missing columns and add them (Migration)
+        // Check for missing columns and add them
         $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'status'");
         if (!$stmt->fetch()) {
             $db->query("ALTER TABLE users ADD COLUMN status ENUM('active', 'pending', 'inactive') DEFAULT 'pending' AFTER role");
@@ -440,6 +464,16 @@ function initializeDatabase() {
         $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'invitation_expires_at'");
         if (!$stmt->fetch()) {
             $db->query("ALTER TABLE users ADD COLUMN invitation_expires_at DATETIME NULL AFTER invitation_token");
+        }
+
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'avatar_path'");
+        if (!$stmt->fetch()) {
+            $db->query("ALTER TABLE users ADD COLUMN avatar_path VARCHAR(255) DEFAULT NULL AFTER created_at");
+        }
+
+        $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'password'");
+        if (!$stmt->fetch()) {
+            $db->query("ALTER TABLE users ADD COLUMN password VARCHAR(255) NULL AFTER avatar_path");
         }
 
         return true;
