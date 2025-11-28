@@ -39,52 +39,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         $db = Database::getInstance();
-        $pdo = $db->getConnection();
         
-        try {
-            $pdo->beginTransaction();
-
-            // Check count inside transaction to avoid race conditions
-            if (getUserCount() > 0) {
-                // If someone else created a user in the meantime
-                $pdo->rollBack();
-                header('Location: auth/login.php');
-                exit;
-            }
-
-            // Reset IDs if this is the first user
-            $db->query("TRUNCATE TABLE users");
-
-            $formData = [
-                'name' => $name,
-                'email' => $email,
-                'role' => 'admin',
-                'password' => $password,
-                'avatar' => null,
-                'status' => 'active'
-            ];
-
-            $userId = createUser($formData);
-            
-            $pdo->commit();
-            
-            // Auto-login
-            try {
-                login($email, $password);
-            } catch (Exception $e) {
-                header('Location: auth/login.php?setup_success=1');
-                exit;
-            }
-
-            header('Location: setup.php?step=3');
+        // Check count to avoid race conditions
+        if (getUserCount() > 0) {
+            header('Location: auth/login.php');
             exit;
-
-        } catch (Exception $e) {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-            throw $e;
         }
+
+        // Reset IDs if this is the first user
+        $db->query("TRUNCATE TABLE users");
+
+        $formData = [
+            'name' => $name,
+            'email' => $email,
+            'role' => 'admin',
+            'password' => $password,
+            'avatar' => null,
+            'status' => 'active'
+        ];
+
+        $userId = createUser($formData);
+        
+        // Auto-login
+        try {
+            login($email, $password);
+        } catch (Exception $e) {
+            header('Location: auth/login.php?setup_success=1');
+            exit;
+        }
+
+        header('Location: setup.php?step=3');
+        exit;
 
     } catch (Exception $e) {
         $error = $e instanceof AppException ? $e->getUserMessage() : $e->getMessage();
