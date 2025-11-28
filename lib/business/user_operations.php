@@ -170,6 +170,24 @@ function deleteUserById($userId) {
         }
         
         $db = Database::getInstance();
+        
+        // Check if trying to delete self
+        $currentUserId = Session::get('user_id');
+        if ($userId == $currentUserId) {
+            throw new UserOperationException(
+                'Attempt to delete own account',
+                'No puedes eliminar tu propia cuenta.'
+            );
+        }
+
+        // Check if it's the last user
+        if (getUserCount() <= 1) {
+            throw new UserOperationException(
+                'Attempt to delete the last user',
+                'No se puede eliminar el último usuario del sistema.'
+            );
+        }
+
         $db->query("DELETE FROM users WHERE id = ?", [$userId]);
         
         return true;
