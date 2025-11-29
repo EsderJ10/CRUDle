@@ -717,3 +717,14 @@ Context: {
     "errno": 2
 }
 --------------------------------------------------------------------------------
+[2025-11-29 20:21:31] [CRITICAL] Uncaught Exception
+Exception: AuthException - User does not have permission for action: user_create
+Stack Trace:
+#0 /var/www/html/pages/users/user_create.php(16): Permissions::require('user_create')
+#1 {main}
+Context: {
+    "file": "\/var\/www\/html\/lib\/core\/Permissions.php",
+    "line": 129,
+    "code": 401
+}
+--------------------------------------------------------------------------------

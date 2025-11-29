@@ -44,15 +44,19 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Invitar Usuario';
         
         <div class="form-group">
             <label for="role">Rol del Usuario</label>
-            <select id="role" name="role" required>
+            <select id="role" name="role" required 
+                    data-current-role="<?php echo htmlspecialchars($isEdit ? $user['role'] : ''); ?>"
+                    data-is-self="<?php echo ($isEdit && $user['id'] == Session::get('user_id')) ? 'true' : 'false'; ?>">
                 <option value="">Seleccione un rol</option>
                 <?php 
                 // Use availableRoles if provided (from controller), otherwise get all roles
                 if (isset($availableRoles)) {
                     $rolesToDisplay = $availableRoles;
                 } else {
-                    $allRoles = getRoles();
-                    $rolesToDisplay = array_combine($allRoles, array_map('ucfirst', $allRoles));
+                    $rolesToDisplay = [];
+                    foreach (Role::cases() as $role) {
+                        $rolesToDisplay[$role->value] = $role->label();
+                    }
                 }
                 
                 $currentRole = $isEdit ? $user['role'] : $formData['role'];

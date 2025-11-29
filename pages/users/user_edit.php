@@ -184,53 +184,15 @@ try {
     if ($user !== null) {
         include getPath('views/partials/header.php');
         // Filter available roles based on permissions
-        $allRoles = [
-            'admin' => 'Administrador',
-            'editor' => 'Editor',
-            'viewer' => 'Visualizador'
-        ];
-        
         $availableRoles = [];
-        foreach ($allRoles as $roleKey => $roleLabel) {
-            if (Permissions::canAssignRole($roleKey)) {
-                $availableRoles[$roleKey] = $roleLabel;
+        foreach (Role::cases() as $role) {
+            if (Permissions::canAssignRole($role->value)) {
+                $availableRoles[$role->value] = $role->label();
             }
         }
 
         // Pass available roles to the view
-        // TODO: The view needs to be updated to use $availableRoles instead of hardcoded options
-        
         include getPath('views/components/forms/user_form.php');
-        
-        // Add JS warning for self-demotion
-        if ($user['id'] == Session::get('user_id')) {
-            echo "<script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const roleSelect = document.querySelector('select[name=\"role\"]');
-                const currentRole = '" . $user['role'] . "';
-                const roleHierarchy = {'viewer': 0, 'editor': 1, 'admin': 2};
-                
-                if(roleSelect) {
-                    roleSelect.addEventListener('change', function() {
-                        const newRole = this.value;
-                        if (roleHierarchy[newRole] < roleHierarchy[currentRole]) {
-                            const warningDiv = document.createElement('div');
-                            warningDiv.id = 'role-warning';
-                            warningDiv.className = 'alert alert-warning mt-2';
-                            warningDiv.textContent = 'Advertencia: Estás a punto de reducir tus propios permisos. Podrías perder acceso a esta página.';
-                            
-                            if (!document.getElementById('role-warning')) {
-                                this.parentNode.appendChild(warningDiv);
-                            }
-                        } else {
-                            const warning = document.getElementById('role-warning');
-                            if (warning) warning.remove();
-                        }
-                    });
-                }
-            });
-            </script>";
-        }
         
         include getPath('views/partials/footer.php');
     }
