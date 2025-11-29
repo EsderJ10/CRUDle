@@ -67,13 +67,18 @@ try {
                 'password' => $_POST['password'] ?? ''
             ]);
 
-            // Validate role assignment permission
-            if (!Permissions::canAssignRole($formData['role'])) {
-                throw new ValidationException(
-                    'Permission denied',
-                    ['role' => ['No tienes permisos para asignar el rol seleccionado.']],
-                    'Error de permisos.'
-                );
+            // If editing self, FORCE role to remain unchanged.
+            if ($userId == Session::get('user_id')) {
+                $formData['role'] = $user['role'];
+            } else {
+                // Validate role assignment permission
+                if (!Permissions::canAssignRole($formData['role'])) {
+                    throw new ValidationException(
+                        'Permission denied',
+                        ['role' => ['No tienes permisos para asignar el rol seleccionado.']],
+                        'Error de permisos.'
+                    );
+                }
             }
             
             // Validar datos básicos

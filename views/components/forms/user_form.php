@@ -46,7 +46,8 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Invitar Usuario';
             <label for="role">Rol del Usuario</label>
             <select id="role" name="role" required 
                     data-current-role="<?php echo htmlspecialchars($isEdit ? $user['role'] : ''); ?>"
-                    data-is-self="<?php echo ($isEdit && $user['id'] == Session::get('user_id')) ? 'true' : 'false'; ?>">
+                    data-is-self="<?php echo ($isEdit && $user['id'] == Session::get('user_id')) ? 'true' : 'false'; ?>"
+                    <?php echo ($isEdit && $user['id'] == Session::get('user_id')) ? 'disabled' : ''; ?>>
                 <option value="">Seleccione un rol</option>
                 <?php 
                 // Use availableRoles if provided (from controller), otherwise get all roles
@@ -60,14 +61,17 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Invitar Usuario';
                 }
                 
                 $currentRole = $isEdit ? $user['role'] : $formData['role'];
-                foreach ($rolesToDisplay as $roleValue => $roleLabel): 
-                ?>
-                    <option value="<?php echo htmlspecialchars($roleValue); ?>" 
-                            <?php echo ($currentRole === $roleValue) ? 'selected' : ''; ?>>
+                
+                foreach ($rolesToDisplay as $roleValue => $roleLabel): ?>
+                    <option value="<?php echo htmlspecialchars($roleValue); ?>" <?php echo ($currentRole === $roleValue) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($roleLabel); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
+            <?php if ($isEdit && $user['id'] == Session::get('user_id')): ?>
+                <input type="hidden" name="role" value="<?php echo htmlspecialchars($user['role']); ?>">
+                <small class="text-muted"><i class="fas fa-lock"></i> Por seguridad, no puedes cambiar tu propio rol.</small>
+            <?php endif; ?>
         </div>
         
         <?php if ($isEdit): ?>

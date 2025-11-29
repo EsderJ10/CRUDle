@@ -60,7 +60,10 @@ class Permissions {
 
     /**
      * Checks if the current user can assign the target role.
-     * Rule: Target role level must be <= my role level.
+     * Rule:
+     * - Admin: Can assign any role.
+     * - Editor: Can assign 'viewer' or 'editor'. Cannot assign 'admin'.
+     * - Viewer: Cannot assign roles (shouldn't reach here).
      * 
      * @param string $targetRole The role to assign.
      * @return bool True if the current user can assign the target role, false otherwise.
@@ -69,15 +72,25 @@ class Permissions {
         $myRole = Session::get('user_role');
         if (!$myRole) return false;
 
-        return self::getRoleLevel($targetRole) <= self::getRoleLevel($myRole);
+        // Admin can assign anything
+        if ($myRole === self::ROLE_ADMIN) {
+            return true;
+        }
+
+        // Editor can assign viewer or editor, but NOT admin
+        if ($myRole === self::ROLE_EDITOR) {
+            return in_array($targetRole, [self::ROLE_VIEWER, self::ROLE_EDITOR]);
+        }
+
+        return false;
     }
 
     /**
      * Checks if the current user can edit the target user.
      * Rule:
      * - Admins can edit everyone.
-     * - Editors can only edit users with strictly lower level OR themselves.
-     * - Viewers can only read users.
+     * - Editors can edit Self and Viewers. Cannot edit other Editors or Admins.
+     * - Viewers can edit Self only.
      * 
      * @param array $targetUser The user to edit.
      * @return bool True if the current user can edit the target user, false otherwise.
@@ -88,18 +101,23 @@ class Permissions {
         
         if (!$myRole) return false;
 
-        // Admins can edit everyone => early return
+        // Admins can edit everyone
         if ($myRole === self::ROLE_ADMIN) {
             return true;
         }
 
-        // Editors can always edit self (but role assignment is restricted by canAssignRole)
+        // Everyone can edit themselves
         if ($targetUser['id'] == $myId) {
             return true;
         }
 
-        // Strict hierarchy check for others
-        return self::getRoleLevel($targetUser['role']) < self::getRoleLevel($myRole);
+        // Editors can edit Viewers
+        if ($myRole === self::ROLE_EDITOR) {
+            return $targetUser['role'] === self::ROLE_VIEWER;
+        }
+
+        // Viewers cannot edit anyone else
+        return false;
     }
 
     /**

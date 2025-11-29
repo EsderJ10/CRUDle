@@ -14,42 +14,6 @@
          */
         init() {
             this.initAvatarHandling();
-            this.initRoleWarning();
-        },
-
-        /**
-         * Init the role warning module for the user form
-         */
-        initRoleWarning() {
-            const roleSelect = document.getElementById('role');
-            if (!roleSelect) return;
-
-            const currentRole = roleSelect.dataset.currentRole;
-            const isSelf = roleSelect.dataset.isSelf === 'true';
-
-            if (!currentRole || !isSelf) return;
-
-            const roleHierarchy = { 'viewer': 0, 'editor': 1, 'admin': 2 };
-
-            roleSelect.addEventListener('change', function () {
-                const newRole = this.value;
-                // Check if both roles exist in hierarchy to avoid errors
-                if (roleHierarchy.hasOwnProperty(newRole) && roleHierarchy.hasOwnProperty(currentRole)) {
-                    if (roleHierarchy[newRole] < roleHierarchy[currentRole]) {
-                        let warningDiv = document.getElementById('role-warning');
-                        if (!warningDiv) {
-                            warningDiv = document.createElement('div');
-                            warningDiv.id = 'role-warning';
-                            warningDiv.className = 'alert alert-warning mt-2';
-                            warningDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Advertencia: Estás a punto de reducir tus propios permisos. Podrías perder acceso a esta página.';
-                            this.parentNode.appendChild(warningDiv);
-                        }
-                    } else {
-                        const warning = document.getElementById('role-warning');
-                        if (warning) warning.remove();
-                    }
-                }
-            });
         },
 
         /**

@@ -293,15 +293,13 @@
     color: var(--neutral-500);
 }
 
-.dark-theme .avatar-warning,
-.dark-theme .alert-warning {
+.dark-theme .avatar-warning {
     background: rgba(245, 158, 11, 0.15);
     border-color: var(--warning);
     color: var(--warning-light);
 }
 
-.dark-theme .avatar-warning small,
-.dark-theme .alert-warning small {
+.dark-theme .avatar-warning small {
     color: var(--warning-light);
 }
 
@@ -1639,7 +1637,7 @@ td {
         color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--bg-primary);
     color: var(--text-primary);
-    /* Prevent text overflow - critical for emails and long text */
+    /* Prevent text overflow */
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 300px;
@@ -1651,7 +1649,6 @@ tr {
 
 tr:hover {
     background: var(--primary-bg);
-    transform: scale(1.01);
 }
 
 tr:hover td {
@@ -2409,8 +2406,7 @@ tbody tr:nth-child(even):hover {
     border: 1px solid transparent;
 }
 
-.avatar-warning,
-.alert-warning {
+.avatar-warning {
     margin-top: var(--space-2);
     padding: var(--space-2) var(--space-3);
     background: var(--warning-bg);
@@ -2420,8 +2416,7 @@ tbody tr:nth-child(even):hover {
     border-color: var(--warning-light);
 }
 
-.avatar-warning small,
-.alert-warning small {
+.avatar-warning small {
     color: #d97706;
     font-weight: 500;
     display: flex;
@@ -2429,8 +2424,7 @@ tbody tr:nth-child(even):hover {
     gap: var(--space-2);
 }
 
-.avatar-warning i,
-.alert-warning i {
+.avatar-warning i {
     font-size: 0.875rem;
 }
 
