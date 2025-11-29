@@ -32,27 +32,27 @@ if (Session::get('user_id')) {
     try {
         $db = Database::getInstance();
         $stmt = $db->query("SELECT id, role, status, name, email, avatar_path FROM users WHERE id = ?", [Session::get('user_id')]);
-        $user = $stmt->fetch();
+        $sessionUser = $stmt->fetch();
 
         // Ghost User Check
-        if (!$user) {
+        if (!$sessionUser) {
             session_destroy();
             header('Location: ' . getWebPath('pages/auth/login.php?error=account_deleted'));
             exit;
         }
 
         // Status Check
-        if ($user['status'] !== 'active') {
+        if ($sessionUser['status'] !== 'active') {
             session_destroy();
             header('Location: ' . getWebPath('pages/auth/login.php?error=account_inactive'));
             exit;
         }
 
         // Data Synchronization
-        $_SESSION['user_role'] = $user['role'];
-        $_SESSION['user_name'] = $user['name'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['user_avatar'] = $user['avatar_path']; 
+        $_SESSION['user_role'] = $sessionUser['role'];
+        $_SESSION['user_name'] = $sessionUser['name'];
+        $_SESSION['user_email'] = $sessionUser['email'];
+        $_SESSION['user_avatar'] = $sessionUser['avatar_path']; 
 
     } catch (Exception $e) {
         error_log("Session Sync Error: " . $e->getMessage());
