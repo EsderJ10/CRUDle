@@ -164,43 +164,51 @@ function updateUser($userId, $formData) {
 }
 
 function deleteUserById($userId) {
+    if (empty($userId)) {
+        throw new InvalidStateException('Empty user ID provided', 'El ID de usuario no es válido.');
+    }
+
+    // Check if trying to delete self
+    $currentUserId = Session::get('user_id');
+    if ($userId == $currentUserId) {
+        throw new UserOperationException(
+            'Attempt to delete own account',
+            'No puedes eliminar tu propia cuenta.'
+        );
+    }
+
+    // Check if it's the last user
+    if (getUserCount() <= 1) {
+        throw new UserOperationException(
+            'Attempt to delete the last user',
+            'No se puede eliminar el último usuario del sistema.'
+        );
+    }
+
     try {
-        if (empty($userId)) {
-            throw new InvalidStateException('Empty user ID provided', 'El ID de usuario no es válido.');
-        }
-        
         $db = Database::getInstance();
         
-        // Check if trying to delete self
-        $currentUserId = Session::get('user_id');
-        if ($userId == $currentUserId) {
+        $stmt = $db->query("DELETE FROM users WHERE id = ?", [$userId]);
+        
+        // Check if the user actually existed
+        if ($stmt->rowCount() === 0) {
             throw new UserOperationException(
-                'Attempt to delete own account',
-                'No puedes eliminar tu propia cuenta.'
+                'User not found: ' . $userId,
+                'El usuario no existe.'
             );
         }
-
-        // Check if it's the last user
-        if (getUserCount() <= 1) {
-            throw new UserOperationException(
-                'Attempt to delete the last user',
-                'No se puede eliminar el último usuario del sistema.'
-            );
-        }
-
-        $db->query("DELETE FROM users WHERE id = ?", [$userId]);
         
         return true;
+
     } catch (Exception $e) {
         throw new UserOperationException(
-            'Error deleting user: ' . $e->getMessage(),
-            'Error al eliminar el usuario.',
+            'DB Error deleting user: ' . $e->getMessage(),
+            'Error del sistema al intentar eliminar el usuario.',
             0,
             $e
         );
     }
 }
-
 function getUserStatistics() {
     try {
         $db = Database::getInstance();
