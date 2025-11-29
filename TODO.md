@@ -1,7 +1,7 @@
 # TODO
 
 ## MUST DO FIRST
-- [ ] User role are not being updated after editing. It is reflected on database but not on session. For example, an user downgraded from editor to viewer, will still have editor permission until logged out and logged in again (which means session is not being updated).
+- [x] User role are not being updated after editing. It is reflected on database but not on session. For example, an user downgraded from editor to viewer, will still have editor permission until logged out and logged in again (which means session is not being updated).
 - [x] Think what to do if the database has no users (first run of the app) - maybe a page with create admin user?.
 - [x] Implement a migration script to migrate the old csv to new database structure?.
 - [x] Specify what admin/editor/viewer can do.
