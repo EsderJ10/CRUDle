@@ -181,7 +181,7 @@ function validateUserData($data) {
     $errors = [];
     
     if (isset($data['name'])) {
-        $errors = array_merge($errors, validateName($data['nombre']));
+        $errors = array_merge($errors, validateName($data['name']));
     }
     
     if (isset($data['email'])) {

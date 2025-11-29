@@ -48,7 +48,7 @@ try {
             activateUser($token, $password, $avatarPath);
             
             // Iniciar sesión automáticamente o redirigir a login
-            Session::setFlash('success', 'Cuenta activada exitosamente. Por favor, inicie sesión.');
+            Session::setFlash('success', 'Cuenta activada exitosamente. Ahora puedes iniciar sesión.');
             header('Location: login.php');
             exit;
         }

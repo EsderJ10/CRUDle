@@ -33,7 +33,6 @@ class Permissions {
                 self::USER_DELETE,
             ],
             self::ROLE_EDITOR => [
-                self::USER_CREATE,
                 self::USER_READ,
                 self::USER_UPDATE,
             ],
@@ -47,6 +46,60 @@ class Permissions {
         }
 
         return in_array($action, $permissions[$role]);
+    }
+
+    private const ROLE_HIERARCHY = [
+        self::ROLE_VIEWER => 0,
+        self::ROLE_EDITOR => 1,
+        self::ROLE_ADMIN => 2,
+    ];
+
+    public static function getRoleLevel(string $role): int {
+        return self::ROLE_HIERARCHY[$role] ?? -1;
+    }
+
+    /**
+     * Checks if the current user can assign the target role.
+     * Rule: Target role level must be <= my role level.
+     * 
+     * @param string $targetRole The role to assign.
+     * @return bool True if the current user can assign the target role, false otherwise.
+     */
+    public static function canAssignRole(string $targetRole): bool {
+        $myRole = Session::get('user_role');
+        if (!$myRole) return false;
+
+        return self::getRoleLevel($targetRole) <= self::getRoleLevel($myRole);
+    }
+
+    /**
+     * Checks if the current user can edit the target user.
+     * Rule:
+     * - Admins can edit everyone.
+     * - Editors can only edit users with strictly lower level OR themselves.
+     * - Viewers can only read users.
+     * 
+     * @param array $targetUser The user to edit.
+     * @return bool True if the current user can edit the target user, false otherwise.
+     */
+    public static function canEditUser(array $targetUser): bool {
+        $myRole = Session::get('user_role');
+        $myId = Session::get('user_id');
+        
+        if (!$myRole) return false;
+
+        // Admins can edit everyone => early return
+        if ($myRole === self::ROLE_ADMIN) {
+            return true;
+        }
+
+        // Editors can always edit self (but role assignment is restricted by canAssignRole)
+        if ($targetUser['id'] == $myId) {
+            return true;
+        }
+
+        // Strict hierarchy check for others
+        return self::getRoleLevel($targetUser['role']) < self::getRoleLevel($myRole);
     }
 
     /**

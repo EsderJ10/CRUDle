@@ -47,13 +47,20 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Invitar Usuario';
             <select id="role" name="role" required>
                 <option value="">Seleccione un rol</option>
                 <?php 
-                $roles = getRoles();
+                // Use availableRoles if provided (from controller), otherwise get all roles
+                if (isset($availableRoles)) {
+                    $rolesToDisplay = $availableRoles;
+                } else {
+                    $allRoles = getRoles();
+                    $rolesToDisplay = array_combine($allRoles, array_map('ucfirst', $allRoles));
+                }
+                
                 $currentRole = $isEdit ? $user['role'] : $formData['role'];
-                foreach ($roles as $role): 
+                foreach ($rolesToDisplay as $roleValue => $roleLabel): 
                 ?>
-                    <option value="<?php echo htmlspecialchars($role); ?>" 
-                            <?php echo ($currentRole === $role) ? 'selected' : ''; ?>>
-                        <?php echo ucfirst(htmlspecialchars($role)); ?>
+                    <option value="<?php echo htmlspecialchars($roleValue); ?>" 
+                            <?php echo ($currentRole === $roleValue) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($roleLabel); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
