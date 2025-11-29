@@ -1,4 +1,4 @@
-docs/notes/
+docs/*
 .env
 uploads
 uploads/avatars
