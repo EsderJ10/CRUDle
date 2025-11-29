@@ -8,13 +8,19 @@
 if (getenv('APP_ENV') === 'development' || isset($_SERVER['APP_ENV'])) {
     // Ejecución en Docker
     define('WEB_ROOT', '');
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 } else {
-    // Ejecución local (XAMPP, WAMP, etc.)
+    // Producción / Ejecución local
     define('WEB_ROOT', '/CRUDle');
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+    error_reporting(E_ALL);
 }
 
 // Directorios
-define('BASE_PATH', __DIR__ . '/../');
+define('BASE_PATH', realpath(__DIR__ . '/../') . '/');
 define('LIB_PATH', BASE_PATH . 'lib/');
 define('PAGES_PATH', BASE_PATH . 'pages/');
 define('VIEWS_PATH', BASE_PATH . 'views/');

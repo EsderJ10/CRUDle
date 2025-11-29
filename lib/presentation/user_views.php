@@ -6,7 +6,7 @@ function renderUserTable($users) {
         return '<div class="card text-center">
                     <h3>No hay usuarios registrados</h3>
                     <p class="mb-4">Comienza creando tu primer usuario del sistema.</p>
-                    <a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a>
+                    ' . (Permissions::checkCurrent(Permissions::USER_CREATE) ? '<a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a>' : '') . '
                 </div>';
     }
     
@@ -20,6 +20,7 @@ function renderUserTable($users) {
                                 <th>Nombre</th>
                                 <th>Email</th>
                                 <th>Rol</th>
+                                <th>Estado</th>
                                 <th>Fecha de Alta</th>
                                 <th>Operaciones</th>
                             </tr>
@@ -28,23 +29,47 @@ function renderUserTable($users) {
                 
     foreach ($users as $user) {
         $avatarSrc = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : getDefaultAvatar();
+        $status = $user['status'] ?? 'active';
+        $statusBadge = '';
+        
+        if ($status === 'active') {
+            $statusBadge = '<span class="badge badge-success">Activo</span>';
+        } elseif ($status === 'pending') {
+            $statusBadge = '<span class="badge badge-warning">Pendiente</span>';
+        } else {
+            $statusBadge = '<span class="badge badge-secondary">Inactivo</span>';
+        }
+
+        $actions = '<a href="user_info.php?id=' . urlencode($user['id']) . '" class="action-view" title="Ver"><i class="fas fa-eye"></i></a>';
+        
+        if (Permissions::checkCurrent(Permissions::USER_UPDATE)) {
+            $actions .= ' <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="action-edit" title="Editar"><i class="fas fa-edit"></i></a>';
+        }
+        
+        if (Permissions::checkCurrent(Permissions::USER_DELETE)) {
+            $actions .= ' <a href="user_delete.php?id=' . urlencode($user['id']) . '" class="action-delete" title="Eliminar"><i class="fas fa-trash"></i></a>';
+        }
+
+        if ($status === 'pending' && Permissions::checkCurrent(Permissions::USER_UPDATE)) {
+            $actions .= ' <a href="user_resend_invite.php?id=' . urlencode($user['id']) . '" class="action-resend" title="Reenviar Invitación"><i class="fas fa-paper-plane"></i></a>';
+        }
+
         $html .= '<tr>
                     <td data-label="Avatar">
                         <img src="' . $avatarSrc . '" 
-                             alt="Avatar de ' . htmlspecialchars($user['nombre']) . '" 
+                             alt="Avatar de ' . htmlspecialchars($user['name']) . '" 
                              class="avatar avatar-small"
                              onerror="this.src=\'' . getDefaultAvatar() . '\'">
                     </td>
                     <td data-label="ID"><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
-                    <td data-label="Nombre"><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
+                    <td data-label="name"><span class="font-semibold">' . htmlspecialchars($user['name']) . '</span></td>
                     <td data-label="Email">' . htmlspecialchars($user['email']) . '</td>
-                    <td data-label="Rol"><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
+                    <td data-label="role"><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td>
+                    <td data-label="Estado">' . $statusBadge . '</td>
                     <td data-label="Fecha">' . htmlspecialchars($user['fecha_alta']) . '</td>
                     <td data-label="Acciones">
                         <div class="actions">
-                            <a href="user_info.php?id=' . urlencode($user['id']) . '" class="action-view">Ver</a>
-                            <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="action-edit">Editar</a>
-                            <a href="user_delete.php?id=' . urlencode($user['id']) . '" class="action-delete">Eliminar</a>
+                            ' . $actions . '
                         </div>
                     </td>
                   </tr>';
@@ -52,25 +77,40 @@ function renderUserTable($users) {
     
     $html .= '</tbody>
               </table>
-              </div>
-              <div class="card-footer">
-                  <a href="user_create.php" class="btn btn-primary">
-                      <i class="fas fa-plus"></i> Añadir usuario
-                  </a>
-              </div>
               </div>';
+              
+    if (Permissions::checkCurrent(Permissions::USER_CREATE)) {
+        $html .= '<div class="card-footer">
+                      <a href="user_create.php" class="btn btn-primary">
+                          <i class="fas fa-plus"></i> Añadir usuario
+                      </a>
+                  </div>';
+    }
+    
+    $html .= '</div>';
     return $html;
 }
 
 function renderUserInfo($user) {
     $avatarSrc = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : getDefaultAvatar();
     
+    // Prepare buttons logic outside the string to keep syntax clean
+    $editButton = '';
+    if (Permissions::checkCurrent(Permissions::USER_UPDATE)) {
+        $editButton = '<a href="user_edit.php?id=' . urlencode($user['id']) . '" class="btn btn-primary">Editar Usuario</a>';
+    }
+
+    $deleteButton = '';
+    if (Permissions::checkCurrent(Permissions::USER_DELETE)) {
+        $deleteButton = '<a href="user_delete.php?id=' . urlencode($user['id']) . '" class="btn btn-danger">Eliminar Usuario</a>';
+    }
+
     return '<div class="card page-transition">
                 <h2>Información del Usuario</h2>
                 <div class="user-info-layout">
                     <div>
                         <img src="' . $avatarSrc . '" 
-                             alt="Avatar de ' . htmlspecialchars($user['nombre']) . '" 
+                             alt="Avatar de ' . htmlspecialchars($user['name']) . '" 
                              class="avatar avatar-large"
                              onerror="this.src=\'' . getDefaultAvatar() . '\'">
                     </div>
@@ -79,9 +119,9 @@ function renderUserInfo($user) {
                             <table>
                                 <tbody>
                                     <tr><th width="150">ID</th><td><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td></tr>
-                                    <tr><th>Nombre</th><td><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td></tr>
+                                    <tr><th>Nombre</th><td><span class="font-semibold">' . htmlspecialchars($user['name']) . '</span></td></tr>
                                     <tr><th>Email</th><td>' . htmlspecialchars($user['email']) . '</td></tr>
-                                    <tr><th>Rol</th><td><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td></tr>
+                                    <tr><th>Rol</th><td><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td></tr>
                                     <tr><th>Fecha de Alta</th><td>' . htmlspecialchars($user['fecha_alta']) . '</td></tr>
                                 </tbody>
                             </table>
@@ -89,20 +129,26 @@ function renderUserInfo($user) {
                     </div>
                 </div>
                 <div class="actions mt-6">
-                    <a href="user_edit.php?id=' . urlencode($user['id']) . '" class="btn btn-primary">Editar Usuario</a>
-                    <a href="user_delete.php?id=' . urlencode($user['id']) . '" class="btn btn-danger">Eliminar Usuario</a>
+                    ' . $editButton . '
+                    ' . $deleteButton . '
                     <a href="user_index.php" class="btn btn-secondary">Volver a la Lista</a>
                 </div>
             </div>';
 }
 
 function renderEditForm($user) {
+    // Handle the logic for the hidden input regarding permissions outside the return string
+    $roleHiddenInput = '';
+    if (!Permissions::checkCurrent(Permissions::USER_DELETE)) {
+        $roleHiddenInput = '<input type="hidden" name="role" value="' . htmlspecialchars($user['role']) . '">';
+    }
+
     return '<div class="card page-transition">
                 <h2>Editar Usuario</h2>
                 <form action="user_edit.php?id=' . urlencode($user['id']) . '" method="post">
                     <div class="form-group">
-                        <label for="nombre">Nombre Completo</label>
-                        <input type="text" id="nombre" name="nombre" value="' . htmlspecialchars($user['nombre']) . '" required>
+                        <label for="name">Nombre Completo</label>
+                        <input type="text" id="name" name="name" value="' . htmlspecialchars($user['name']) . '" required>
                     </div>
                     
                     <div class="form-group">
@@ -111,12 +157,13 @@ function renderEditForm($user) {
                     </div>
                     
                     <div class="form-group">
-                        <label for="rol">Rol del Usuario</label>
-                        <select id="rol" name="rol" required>
-                            <option value="admin"' . ($user['rol'] === 'admin' ? ' selected' : '') . '>Administrador</option>
-                            <option value="editor"' . ($user['rol'] === 'editor' ? ' selected' : '') . '>Editor</option>
-                            <option value="viewer"' . ($user['rol'] === 'viewer' ? ' selected' : '') . '>Visualizador</option>
+                        <label for="role">Rol del Usuario</label>
+                        <select id="role" name="role" required ' . (!Permissions::checkCurrent(Permissions::USER_DELETE) ? 'disabled' : '') . '>
+                            <option value="admin"' . ($user['role'] === 'admin' ? ' selected' : '') . '>Administrador</option>
+                            <option value="editor"' . ($user['role'] === 'editor' ? ' selected' : '') . '>Editor</option>
+                            <option value="viewer"' . ($user['role'] === 'viewer' ? ' selected' : '') . '>Visualizador</option>
                         </select>
+                        ' . $roleHiddenInput . '
                     </div>
                     
                     <div class="form-group">
@@ -205,9 +252,9 @@ function renderRecentUsers($recentUsers) {
     foreach ($recentUsers as $user) {
         $html .= '<tr>
                     <td data-label="ID"><span class="font-medium">#' . htmlspecialchars($user['id']) . '</span></td>
-                    <td data-label="Nombre"><span class="font-semibold">' . htmlspecialchars($user['nombre']) . '</span></td>
+                    <td data-label="name"><span class="font-semibold">' . htmlspecialchars($user['name']) . '</span></td>
                     <td data-label="Email">' . htmlspecialchars($user['email']) . '</td>
-                    <td data-label="Rol"><span class="font-medium">' . ucfirst(htmlspecialchars($user['rol'])) . '</span></td>
+                    <td data-label="role"><span class="font-medium">' . ucfirst(htmlspecialchars($user['role'])) . '</span></td>
                     <td data-label="Fecha">' . htmlspecialchars($user['fecha_alta']) . '</td>
                     <td data-label="Acciones"><a href="pages/users/user_info.php?id=' . urlencode($user['id']) . '" class="action-view">Ver Detalles</a></td>
                   </tr>';

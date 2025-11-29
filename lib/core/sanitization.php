@@ -62,20 +62,34 @@ function sanitizeUserId($id) {
 function sanitizeUserData($data) {
     $sanitized = [];
     
-    if (isset($data['nombre'])) {
-        $sanitized['nombre'] = sanitizeName($data['nombre']);
+    if (isset($data['name'])) {
+        $sanitized['name'] = sanitizeName($data['name']);
     }
     
     if (isset($data['email'])) {
         $sanitized['email'] = sanitizeEmail($data['email']);
     }
     
-    if (isset($data['rol'])) {
-        $sanitized['rol'] = sanitizeRole($data['rol']);
+    if (isset($data['role'])) {
+        $sanitized['role'] = sanitizeRole($data['role']);
     }
     
     if (isset($data['id'])) {
         $sanitized['id'] = sanitizeUserId($data['id']);
+    }
+
+    if (isset($data['password'])) {
+        if (!is_array($data['password']) && !is_object($data['password']) && !empty($data['password'])) {
+            $password = (string)$data['password'];
+            $password = trim($password);
+            if (strlen($password) >= 8 && strlen($password) <= 128) {
+                $sanitized['password'] = $password;
+            } else {
+                $sanitized['password'] = '';
+            }
+        } else {
+            $sanitized['password'] = '';
+        }
     }
     
     return $sanitized;

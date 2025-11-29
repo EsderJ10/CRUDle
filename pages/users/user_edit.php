@@ -8,15 +8,17 @@
 
 require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
+require_once getPath('lib/business/auth_operations.php');
 require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
+
+Permissions::require(Permissions::USER_UPDATE);
 
 $pageTitle = "Editar Usuario";
 $pageHeader = "Editar Usuario";
 
 try {
-    // Validar que se proporcione un ID
     // Validar que se proporcione un ID
     if (!isset($_GET['id'])) {
         Session::setFlash('error', 'No se ha proporcionado un ID de usuario.');
@@ -29,15 +31,20 @@ try {
     // Cargar usuario existente
     try {
         $user = getUserById($userId);
-        
-        if ($user === null) {
-            throw new ResourceNotFoundException(
-                'User not found: ' . $userId,
-                'El usuario no existe.'
-            );
-        }
-    } catch (ResourceNotFoundException $e) {
-        Session::setFlash('error', $e->getUserMessage());
+    } catch (Exception $e) {
+        Session::setFlash('error', 'Error al cargar el usuario: ' . $e->getMessage());
+        header('Location: user_index.php');
+        exit;
+    }
+    if (!$user) {
+        Session::setFlash('error', 'Usuario no encontrado.');
+        header('Location: user_index.php');
+        exit;
+    }
+
+    // Check if user has permission to edit this specific target user
+    if (!Permissions::canEditUser($user)) {
+        Session::setFlash('error', 'No tienes permisos para editar a este usuario.');
         header('Location: user_index.php');
         exit;
     }
@@ -54,10 +61,25 @@ try {
         try {
             // Sanitizar datos
             $formData = sanitizeUserData([
-                'nombre' => $_POST['name'] ?? '',
+                'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
-                'rol' => $_POST['role'] ?? ''
+                'role' => $_POST['role'] ?? '',
+                'password' => $_POST['password'] ?? ''
             ]);
+
+            // If editing self, FORCE role to remain unchanged.
+            if ($userId == Session::get('user_id')) {
+                $formData['role'] = $user['role'];
+            } else {
+                // Validate role assignment permission
+                if (!Permissions::canAssignRole($formData['role'])) {
+                    throw new ValidationException(
+                        'Permission denied',
+                        ['role' => ['No tienes permisos para asignar el rol seleccionado.']],
+                        'Error de permisos.'
+                    );
+                }
+            }
             
             // Validar datos básicos
             $errors = validateUserData($formData);
@@ -106,7 +128,7 @@ try {
             } else if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 // Usuario está subiendo un nuevo avatar
                 try {
-                    $newAvatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['nombre']);
+                    $newAvatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['name']);
                     if ($newAvatarPath) {
                         $formData['avatar'] = $newAvatarPath;
                         // El avatar antiguo se elimina automáticamente en handleAvatarUpload
@@ -147,9 +169,9 @@ try {
             }
             
             // Actualizar datos del formulario
-            $user['nombre'] = $formData['nombre'];
+            $user['name'] = $formData['name'];
             $user['email'] = $formData['email'];
-            $user['rol'] = $formData['rol'];
+            $user['role'] = $formData['role'];
             
             include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
@@ -166,7 +188,17 @@ try {
     // GET request - mostrar formulario con datos del usuario
     if ($user !== null) {
         include getPath('views/partials/header.php');
+        // Filter available roles based on permissions
+        $availableRoles = [];
+        foreach (Role::cases() as $role) {
+            if (Permissions::canAssignRole($role->value)) {
+                $availableRoles[$role->value] = $role->label();
+            }
+        }
+
+        // Pass available roles to the view
         include getPath('views/components/forms/user_form.php');
+        
         include getPath('views/partials/footer.php');
     }
     

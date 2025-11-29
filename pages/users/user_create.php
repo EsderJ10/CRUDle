@@ -8,12 +8,15 @@
 
 require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
+require_once getPath('lib/business/auth_operations.php');
 require_once getPath('lib/presentation/user_views.php');
 require_once getPath('lib/core/validation.php');
 require_once getPath('lib/core/sanitization.php');
 
-$pageTitle = "Crear Usuario";
-$pageHeader = "Crear Nuevo Usuario";
+Permissions::require(Permissions::USER_CREATE);
+
+$pageTitle = "Invitar Usuario";
+$pageHeader = "Invitar Nuevo Usuario";
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,7 +25,7 @@ try {
             Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
             // Recargar formulario
             include getPath('views/partials/header.php');
-            $user = $_POST; // Repoblar
+            $formData = $_POST; // Repoblar
             include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
             exit;
@@ -31,25 +34,18 @@ try {
         try {
             // Sanitizar datos de entrada
             $formData = sanitizeUserData([
-                'nombre' => $_POST['name'] ?? '',
+                'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
-                'rol' => $_POST['role'] ?? ''
+                'role' => $_POST['role'] ?? ''
             ]);
             
-            // Validar datos
-            $errors = validateUserData($formData);
-            
-            // Validar avatar si se proporciona
-            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE) {
-                try {
-                    $avatarErrors = validateAvatar($_FILES['avatar']);
-                    $errors = array_merge($errors, $avatarErrors);
-                } catch (ValidationException $e) {
-                    $errors = array_merge($errors, $e->getErrors()['avatar'] ?? [$e->getUserMessage()]);
-                } catch (FileUploadException $e) {
-                    $errors[] = $e->getUserMessage();
-                }
-            }
+            // Validar datos básicos (nombre, email, role)
+            // Usamos validateUserData pero ignoramos password y avatar
+            $errors = [];
+            if (empty($formData['name'])) $errors[] = "El name es obligatorio.";
+            if (empty($formData['email'])) $errors[] = "El email es obligatorio.";
+            if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) $errors[] = "El email no es válido.";
+            if (empty($formData['role'])) $errors[] = "El role es obligatorio.";
             
             if (!empty($errors)) {
                 throw new ValidationException(
@@ -59,28 +55,22 @@ try {
                 );
             }
             
-            // Crear usuario
-            $userId = createUser($formData);
-            
-            // Procesar avatar si se proporcionó
+            // Procesar avatar si se subió uno
             $avatarPath = null;
             if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 try {
-                    $avatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['nombre']);
-                    if ($avatarPath) {
-                        $formData['avatar'] = $avatarPath;
-                        updateUser($userId, $formData);
-                    }
-                } catch (AvatarException $e) {
-                    // Avatar upload failed, but user was created successfully
-                    // Log this but don't fail the entire operation
-                    error_log('Avatar upload failed for user ' . $userId . ': ' . $e->getMessage());
-                    // User is still created without avatar
+                    $avatarPath = handleAvatarUpload($_FILES['avatar'], null, $formData['name']);
+                } catch (Exception $e) {
+                    // Si falla el avatar, advertimos pero continuamos con la invitación
+                    Session::setFlash('warning', 'Usuario invitado, pero hubo un error al subir el avatar: ' . $e->getMessage());
                 }
             }
             
+            // Invitar usuario
+            $userId = inviteUser($formData['name'], $formData['email'], $formData['role'], $avatarPath);
+            
             // Éxito - redirigir con mensaje flash
-            Session::setFlash('success', 'Usuario creado exitosamente.');
+            Session::setFlash('success', 'Invitación enviada exitosamente.');
             header('Location: user_index.php');
             exit;
             
@@ -95,13 +85,13 @@ try {
             }
             
             // Repoblar datos del formulario
-            $user = $formData ?? [];
+            // $formData ya tiene los datos sanitizados
             include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
             exit;
             
         } catch (AppException $e) {
-            // Errores de aplicación conocidos (CSV, UserOperation, etc.)
+            // Errores de aplicación conocidos (UserOperation, etc.)
             Session::setFlash('error', $e->getUserMessage());
             include getPath('views/partials/header.php');
             include getPath('views/components/forms/user_form.php');

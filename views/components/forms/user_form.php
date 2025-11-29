@@ -9,14 +9,14 @@ require_once getPath('lib/helpers/utils.php');
 require_once getPath('config/config.php');
 
 $formData = $formData ?? [
-    'nombre' => '',
+    'name' => '',
     'email' => '',
-    'rol' => ''
+    'role' => ''
 ];
 
 $isEdit = isset($user) && !empty($user) && isset($user['id']);
 $action = $isEdit ? 'user_edit.php?id=' . urlencode($user['id']) : 'user_create.php';
-$buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
+$buttonText = $isEdit ? 'Actualizar Usuario' : 'Invitar Usuario';
 ?>
 
 <div class="card">
@@ -28,7 +28,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
                    id="name" 
                    name="name" 
                    placeholder="Ingrese el nombre completo" 
-                   value="<?php echo htmlspecialchars($isEdit ? $user['nombre'] : $formData['nombre']); ?>" 
+                   value="<?php echo htmlspecialchars($isEdit ? $user['name'] : $formData['name']); ?>" 
                    required>
         </div>
         
@@ -44,36 +44,52 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
         
         <div class="form-group">
             <label for="role">Rol del Usuario</label>
-            <select id="role" name="role" required>
+            <select id="role" name="role" required 
+                    data-current-role="<?php echo htmlspecialchars($isEdit ? $user['role'] : ''); ?>"
+                    data-is-self="<?php echo ($isEdit && $user['id'] == Session::get('user_id')) ? 'true' : 'false'; ?>"
+                    <?php echo ($isEdit && $user['id'] == Session::get('user_id')) ? 'disabled' : ''; ?>>
                 <option value="">Seleccione un rol</option>
                 <?php 
-                $roles = getRoles();
-                $currentRole = $isEdit ? $user['rol'] : $formData['rol'];
-                foreach ($roles as $role): 
-                ?>
-                    <option value="<?php echo htmlspecialchars($role); ?>" 
-                            <?php echo ($currentRole === $role) ? 'selected' : ''; ?>>
-                        <?php echo ucfirst(htmlspecialchars($role)); ?>
+                // Use availableRoles if provided (from controller), otherwise get all roles
+                if (isset($availableRoles)) {
+                    $rolesToDisplay = $availableRoles;
+                } else {
+                    $rolesToDisplay = [];
+                    foreach (Role::cases() as $role) {
+                        $rolesToDisplay[$role->value] = $role->label();
+                    }
+                }
+                
+                $currentRole = $isEdit ? $user['role'] : $formData['role'];
+                
+                foreach ($rolesToDisplay as $roleValue => $roleLabel): ?>
+                    <option value="<?php echo htmlspecialchars($roleValue); ?>" <?php echo ($currentRole === $roleValue) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($roleLabel); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
+            <?php if ($isEdit && $user['id'] == Session::get('user_id')): ?>
+                <input type="hidden" name="role" value="<?php echo htmlspecialchars($user['role']); ?>">
+                <small class="text-muted"><i class="fas fa-lock"></i> Por seguridad, no puedes cambiar tu propio rol.</small>
+            <?php endif; ?>
         </div>
         
-        <div class="form-group">
-            <label for="avatar">Avatar del Usuario</label>
-            <?php if ($isEdit && !empty($user['avatar'])): ?>
-                <div class="current-avatar mb-3">
-                    <div class="avatar-container">
-                        <img src="<?php echo htmlspecialchars($user['avatar']); ?>" 
+        <?php if ($isEdit): ?>
+            <div class="form-group">
+                <label for="avatar">Avatar del Usuario</label>
+                <?php if ($isEdit && !empty($user['avatar'])): ?>
+                    <div class="current-avatar mb-3">
+                        <div class="avatar-container">
+                            <img src="<?php echo htmlspecialchars($user['avatar']); ?>" 
                              alt="Avatar actual" 
                              class="avatar avatar-medium">
-                    </div>
-                    <div class="avatar-actions mt-3">
-                        <label class="checkbox-container">
-                            <input type="checkbox" 
-                                   id="remove_avatar" 
-                                   name="remove_avatar" 
-                                   value="1">
+                        </div>
+                            <div class="avatar-actions mt-3">
+                            <label class="checkbox-container">
+                                <input type="checkbox" 
+                                       id="remove_avatar" 
+                                       name="remove_avatar" 
+                                       value="1">
                             <span class="checkmark"></span>
                             <span class="checkbox-label">Eliminar avatar actual</span>
                         </label>
@@ -114,6 +130,7 @@ $buttonText = $isEdit ? 'Actualizar Usuario' : 'Crear Usuario';
                 </small>
             </div>
         </div>
+        <?php endif; ?>
         
         <?php if ($isEdit): ?>
         <div class="form-group">
