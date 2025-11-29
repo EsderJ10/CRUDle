@@ -30,7 +30,7 @@ function getAllUsers() {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error fetching all users: ' . $e->getMessage(),
-            'Error al obtener la lista de usuarios.',
+            'Error fetching user list.',
             0,
             $e
         );
@@ -52,7 +52,7 @@ function getUserCount() {
 function getUserById($userId) {
     try {
         if (empty($userId)) {
-            throw new InvalidStateException('Empty user ID provided', 'El ID de usuario no es válido.');
+            throw new InvalidStateException('Empty user ID provided', 'Invalid user ID.');
         }
         
         $db = Database::getInstance();
@@ -69,7 +69,7 @@ function getUserById($userId) {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error fetching user by ID: ' . $e->getMessage(),
-            'Error al obtener los datos del usuario.',
+            'Error fetching user data.',
             0,
             $e
         );
@@ -79,7 +79,7 @@ function getUserById($userId) {
 function createUser($formData) {
     try {
         if (empty($formData)) {
-            throw new InvalidStateException('Empty form data provided', 'Los datos del formulario no son válidos.');
+            throw new InvalidStateException('Empty form data provided', 'Invalid form data.');
         }
         
         $db = Database::getInstance();
@@ -115,7 +115,7 @@ function createUser($formData) {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error creating user: ' . $e->getMessage(),
-            'Error al crear el usuario.',
+            'Error creating user.',
             0,
             $e
         );
@@ -125,14 +125,14 @@ function createUser($formData) {
 function updateUser($userId, $formData) {
     try {
         if (empty($userId) || empty($formData)) {
-            throw new InvalidStateException('Invalid data provided', 'Datos inválidos.');
+            throw new InvalidStateException('Invalid data provided', 'Invalid data.');
         }
         
         $db = Database::getInstance();
         
         $stmt = $db->query("SELECT id FROM users WHERE id = ?", [$userId]);
         if (!$stmt->fetch()) {
-            throw new ResourceNotFoundException('User not found: ' . $userId, 'El usuario no existe.');
+            throw new ResourceNotFoundException('User not found: ' . $userId, 'User not found.');
         }
         
         $sql = "UPDATE users SET name = ?, email = ?, role = ?, avatar_path = ?";
@@ -156,7 +156,7 @@ function updateUser($userId, $formData) {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error updating user: ' . $e->getMessage(),
-            'Error al actualizar el usuario.',
+            'Error updating user.',
             0,
             $e
         );
@@ -165,7 +165,7 @@ function updateUser($userId, $formData) {
 
 function deleteUserById($userId) {
     if (empty($userId)) {
-        throw new InvalidStateException('Empty user ID provided', 'El ID de usuario no es válido.');
+        throw new InvalidStateException('Empty user ID provided', 'Invalid user ID.');
     }
 
     // Check if trying to delete self
@@ -173,7 +173,7 @@ function deleteUserById($userId) {
     if ($userId == $currentUserId) {
         throw new UserOperationException(
             'Attempt to delete own account',
-            'No puedes eliminar tu propia cuenta.'
+            'You cannot delete your own account.'
         );
     }
 
@@ -181,7 +181,7 @@ function deleteUserById($userId) {
     if (getUserCount() <= 1) {
         throw new UserOperationException(
             'Attempt to delete the last user',
-            'No se puede eliminar el último usuario del sistema.'
+            'Cannot delete the last user in the system.'
         );
     }
 
@@ -194,7 +194,7 @@ function deleteUserById($userId) {
         if ($stmt->rowCount() === 0) {
             throw new UserOperationException(
                 'User not found: ' . $userId,
-                'El usuario no existe.'
+                'User not found.'
             );
         }
         
@@ -203,7 +203,7 @@ function deleteUserById($userId) {
     } catch (Exception $e) {
         throw new UserOperationException(
             'DB Error deleting user: ' . $e->getMessage(),
-            'Error del sistema al intentar eliminar el usuario.',
+            'System error while deleting user.',
             0,
             $e
         );
@@ -238,7 +238,7 @@ function getUserStatistics() {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error calculating statistics: ' . $e->getMessage(),
-            'Error al calcular las estadísticas.',
+            'Error calculating statistics.',
             0,
             $e
         );
@@ -254,7 +254,7 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
         if ($file['error'] !== UPLOAD_ERR_OK) {
             throw new FileUploadException(
                 'File upload error: ' . $file['error'],
-                'Error al procesar el archivo.'
+                'Error processing file.'
             );
         }
         
@@ -263,7 +263,7 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
             if (!@mkdir($uploadDir, 0755, true)) {
                 throw new AvatarException(
                     'Unable to create avatar directory: ' . $uploadDir,
-                    'Error al crear el directorio de avatares.'
+                    'Error creating avatar directory.'
                 );
             }
         }
@@ -271,7 +271,7 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
         if (!is_writable($uploadDir)) {
             throw new AvatarException(
                 'Avatar directory is not writable: ' . $uploadDir,
-                'No hay permisos para guardar la imagen.'
+                'No permission to save image.'
             );
         }
         
@@ -294,11 +294,11 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
         if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
             throw new AvatarException(
                 'Failed to move uploaded file to: ' . $targetPath,
-                'Error al guardar la imagen de perfil.'
+                'Error saving profile image.'
             );
         }
         
-        return getWebUploadPath('avatars/' . $filename);
+        return $filename;
     } catch (AvatarException $e) {
         throw $e;
     } catch (FileUploadException $e) {
@@ -306,7 +306,7 @@ function handleAvatarUpload($file, $userId = null, $userName = null) {
     } catch (Exception $e) {
         throw new AvatarException(
             'Avatar upload error: ' . $e->getMessage(),
-            'Error al procesar la imagen de perfil.',
+            'Error processing profile image.',
             0,
             $e
         );
@@ -319,7 +319,13 @@ function deleteAvatarFile($avatarPath) {
             return true;
         }
         
-        $filePath = str_replace(getWebPath(''), BASE_PATH, $avatarPath);
+        // If it's just a filename, construct the full path
+        if (strpos($avatarPath, '/') === false) {
+            $filePath = getAvatarPath() . $avatarPath;
+        } else {
+            // Legacy: try to resolve from web path
+            $filePath = str_replace(getWebPath(''), BASE_PATH, $avatarPath);
+        }
         
         if (!file_exists($filePath)) {
             // Si el fichero no existe, no hay nada que eliminar
@@ -329,21 +335,21 @@ function deleteAvatarFile($avatarPath) {
         if (!is_file($filePath)) {
             throw new AvatarException(
                 'Avatar path is not a file: ' . $filePath,
-                'La ruta del avatar no es válida.'
+                'Invalid avatar path.'
             );
         }
         
         if (!is_writable($filePath)) {
             throw new AvatarException(
                 'Avatar file is not writable: ' . $filePath,
-                'No hay permisos para eliminar la imagen.'
+                'No permission to delete image.'
             );
         }
         
         if (!unlink($filePath)) {
             throw new AvatarException(
                 'Failed to delete avatar file: ' . $filePath,
-                'Error al eliminar la imagen de perfil.'
+                'Error deleting profile image.'
             );
         }
         
@@ -353,7 +359,7 @@ function deleteAvatarFile($avatarPath) {
     } catch (Exception $e) {
         throw new AvatarException(
             'Avatar deletion error: ' . $e->getMessage(),
-            'Error al eliminar la imagen de perfil.',
+            'Error deleting profile image.',
             0,
             $e
         );
@@ -383,7 +389,7 @@ function removeExistingUserAvatar($userId) {
                 if (!unlink($file)) {
                     throw new AvatarException(
                         'Failed to delete avatar file: ' . $file,
-                        'Error al eliminar una imagen antigua.'
+                        'Error deleting old image.'
                     );
                 }
             }
@@ -395,7 +401,7 @@ function removeExistingUserAvatar($userId) {
     } catch (Exception $e) {
         throw new AvatarException(
             'Error removing existing avatar: ' . $e->getMessage(),
-            'Error al limpiar avatares anteriores.',
+            'Error cleaning up previous avatars.',
             0,
             $e
         );
@@ -409,9 +415,9 @@ function getDefaultAvatar() {
 function checkSystemStatus() {
     try {
         Database::getInstance();
-        return ['status' => 'OK', 'message' => 'Conexión a base de datos exitosa'];
+        return ['status' => 'OK', 'message' => 'Database connection successful'];
     } catch (Exception $e) {
-        return ['status' => 'ERROR', 'message' => 'Fallo al conectar a la base de datos'];
+        return ['status' => 'ERROR', 'message' => 'Failed to connect to database'];
     }
 }
 
@@ -424,36 +430,36 @@ function checkDatabaseSchema() {
         // Check for status column
         $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'status'");
         if (!$stmt->fetch()) {
-            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (status)'];
+            return ['status' => 'WARNING', 'message' => 'Table exists but missing columns (status)'];
         }
 
         // Check for invitation_token column
         $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'invitation_token'");
         if (!$stmt->fetch()) {
-            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (invitation_token)'];
+            return ['status' => 'WARNING', 'message' => 'Table exists but missing columns (invitation_token)'];
         }
 
         // Check for invitation_expires_at column
         $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'invitation_expires_at'");
         if (!$stmt->fetch()) {
-            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (invitation_expires_at)'];
+            return ['status' => 'WARNING', 'message' => 'Table exists but missing columns (invitation_expires_at)'];
         }
         
         // Check for password column
         $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'password'");
         if (!$stmt->fetch()) {
-            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (password)'];
+            return ['status' => 'WARNING', 'message' => 'Table exists but missing columns (password)'];
         }
 
         // Check for avatar_path column
         $stmt = $db->query("SHOW COLUMNS FROM users LIKE 'avatar_path'");
         if (!$stmt->fetch()) {
-            return ['status' => 'WARNING', 'message' => 'La tabla existe pero faltan columnas (avatar_path)'];
+            return ['status' => 'WARNING', 'message' => 'Table exists but missing columns (avatar_path)'];
         }
         
-        return ['status' => 'OK', 'message' => 'Esquema de base de datos correcto'];
+        return ['status' => 'OK', 'message' => 'Database schema correct'];
     } catch (Exception $e) {
-        return ['status' => 'ERROR', 'message' => 'La tabla "users" no existe'];
+        return ['status' => 'ERROR', 'message' => 'Table "users" does not exist'];
     }
 }
 
@@ -506,7 +512,7 @@ function initializeDatabase() {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error initializing database: ' . $e->getMessage(),
-            'Error al inicializar la base de datos.',
+            'Error initializing database.',
             0,
             $e
         );
@@ -515,7 +521,7 @@ function initializeDatabase() {
 function inviteUser($name, $email, $role, $avatarPath = null) {
     try {
         if (empty($name) || empty($email) || empty($role)) {
-            throw new InvalidStateException('Missing required fields', 'Faltan datos requeridos.');
+            throw new InvalidStateException('Missing required fields', 'Missing required fields.');
         }
 
         $db = Database::getInstance();
@@ -523,7 +529,7 @@ function inviteUser($name, $email, $role, $avatarPath = null) {
         // Check if email already exists
         $stmt = $db->query("SELECT id FROM users WHERE email = ?", [$email]);
         if ($stmt->fetch()) {
-            throw new UserOperationException('Email already exists', 'El correo electrónico ya está registrado.');
+            throw new UserOperationException('Email already exists', 'Email already registered.');
         }
 
         // Generate secure token
@@ -549,7 +555,7 @@ function inviteUser($name, $email, $role, $avatarPath = null) {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error inviting user: ' . $e->getMessage(),
-            'Error al invitar al usuario.',
+            'Error inviting user.',
             0,
             $e
         );
@@ -565,11 +571,11 @@ function resendInvitation($userId) {
         $user = $stmt->fetch();
 
         if (!$user) {
-            throw new ResourceNotFoundException('User not found', 'Usuario no encontrado.');
+            throw new ResourceNotFoundException('User not found', 'User not found.');
         }
 
         if ($user['status'] !== 'pending') {
-            throw new InvalidStateException('User is not pending', 'El usuario no está en estado pendiente.');
+            throw new InvalidStateException('User is not pending', 'User is not in pending status.');
         }
 
         // Generate new token
@@ -586,7 +592,7 @@ function resendInvitation($userId) {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error resending invitation: ' . $e->getMessage(),
-            'Error al reenviar la invitación.',
+            'Error resending invitation.',
             0,
             $e
         );
@@ -612,7 +618,7 @@ function getInvitation($token) {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error fetching invitation: ' . $e->getMessage(),
-            'Error al verificar la invitación.',
+            'Error verifying invitation.',
             0,
             $e
         );
@@ -623,7 +629,7 @@ function activateUser($token, $password, $avatarPath = null) {
     try {
         $user = getInvitation($token);
         if (!$user) {
-            throw new InvalidStateException('Invalid or expired token', 'El enlace de invitación no es válido o ha expirado.');
+            throw new InvalidStateException('Invalid or expired token', 'Invitation link is invalid or has expired.');
         }
 
         $db = Database::getInstance();
@@ -637,7 +643,7 @@ function activateUser($token, $password, $avatarPath = null) {
     } catch (Exception $e) {
         throw new UserOperationException(
             'Error activating user: ' . $e->getMessage(),
-            'Error al activar la cuenta.',
+            'Error activating account.',
             0,
             $e
         );
@@ -648,19 +654,19 @@ function sendInvitationEmail($email, $name, $token) {
     $invitePath = getWebPath("pages/auth/accept_invite.php?token=" . $token);
     $inviteLink = APP_URL . $invitePath;
     
-    $subject = "Invitación a CRUDle";
+    $subject = "Invitation to CRUDle";
     $body = "
     <html>
     <body style='font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333;'>
         <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;'>
-            <h2 style='color: #2563eb;'>Bienvenido a CRUDle</h2>
-            <p>Hola <strong>" . htmlspecialchars($name) . "</strong>,</p>
-            <p>Has sido invitado a unirte a la plataforma CRUDle. Para activar tu cuenta y establecer tu contraseña, por favor haz clic en el siguiente enlace:</p>
+            <h2 style='color: #2563eb;'>Welcome to CRUDle</h2>
+            <p>Hello <strong>" . htmlspecialchars($name) . "</strong>,</p>
+            <p>You have been invited to join the CRUDle platform. To activate your account and set your password, please click the link below:</p>
             <p style='text-align: center; margin: 30px 0;'>
-                <a href='" . $inviteLink . "' style='background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;'>Aceptar Invitación</a>
+                <a href='" . $inviteLink . "' style='background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;'>Accept Invitation</a>
             </p>
-            <p>Este enlace expirará en 48 horas.</p>
-            <p style='font-size: 12px; color: #666;'>Si no esperabas esta invitación, puedes ignorar este correo.</p>
+            <p>This link will expire in 48 hours.</p>
+            <p style='font-size: 12px; color: #666;'>If you were not expecting this invitation, you can ignore this email.</p>
         </div>
     </body>
     </html>

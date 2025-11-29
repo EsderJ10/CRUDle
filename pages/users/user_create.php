@@ -15,14 +15,14 @@ require_once getPath('lib/core/sanitization.php');
 
 Permissions::require(Permissions::USER_CREATE);
 
-$pageTitle = "Invitar Usuario";
-$pageHeader = "Invitar Nuevo Usuario";
+$pageTitle = "Invite User";
+$pageHeader = "Invite New User";
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validar CSRF
         if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
-            Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+            Session::setFlash('error', 'Security error: Invalid CSRF token.');
             // Recargar formulario
             include getPath('views/partials/header.php');
             $formData = $_POST; // Repoblar
@@ -42,16 +42,16 @@ try {
             // Validar datos básicos (nombre, email, role)
             // Usamos validateUserData pero ignoramos password y avatar
             $errors = [];
-            if (empty($formData['name'])) $errors[] = "El name es obligatorio.";
-            if (empty($formData['email'])) $errors[] = "El email es obligatorio.";
-            if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) $errors[] = "El email no es válido.";
-            if (empty($formData['role'])) $errors[] = "El role es obligatorio.";
+            if (empty($formData['name'])) $errors[] = "Name is required.";
+            if (empty($formData['email'])) $errors[] = "Email is required.";
+            if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format.";
+            if (empty($formData['role'])) $errors[] = "Role is required.";
             
             if (!empty($errors)) {
                 throw new ValidationException(
                     'Form validation failed',
                     ['general' => $errors],
-                    'Por favor, corrija los errores en el formulario.'
+                    'Please correct the errors in the form.'
                 );
             }
             
@@ -62,7 +62,7 @@ try {
                     $avatarPath = handleAvatarUpload($_FILES['avatar'], null, $formData['name']);
                 } catch (Exception $e) {
                     // Si falla el avatar, advertimos pero continuamos con la invitación
-                    Session::setFlash('warning', 'Usuario invitado, pero hubo un error al subir el avatar: ' . $e->getMessage());
+                    Session::setFlash('warning', 'User invited, but there was an error uploading the avatar: ' . $e->getMessage());
                 }
             }
             
@@ -70,7 +70,7 @@ try {
             $userId = inviteUser($formData['name'], $formData['email'], $formData['role'], $avatarPath);
             
             // Éxito - redirigir con mensaje flash
-            Session::setFlash('success', 'Invitación enviada exitosamente.');
+            Session::setFlash('success', 'Invitation sent successfully.');
             header('Location: user_index.php');
             exit;
             

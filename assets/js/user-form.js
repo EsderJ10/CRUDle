@@ -77,7 +77,7 @@
 
             // Valida que sea una imagen
             if (!file.type.match('image.*')) {
-                alert('Por favor, selecciona solo archivos de imagen.');
+                alert('Please select only image files.');
                 this.clearFileInput();
                 return;
             }
@@ -85,7 +85,7 @@
             // Valida el tamaño (2MB máximo)
             const maxSize = 2 * 1024 * 1024; // 2MB en bytes
             if (file.size > maxSize) {
-                alert('El archivo es demasiado grande. El tamaño máximo es 2MB.');
+                alert('File is too large. Maximum size is 2MB.');
                 this.clearFileInput();
                 return;
             }
@@ -100,7 +100,7 @@
             }
 
             if (fileTextMain) {
-                fileTextMain.textContent = 'Archivo seleccionado';
+                fileTextMain.textContent = 'File selected';
             }
 
             if (fileTextSub) {
@@ -165,11 +165,11 @@
             }
 
             if (fileTextMain) {
-                fileTextMain.textContent = 'Seleccionar archivo';
+                fileTextMain.textContent = 'Select file';
             }
 
             if (fileTextSub) {
-                fileTextSub.textContent = 'o arrastra y suelta aquí';
+                fileTextSub.textContent = 'or drag and drop here';
             }
 
             if (preview) {

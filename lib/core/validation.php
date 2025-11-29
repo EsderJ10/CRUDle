@@ -10,26 +10,26 @@ function validateName($name) {
     $errors = [];
     
     if (empty($name)) {
-        $errors[] = "El nombre es obligatorio.";
+        $errors[] = "Name is required.";
         return $errors;
     }
     
     $name = trim($name);
     
     if (strlen($name) < MIN_NAME_LENGTH) {
-        $errors[] = "El nombre debe tener al menos " . MIN_NAME_LENGTH . " caracteres.";
+        $errors[] = "Name must be at least " . MIN_NAME_LENGTH . " characters long.";
     }
     
     if (strlen($name) > MAX_NAME_LENGTH) {
-        $errors[] = "El nombre no puede tener más de " . MAX_NAME_LENGTH . " caracteres.";
+        $errors[] = "Name cannot exceed " . MAX_NAME_LENGTH . " characters.";
     }
     
     if (preg_match('/^[0-9]+$/', $name)) {
-        $errors[] = "El nombre no puede ser solo números.";
+        $errors[] = "Name cannot contain only numbers.";
     }
     
     if (!preg_match('/^[a-zA-ZáéíóúñÁÉÍÓÚÑ\s]+$/', $name)) {
-        $errors[] = "El nombre solo puede contener letras y espacios.";
+        $errors[] = "Name can only contain letters and spaces.";
     }
     
     return $errors;
@@ -39,18 +39,18 @@ function validateEmail($email) {
     $errors = [];
     
     if (empty($email)) {
-        $errors[] = "El email es obligatorio.";
+        $errors[] = "Email is required.";
         return $errors;
     }
     
     $email = trim($email);
     
     if (strlen($email) > MAX_EMAIL_LENGTH) {
-        $errors[] = "El email no puede tener más de " . MAX_EMAIL_LENGTH . " caracteres.";
+        $errors[] = "Email cannot exceed " . MAX_EMAIL_LENGTH . " characters.";
     }
     
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "El email no tiene un formato válido.";
+        $errors[] = "Invalid email format.";
     }
     
     return $errors;
@@ -68,16 +68,16 @@ function validateAvatar($file) {
         // Se busca cualquier error en la subida del archivo para manejarlo
         if ($file['error'] !== UPLOAD_ERR_OK) {
             $uploadErrors = [
-                UPLOAD_ERR_INI_SIZE => 'El archivo es demasiado grande (límite del servidor).',
-                UPLOAD_ERR_FORM_SIZE => 'El archivo es demasiado grande (límite del formulario).',
-                UPLOAD_ERR_PARTIAL => 'El archivo no se subió completamente.',
-                UPLOAD_ERR_NO_FILE => 'No se subió ningún archivo.',
-                UPLOAD_ERR_NO_TMP_DIR => 'No hay directorio temporal en el servidor.',
-                UPLOAD_ERR_CANT_WRITE => 'No se puede escribir el archivo en el servidor.',
-                UPLOAD_ERR_EXTENSION => 'Una extensión de PHP detuvo la subida del archivo.'
+                UPLOAD_ERR_INI_SIZE => 'File is too large (server limit).',
+                UPLOAD_ERR_FORM_SIZE => 'File is too large (form limit).',
+                UPLOAD_ERR_PARTIAL => 'File was only partially uploaded.',
+                UPLOAD_ERR_NO_FILE => 'No file was uploaded.',
+                UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder.',
+                UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+                UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload.'
             ];
             
-            $errorMessage = $uploadErrors[$file['error']] ?? 'Error desconocido al subir el archivo.';
+            $errorMessage = $uploadErrors[$file['error']] ?? 'Unknown error uploading file.';
             throw new FileUploadException(
                 'Upload error code: ' . $file['error'],
                 '* ERROR: ' . $errorMessage
@@ -89,8 +89,8 @@ function validateAvatar($file) {
         if ($file['size'] > $maxSize) {
             throw new ValidationException(
                 'Avatar file exceeds maximum size',
-                ['avatar' => ['El archivo es demasiado grande (máximo 2MB).']],
-                'El archivo de imagen es demasiado grande.'
+                ['avatar' => ['File is too large (max 2MB).']],
+                'Image file is too large.'
             );
         }
         
@@ -98,8 +98,8 @@ function validateAvatar($file) {
         if ($file['size'] <= 0) {
             throw new ValidationException(
                 'Avatar file is empty',
-                ['avatar' => ['El archivo está vacío.']],
-                'El archivo de imagen está vacío.'
+                ['avatar' => ['File is empty.']],
+                'Image file is empty.'
             );
         }
         
@@ -107,7 +107,7 @@ function validateAvatar($file) {
         if (!is_uploaded_file($file['tmp_name'])) {
             throw new FileUploadException(
                 'Invalid uploaded file: ' . $file['tmp_name'],
-                'El archivo no parece ser un archivo subido válido.'
+                'File does not appear to be a valid uploaded file.'
             );
         }
         
@@ -128,16 +128,16 @@ function validateAvatar($file) {
             if ($mimeType === false) {
                 throw new ValidationException(
                     'Could not determine MIME type',
-                    ['avatar' => ['No se puede determinar el tipo de archivo.']],
-                    'El tipo de archivo no se pudo verificar.'
+                    ['avatar' => ['Could not determine file type.']],
+                    'File type could not be verified.'
                 );
             }
             
             if (!in_array($mimeType, $allowedTypes)) {
                 throw new ValidationException(
                     'Invalid MIME type: ' . $mimeType,
-                    ['avatar' => ['El avatar debe ser una imagen (JPEG, PNG, GIF, SVG).']],
-                    'El tipo de archivo no es válido.'
+                    ['avatar' => ['Avatar must be an image (JPEG, PNG, GIF, SVG).']],
+                    'Invalid file type.'
                 );
             }
         } catch (ValidationException $e) {
@@ -145,8 +145,8 @@ function validateAvatar($file) {
         } catch (Exception $e) {
             throw new ValidationException(
                 'MIME type verification failed: ' . $e->getMessage(),
-                ['avatar' => ['Error al verificar el tipo de archivo.']],
-                'Error al validar la imagen.',
+                ['avatar' => ['Error verifying file type.']],
+                'Error validating image.',
                 0,
                 $e
             );
@@ -157,8 +157,8 @@ function validateAvatar($file) {
         if (!in_array($extension, $allowedExtensions)) {
             throw new ValidationException(
                 'Invalid file extension: ' . $extension,
-                ['avatar' => ['Extensión de archivo no válida. Use: JPG, PNG, GIF, SVG.']],
-                'La extensión del archivo no es válida.'
+                ['avatar' => ['Invalid file extension. Use: JPG, PNG, GIF, SVG.']],
+                'Invalid file extension.'
             );
         }
         
@@ -170,7 +170,7 @@ function validateAvatar($file) {
     } catch (Exception $e) {
         throw new FileUploadException(
             'Avatar validation error: ' . $e->getMessage(),
-            'Error al validar la imagen de perfil.',
+            'Error validating profile image.',
             0,
             $e
         );

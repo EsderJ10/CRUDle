@@ -22,15 +22,20 @@ function normalizeAvatarPath($avatarPath) {
         return null;
     }
     
-    // Si la ruta ya tiene /CRUDle/, la quitamos
+    // If it's just a filename (no slashes), prepend the standard path
+    if (strpos($avatarPath, '/') === false) {
+        return WEB_ROOT . '/uploads/avatars/' . $avatarPath;
+    }
+    
+    // Legacy handling: If it already has /CRUDle/, remove it to re-add correct WEB_ROOT
     $cleanPath = str_replace('/CRUDle/', '/', $avatarPath);
     
-    // Aseguramos que empiece con /
+    // Ensure it starts with /
     if (substr($cleanPath, 0, 1) !== '/') {
         $cleanPath = '/' . $cleanPath;
     }
     
-    // Añadimos el WEB_ROOT correcto según el entorno
+    // Add correct WEB_ROOT
     return WEB_ROOT . $cleanPath;
 }
 ?>

@@ -13,8 +13,8 @@ require_once getPath('lib/presentation/user_views.php');
 
 Permissions::require(Permissions::USER_DELETE);
 
-$pageTitle = "Eliminar Usuario";
-$pageHeader = "Confirmar Eliminación";
+$pageTitle = "Delete User";
+$pageHeader = "Confirm Deletion";
 
 try {
     // Mostrar confirmación en GET
@@ -23,7 +23,7 @@ try {
         
         // Prevent Self-Deletion
         if ($userId === Session::get('user_id')) {
-            Session::setFlash('error', 'No puedes eliminar tu propia cuenta.');
+            Session::setFlash('error', 'You cannot delete your own account.');
             header('Location: user_index.php');
             exit;
         }
@@ -37,7 +37,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['confirm'])) {
         // Validar CSRF
         if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
-            Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+            Session::setFlash('error', 'Security error: Invalid CSRF token.');
             header('Location: user_index.php');
             exit;
         }
@@ -62,9 +62,9 @@ try {
                     }
                 }
                 
-                Session::setFlash('success', "Usuario con ID " . $userId . " eliminado exitosamente.");
+                Session::setFlash('success', "User ID " . $userId . " deleted successfully.");
             } else {
-                Session::setFlash('info', "Eliminación cancelada.");
+                Session::setFlash('info', "Deletion canceled.");
             }
             header('Location: user_index.php');
             exit;
@@ -76,7 +76,7 @@ try {
         }
     } else if (!isset($_POST['id']) && !isset($_GET['id'])) {
         // La petición no es válida
-        Session::setFlash('error', 'No se ha proporcionado un ID de usuario.');
+        Session::setFlash('error', 'No user ID provided.');
         header('Location: user_index.php');
         exit;
     }
