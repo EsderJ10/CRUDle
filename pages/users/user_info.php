@@ -9,15 +9,15 @@ require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/presentation/user_views.php');
 
-$pageTitle = "Información del Usuario";
-$pageHeader = "Detalles del Usuario";
+$pageTitle = "User Information";
+$pageHeader = "User Details";
 
 try {
     // Validar que se proporcione un ID
     if (!isset($_GET['id'])) {
         include getPath('views/partials/header.php');
-        echo renderMessage('ERROR: No se ha proporcionado un ID de usuario.', 'error');
-        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
+        echo renderMessage('ERROR: No user ID provided.', 'error');
+        echo '<p><a href="user_index.php">Back to User List</a></p>';
         include getPath('views/partials/footer.php');
         exit;
     }
@@ -31,19 +31,19 @@ try {
         if ($user === null) {
             throw new ResourceNotFoundException(
                 'User not found: ' . $userId,
-                'El usuario no existe.'
+                'User does not exist.'
             );
         }
     } catch (ResourceNotFoundException $e) {
         include getPath('views/partials/header.php');
         echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
+        echo '<p><a href="user_index.php">Back to User List</a></p>';
         include getPath('views/partials/footer.php');
         exit;
     }catch (UserOperationException $e) {
         include getPath('views/partials/header.php');
         echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-        echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
+        echo '<p><a href="user_index.php">Back to User List</a></p>';
         include getPath('views/partials/footer.php');
         exit;
     }
@@ -56,8 +56,8 @@ try {
 } catch (Exception $e) {
     // Error no esperado
     include getPath('views/partials/header.php');
-    echo renderMessage('ERROR: Ocurrió un error inesperado. ' . $e->getMessage(), 'error');
-    echo '<p><a href="user_index.php">Volver a la lista de usuarios</a></p>';
+    echo renderMessage('ERROR: An unexpected error occurred. ' . $e->getMessage(), 'error');
+    echo '<p><a href="user_index.php">Back to User List</a></p>';
     include getPath('views/partials/footer.php');
     error_log('Unexpected error in user_info.php: ' . $e->getMessage());
     exit;

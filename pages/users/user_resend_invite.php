@@ -11,7 +11,7 @@ requireLogin();
 
 // Verificar si es admin
 if (!isAdmin()) {
-    Session::setFlash('error', 'Acceso denegado.');
+    Session::setFlash('error', 'Access denied.');
     header('Location: user_index.php');
     exit;
 }
@@ -19,25 +19,25 @@ if (!isAdmin()) {
 $userId = $_GET['id'] ?? null;
 
 if (!$userId) {
-    Session::setFlash('error', 'ID de usuario no especificado.');
+    Session::setFlash('error', 'User ID not specified.');
     header('Location: user_index.php');
     exit;
 }
 
 // Validate CSRF
 if (!isset($_GET['csrf_token']) || !CSRF::validate($_GET['csrf_token'])) {
-    Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+    Session::setFlash('error', 'Security error: Invalid CSRF token.');
     header('Location: user_index.php');
     exit;
 }
 
 try {
     resendInvitation($userId);
-    Session::setFlash('success', 'Invitación reenviada exitosamente.');
+    Session::setFlash('success', 'Invitation resent successfully.');
 } catch (AppException $e) {
     Session::setFlash('error', $e->getUserMessage());
 } catch (Exception $e) {
-    Session::setFlash('error', 'Error inesperado al reenviar la invitación.');
+    Session::setFlash('error', 'Unexpected error resending invitation.');
 }
 
 header('Location: user_index.php');

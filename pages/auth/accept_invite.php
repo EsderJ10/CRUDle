@@ -7,21 +7,21 @@ require_once '../../config/init.php';
 require_once getPath('lib/business/user_operations.php');
 require_once getPath('lib/core/validation.php');
 
-$pageTitle = "Aceptar Invitación";
+$pageTitle = "Accept Invitation";
 $token = $_GET['token'] ?? '';
 $error = null;
 $user = null;
 
 try {
     if (empty($token)) {
-        throw new InvalidStateException('Token missing', 'El enlace de invitación no es válido.');
+        throw new InvalidStateException('Token missing', 'Invalid invitation link.');
     }
 
     // Verificar token
     $user = getInvitation($token);
     
     if (!$user) {
-        throw new InvalidStateException('Invalid token', 'El enlace de invitación no es válido o ha expirado.');
+        throw new InvalidStateException('Invalid token', 'Invitation link is invalid or has expired.');
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -29,9 +29,9 @@ try {
         $confirmPassword = $_POST['confirm_password'] ?? '';
 
         if (empty($password) || strlen($password) < 8) {
-            $error = "La contraseña debe tener al menos 8 caracteres.";
+            $error = "Password must be at least 8 characters long.";
         } elseif ($password !== $confirmPassword) {
-            $error = "Las contraseñas no coinciden.";
+            $error = "Passwords do not match.";
         } else {
             // Procesar avatar si se subió uno
             $avatarPath = null;
@@ -48,14 +48,14 @@ try {
             activateUser($token, $password, $avatarPath);
             
             // Iniciar sesión automáticamente o redirigir a login
-            Session::setFlash('success', 'Cuenta activada exitosamente. Ahora puedes iniciar sesión.');
+            Session::setFlash('success', 'Account activated successfully. You can now login.');
             header('Location: login.php');
             exit;
         }
     }
 
 } catch (Exception $e) {
-    $error = $e instanceof AppException ? $e->getUserMessage() : 'Ocurrió un error inesperado.';
+    $error = $e instanceof AppException ? $e->getUserMessage() : 'An unexpected error occurred.';
 }
 ?>
 <!DOCTYPE html>
@@ -75,12 +75,12 @@ try {
                 <div class="auth-logo">
                     <i class="fas fa-database"></i>
                 </div>
-                <h1>Bienvenido a CRUDle</h1>
+                <h1>Welcome to CRUDle</h1>
                 <p class="auth-subtitle">
                     <?php if ($user): ?>
-                        Hola <strong><?php echo htmlspecialchars($user['name']); ?></strong>, configura tu contraseña para continuar.
+                        Hello <strong><?php echo htmlspecialchars($user['name']); ?></strong>, set your password to continue.
                     <?php else: ?>
-                        Aceptar Invitación
+                        Accept Invitation
                     <?php endif; ?>
                 </p>
             </div>
@@ -92,7 +92,7 @@ try {
                 </div>
                 <?php if (!$user): ?>
                     <div class="auth-footer">
-                        <a href="login.php" class="auth-link">Volver al inicio de sesión</a>
+                        <a href="login.php" class="auth-link">Back to Login</a>
                     </div>
                 <?php endif; ?>
             <?php endif; ?>
@@ -100,14 +100,14 @@ try {
             <?php if ($user): ?>
                 <form method="post" action="accept_invite.php?token=<?php echo htmlspecialchars($token); ?>" class="auth-form" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="email">Correo Electrónico</label>
+                        <label for="email">Email Address</label>
                         <input type="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" disabled class="disabled-input">
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Nueva Contraseña</label>
+                        <label for="password">New Password</label>
                         <div class="password-input-wrapper">
-                            <input type="password" id="password" name="password" required placeholder="Mínimo 8 caracteres">
+                            <input type="password" id="password" name="password" required placeholder="Minimum 8 characters">
                             <button type="button" class="toggle-password" tabindex="-1">
                                 <i class="far fa-eye"></i>
                             </button>
@@ -115,20 +115,20 @@ try {
                     </div>
 
                     <div class="form-group">
-                        <label for="confirm_password">Confirmar Contraseña</label>
+                        <label for="confirm_password">Confirm Password</label>
                         <div class="password-input-wrapper">
-                            <input type="password" id="confirm_password" name="confirm_password" required placeholder="Repita la contraseña">
+                            <input type="password" id="confirm_password" name="confirm_password" required placeholder="Repeat password">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="avatar">Avatar (Opcional)</label>
+                        <label for="avatar">Avatar (Optional)</label>
                         <div class="avatar-upload-section" id="avatarUploadSection">
                             <label for="avatar" class="custom-file-upload" id="customFileUpload">
                                 <span class="file-icon fas fa-upload"></span>
                                 <span class="file-text">
-                                    <span class="file-text-main" id="fileTextMain">Seleccionar archivo</span>
-                                    <span class="file-text-sub" id="fileTextSub">o arrastra y suelta aquí</span>
+                                    <span class="file-text-main" id="fileTextMain">Select file</span>
+                                    <span class="file-text-sub" id="fileTextSub">or drag and drop here</span>
                                 </span>
                             </label>
                             <input type="file" 
@@ -142,17 +142,17 @@ try {
                                     <div class="file-preview-size" id="filePreviewSize"></div>
                                 </div>
                                 <button type="button" class="file-preview-remove" id="filePreviewRemove">
-                                    <i class="fas fa-times"></i> Quitar
+                                    <i class="fas fa-times"></i> Remove
                                 </button>
                             </div>
                             <small class="text-neutral-600">
-                                Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB.
+                                Allowed formats: JPG, PNG, GIF. Max size: 2MB.
                             </small>
                         </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block btn-lg">
-                        Activar Cuenta
+                        Activate Account
                     </button>
                 </form>
             <?php endif; ?>

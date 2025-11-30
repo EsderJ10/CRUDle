@@ -15,13 +15,13 @@ require_once getPath('lib/core/sanitization.php');
 
 Permissions::require(Permissions::USER_UPDATE);
 
-$pageTitle = "Editar Usuario";
-$pageHeader = "Editar Usuario";
+$pageTitle = "Edit User";
+$pageHeader = "Edit User";
 
 try {
     // Validar que se proporcione un ID
     if (!isset($_GET['id'])) {
-        Session::setFlash('error', 'No se ha proporcionado un ID de usuario.');
+        Session::setFlash('error', 'No user ID provided.');
         header('Location: user_index.php');
         exit;
     }
@@ -32,19 +32,19 @@ try {
     try {
         $user = getUserById($userId);
     } catch (Exception $e) {
-        Session::setFlash('error', 'Error al cargar el usuario: ' . $e->getMessage());
+        Session::setFlash('error', 'Error loading user: ' . $e->getMessage());
         header('Location: user_index.php');
         exit;
     }
     if (!$user) {
-        Session::setFlash('error', 'Usuario no encontrado.');
+        Session::setFlash('error', 'User not found.');
         header('Location: user_index.php');
         exit;
     }
 
     // Check if user has permission to edit this specific target user
     if (!Permissions::canEditUser($user)) {
-        Session::setFlash('error', 'No tienes permisos para editar a este usuario.');
+        Session::setFlash('error', 'You do not have permission to edit this user.');
         header('Location: user_index.php');
         exit;
     }
@@ -53,7 +53,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validar CSRF
         if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
-            Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+            Session::setFlash('error', 'Security error: Invalid CSRF token.');
             header('Location: user_edit.php?id=' . $userId);
             exit;
         }
@@ -75,8 +75,8 @@ try {
                 if (!Permissions::canAssignRole($formData['role'])) {
                     throw new ValidationException(
                         'Permission denied',
-                        ['role' => ['No tienes permisos para asignar el rol seleccionado.']],
-                        'Error de permisos.'
+                        ['role' => ['You do not have permission to assign the selected role.']],
+                        'Permission error.'
                     );
                 }
             }
@@ -87,7 +87,7 @@ try {
             // Validar conflictos entre remove y upload
             $removeAvatar = isset($_POST['remove_avatar']) && $_POST['remove_avatar'] == '1';
             if ($removeAvatar && isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-                $errors[] = "No puedes eliminar y subir un avatar al mismo tiempo. Elige solo una opción.";
+                $errors[] = "You cannot remove and upload an avatar at the same time. Please choose only one option.";
             }
             
             // Validar avatar si se proporciona
@@ -106,7 +106,7 @@ try {
                 throw new ValidationException(
                     'Form validation failed',
                     ['general' => $errors],
-                    'Por favor, corrija los errores en el formulario.'
+                    'Please correct the errors in the form.'
                 );
             }
             
@@ -149,13 +149,13 @@ try {
             $success = updateUser($userId, $formData);
             
             if ($success) {
-                Session::setFlash('success', 'Usuario con ID ' . $userId . ' actualizado exitosamente.');
+                Session::setFlash('success', 'User ID ' . $userId . ' updated successfully.');
                 header('Location: user_index.php');
                 exit;
             } else {
                 throw new UserOperationException(
                     'Failed to update user',
-                    'Error al actualizar el usuario.'
+                    'Error updating user.'
                 );
             }
             
