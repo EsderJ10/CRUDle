@@ -6,7 +6,7 @@ require_once getPath('lib/presentation/user_views.php');
 $pageTitle = "Login - CRUDle";
 $pageHeader = "Login";
 
-// Si ya está logueado, redirigir al dashboard
+// If already logged in, redirect to dashboard
 if (isLoggedIn()) {
     header('Location: ' . getWebPath('index.php'));
     exit;

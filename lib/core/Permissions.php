@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /*
- * Clase para manejar los permisos de los usuarios basados en roles.
+ * Class to handle user permissions based on roles.
  */
 
 class Permissions {
@@ -11,18 +11,18 @@ class Permissions {
     public const ROLE_EDITOR = 'editor';
     public const ROLE_VIEWER = 'viewer';
 
-    // Acciones
+    // Actions
     public const USER_CREATE = 'user_create';
     public const USER_READ = 'user_read';
     public const USER_UPDATE = 'user_update';
     public const USER_DELETE = 'user_delete';
     
     /**
-     * Verifica si un role tiene permiso para realizar una acción.
+     * Checks if a role has permission to perform an action.
      *
-     * @param string $role El role del usuario.
-     * @param string $action La acción a realizar.
-     * @return bool True si tiene permiso, false en caso contrario.
+     * @param string $role User role.
+     * @param string $action Action to perform.
+     * @return bool True if allowed, false otherwise.
      */
     public static function check(string $role, string $action): bool {
         $permissions = [
@@ -121,10 +121,10 @@ class Permissions {
     }
 
     /**
-     * Verifica si el usuario actual (en sesión) tiene permiso.
+     * Checks if the current user (in session) has permission.
      *
-     * @param string $action La acción a realizar.
-     * @return bool True si tiene permiso, false en caso contrario.
+     * @param string $action Action to perform.
+     * @return bool True if allowed, false otherwise.
      */
     public static function checkCurrent(string $action): bool {
         $role = Session::get('user_role');
@@ -136,9 +136,9 @@ class Permissions {
     }
     
     /**
-     * Lanza una excepción si el usuario actual no tiene permiso.
+     * Throws an exception if the current user does not have permission.
      * 
-     * @param string $action La acción requerida.
+     * @param string $action Required action.
      * @throws AuthException
      */
     public static function require(string $action): void {
@@ -146,7 +146,7 @@ class Permissions {
         if (!self::checkCurrent($action)) {
             throw new AuthException(
                 "User does not have permission for action: $action",
-                "No tienes permisos para realizar esta acción."
+                "You do not have permission to perform this action."
             );
         }
     }

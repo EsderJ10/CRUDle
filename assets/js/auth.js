@@ -1,3 +1,10 @@
+/*
+ * Authentication module
+ * It handles anything related with password visibility toggling and validation.
+ * Gives feedback to the user in real-time.
+ * Author: José Antonio Cortés Ferre.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     initPasswordToggles();
     initPasswordValidation();
@@ -13,7 +20,6 @@ function initPasswordToggles() {
             e.preventDefault();
 
             // Find the input relative to the button wrapper or previous sibling
-            // Using logic that handles slightly different HTML structures safely
             const wrapper = button.closest('.password-input-wrapper');
             const input = wrapper ? wrapper.querySelector('input') : button.previousElementSibling;
             const icon = button.querySelector('i');
@@ -21,19 +27,14 @@ function initPasswordToggles() {
             if (!input) return;
 
             const isPassword = input.type === 'password';
-
-            // Toggle Type
             input.type = isPassword ? 'text' : 'password';
-
-            // Update Icon
             icon.classList.toggle('fa-eye');
             icon.classList.toggle('fa-eye-slash');
 
-            // Accessibility: Tell screen readers the state changed
+            // Tell screen readers the state changed
             button.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
             button.setAttribute('aria-pressed', isPassword);
 
-            // UX: Keep focus on the input so typing isn't interrupted
             input.focus();
         });
     });
@@ -41,7 +42,6 @@ function initPasswordToggles() {
 
 /**
  * Real-time password matching validation.
- * "Don't wait for the click to tell me I'm wrong."
  */
 function initPasswordValidation() {
     const form = document.querySelector('.auth-form');
@@ -81,15 +81,12 @@ function initPasswordValidation() {
         if (confirmInput.value !== '') updateStatus();
     });
 
-    // Final safety check on submit
     form.addEventListener('submit', (e) => {
         if (passInput.value !== confirmInput.value) {
             e.preventDefault();
-            // Shake animation or focus logic could go here
             confirmInput.focus();
-            confirmInput.classList.add('shake-animation'); // Optional CSS class
+            confirmInput.classList.add('shake-animation');
 
-            // Remove animation class after it plays so it can be triggered again
             setTimeout(() => {
                 confirmInput.classList.remove('shake-animation');
             }, 500);

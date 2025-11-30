@@ -1,16 +1,16 @@
 <?php
 /*
- * Archivo de inicialización central.
- * Carga todas las dependencias necesarias y configura el entorno.
+ * Initialization file.
+ * Loads all necessary dependencies and configures the environment.
  */
 
-// Rutas
+// Paths
 require_once __DIR__ . '/paths.php';
 
-// Configuración
+// Configuration
 require_once getPath('config/config.php');
 
-// Núcleo
+// Core
 require_once getPath('lib/core/exceptions.php');
 require_once getPath('lib/core/error_handler.php');
 require_once getPath('lib/core/Session.php');
@@ -23,7 +23,7 @@ require_once getPath('lib/helpers/utils.php');
 // Database Core
 require_once getPath('lib/core/Database.php');
 
-// Sesión
+// Session
 Session::init();
 date_default_timezone_set('Europe/Madrid');
 

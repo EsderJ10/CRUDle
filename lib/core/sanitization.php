@@ -1,6 +1,6 @@
 <?php
 /*
- * Aquí se definen las funciones de saneamiento de datos.
+ * Data sanitization functions are defined here.
  */
 
 function sanitizeName($name) {
@@ -14,7 +14,7 @@ function sanitizeName($name) {
     
     $name = trim($name);
     $name = preg_replace('/\s+/', ' ', $name);
-    // Reemplazado de FILTRO_SANITIZE_STRING (deprecated) por strip_tags
+    // Replaced FILTER_SANITIZE_STRING (deprecated) with strip_tags
     $name = strip_tags($name);
     $name = ucwords(strtolower($name));
     

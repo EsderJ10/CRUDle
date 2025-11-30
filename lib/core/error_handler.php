@@ -1,9 +1,9 @@
 <?php
 /*
- * Utilidades para el manejo de errores y excepciones en la aplicación.
- * Proporciona controladores globales de errores y excepciones, registro y funciones
- * utilitarias para una gestión integral de errores en toda la aplicación.
- * Autor: José Antonio Cortés Ferre
+ * Utilities for error and exception handling in the application.
+ * Provides global error and exception handlers, logging, and utility functions
+ * for comprehensive error management throughout the application.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once __DIR__ . '/../../config/paths.php';
@@ -17,11 +17,11 @@ function ensureLogDirectoryExists() {
 }
 
 /**
- * Log de un error o excepción
- * @param string $message Mensaje de error
- * @param string $level Nivel de log (ERROR, WARNING, INFO, DEBUG)
- * @param Exception $exception Objeto de excepción opcional
- * @param array $context Información de contexto adicional
+ * Log an error or exception
+ * @param string $message Error message
+ * @param string $level Log level (ERROR, WARNING, INFO, DEBUG)
+ * @param Exception $exception Optional exception object
+ * @param array $context Additional context information
  */
 function logError($message, $level = 'ERROR', $exception = null, $context = []) {
     try {
@@ -45,20 +45,20 @@ function logError($message, $level = 'ERROR', $exception = null, $context = []) 
         
         $logEntry .= "\n" . str_repeat("-", 80) . "\n";
         
-        // Se rota el archivo de log si excede el tamaño máximo
+        // Rotate log file if it exceeds max size
         if (file_exists(ERROR_LOG_FILE) && filesize(ERROR_LOG_FILE) > ERROR_LOG_MAX_SIZE) {
             rotateLogFile();
         }
         
         error_log($logEntry, 3, ERROR_LOG_FILE);
     } catch (Exception $e) {
-        // Fallo al registrar el error, se intenta registrar en el log de errores de PHP
+        // Failed to log error, try logging to PHP error log
         error_log($message . ($exception ? ' - ' . $exception->getMessage() : ''));
     }
 }
 
 /**
- * Rota el archivo de log de errores si excede el tamaño máximo
+ * Rotates the error log file if it exceeds max size
  */
 function rotateLogFile() {
     try {
@@ -70,13 +70,13 @@ function rotateLogFile() {
             cleanupOldLogs();
         }
     } catch (Exception $e) {
-        // Fallo al rotar el log, se registra en el log de errores de PHP
+        // Failed to rotate log, log to PHP error log
         error_log('Failed to rotate error log: ' . $e->getMessage());
     }
 }
 
 /**
- * Limpia los archivos de log antiguos, manteniendo solo los 10 más recientes
+ * Cleans up old log files, keeping only the 10 most recent
  */
 function cleanupOldLogs() {
     try {
@@ -95,13 +95,13 @@ function cleanupOldLogs() {
             }
         }
     } catch (Exception $e) {
-        // Fallo al limpiar logs antiguos, se registra en el log de errores de PHP
+        // Failed to clean up old logs, log to PHP error log
         error_log('Failed to clean up old logs: ' . $e->getMessage());
     }
 }
 
 /**
- * Handler global de excepciones no capturadas
+ * Global uncaught exception handler
  * @param Throwable $exception
  */
 function globalExceptionHandler($exception) {
@@ -120,15 +120,15 @@ function globalExceptionHandler($exception) {
 }
 
 /**
- * Handler global de errores de PHP
- * @param int $errno Nivel de error
- * @param string $errstr Mensaje de error
- * @param string $errfile Archivo donde ocurrió el error
- * @param int $errline Número de línea donde ocurrió el error
- * @return bool Indica si el error fue manejado
+ * Global PHP error handler
+ * @param int $errno Error level
+ * @param string $errstr Error message
+ * @param string $errfile File where error occurred
+ * @param int $errline Line number where error occurred
+ * @return bool Indicates if error was handled
  */
 function globalErrorHandler($errno, $errstr, $errfile, $errline) {
-    // Si el error está deshabilitado por la configuración de error_reporting, no hacer nada
+    // If error is disabled by error_reporting configuration, do nothing
     if (!(error_reporting() & $errno)) {
         return false;
     }
@@ -167,11 +167,11 @@ function globalErrorHandler($errno, $errstr, $errfile, $errline) {
 }
 
 /**
- * Muestra una página de error al usuario
+ * Displays an error page to the user
  * @param Throwable $exception
  */
 function displayErrorPage($exception) {
-    // Previene enviar cabeceras si ya se han enviado
+    // Prevent sending headers if already sent
     if (headers_sent()) {
         return;
     }
@@ -185,9 +185,9 @@ function displayErrorPage($exception) {
 }
 
 /**
- * Formatea los errores de validación para su visualización
- * @param array $errors Mensajes de error
- * @return array Array de errores formateados
+ * Formats validation errors for display
+ * @param array $errors Error messages
+ * @return array Array of formatted errors
  */
 function formatValidationErrors($errors) {
     $formatted = [];
@@ -206,7 +206,7 @@ function formatValidationErrors($errors) {
 }
 
 /**
- * Determina si un error es recuperable
+ * Determines if an error is recoverable
  * @param Throwable $exception
  * @return bool
  */
@@ -217,9 +217,9 @@ function isRecoverableError($exception) {
 }
 
 /**
- * Obtiene un mensaje de error amigable para el usuario
+ * Gets a user-friendly error message
  * @param Throwable $exception
- * @return string Mensaje de error amigable para el usuario
+ * @return string User-friendly error message
  */
 function getDisplayErrorMessage($exception) {
     if ($exception instanceof AppException) {
@@ -230,7 +230,7 @@ function getDisplayErrorMessage($exception) {
 }
 
 /**
- * Registra los controladores globales de errores y excepciones
+ * Registers global error and exception handlers
  */
 function registerErrorHandlers() {
     set_exception_handler('globalExceptionHandler');

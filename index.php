@@ -1,9 +1,9 @@
 <?php
 /* 
- * Página principal del dashboard.
- * Sirve como punto de entrada principal para la aplicación CRUD PHP.
- * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
- * Autor: José Antonio Cortés Ferre
+ * Dashboard main page.
+ * Serves as the main entry point for the PHP CRUD application.
+ * Uses functions from lib/business/user_operations and lib/presentation/user_views modules.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once 'config/init.php';
@@ -18,7 +18,6 @@ try {
         exit;
     }
 } catch (Exception $e) {
-    // If DB fails, we might be in trouble, but let's try to proceed or show error
     // For now, let it fall through to requireLogin which might fail too
 }
 
@@ -45,12 +44,12 @@ try {
 ?>
 
         <div class="card page-transition">
-            <h2>Acciones Principales</h2>
+            <h2>Main Actions</h2>
             <div class="mb-6">
-                <h3>Gestión de Usuarios</h3>
+                <h3>Users Management</h3>
                 <div class="actions mt-4">
-                    <a href="pages/users/user_index.php" class="btn btn-primary">Ver Todos los Usuarios</a>
-                    <a href="pages/users/user_create.php" class="btn btn-success">Invitar Nuevo Usuario</a>
+                    <a href="pages/users/user_index.php" class="btn btn-primary">View All Users</a>
+                    <a href="pages/users/user_create.php" class="btn btn-success">Invite New User</a>
                 </div>
             </div>
         </div>
@@ -63,9 +62,9 @@ try {
 <?php
     include 'views/partials/footer.php';
 } catch (Exception $e) {
-    // Error inesperado
+    // Unexpected error
     include 'views/partials/header.php';
-    echo renderMessage('ERROR: Ocurrió un error inesperado. ' . $e->getMessage(), 'error');
+    echo renderMessage('ERROR: An unexpected error occurred. ' . $e->getMessage(), 'error');
     include 'views/partials/footer.php';
     error_log('Unexpected error in dashboard: ' . $e->getMessage());
     exit;

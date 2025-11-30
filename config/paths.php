@@ -1,38 +1,38 @@
 <?php
 /*
- * Definición de las rutas del proyecto.
- * También se definen funciones de ayuda para obtener las rutas.
+ * Project path definitions.
+ * Helper functions to get paths are also defined here.
  */ 
 
-// Detección del entorno
+// Environment detection
 if (getenv('APP_ENV') === 'development' || isset($_SERVER['APP_ENV'])) {
-    // Ejecución en Docker
+    // Docker execution
     define('WEB_ROOT', '');
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 } else {
-    // Producción / Ejecución local
+    // Production / Local execution
     define('WEB_ROOT', '/CRUDle');
     ini_set('display_errors', 0);
     ini_set('display_startup_errors', 0);
     error_reporting(E_ALL);
 }
 
-// Directorios
+// Directories
 define('BASE_PATH', realpath(__DIR__ . '/../') . '/');
 define('LIB_PATH', BASE_PATH . 'lib/');
 define('PAGES_PATH', BASE_PATH . 'pages/');
 define('VIEWS_PATH', BASE_PATH . 'views/');
 define('CONFIG_PATH', BASE_PATH . 'config/');
 
-// Librerías
+// Libraries
 define('CORE_PATH', LIB_PATH . 'core/');
 define('BUSINESS_PATH', LIB_PATH . 'business/');
 define('PRESENTATION_PATH', LIB_PATH . 'presentation/');
 define('HELPERS_PATH', LIB_PATH . 'helpers/');
 
-// Vistas
+// Views
 define('PARTIALS_PATH', VIEWS_PATH . 'partials/');
 define('COMPONENTS_PATH', VIEWS_PATH . 'components/');
 define('FORMS_PATH', COMPONENTS_PATH . 'forms/');
@@ -48,7 +48,7 @@ define('CSS_PATH', ASSETS_PATH . 'css/');
 define('JS_PATH', ASSETS_PATH . 'js/');
 define('IMAGES_PATH', ASSETS_PATH . 'images/');
 
-// Subida de ficheros
+// File uploads
 define('UPLOADS_PATH', BASE_PATH . 'uploads/');
 define('AVATARS_PATH', UPLOADS_PATH . 'avatars/');
 

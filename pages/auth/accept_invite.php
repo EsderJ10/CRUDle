@@ -1,6 +1,6 @@
 <?php
 /*
- * Página para aceptar una invitación y establecer la contraseña.
+ * Page to accept an invitation and set the password.
  */
 
 require_once '../../config/init.php';
@@ -17,7 +17,7 @@ try {
         throw new InvalidStateException('Token missing', 'Invalid invitation link.');
     }
 
-    // Verificar token
+    // Verify token
     $user = getInvitation($token);
     
     if (!$user) {
@@ -33,21 +33,21 @@ try {
         } elseif ($password !== $confirmPassword) {
             $error = "Passwords do not match.";
         } else {
-            // Procesar avatar si se subió uno
+            // Process avatar if one was uploaded
             $avatarPath = null;
             if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 try {
-                    // Usamos el ID del usuario ya que lo tenemos disponible en $user['id']
+                    // Use the user ID since we have it available in $user['id']
                     $avatarPath = handleAvatarUpload($_FILES['avatar'], $user['id'], $user['name']);
                 } catch (Exception $e) {
                     Logger::warning('Avatar upload failed during activation', ['error' => $e->getMessage()]);
                 }
             }
 
-            // Activar usuario
+            // Activate user
             activateUser($token, $password, $avatarPath);
             
-            // Iniciar sesión automáticamente o redirigir a login
+            // Automatically login or redirect to login
             Session::setFlash('success', 'Account activated successfully. You can now login.');
             header('Location: login.php');
             exit;

@@ -1,8 +1,8 @@
 <?php
 /*
- * Página para mostrar la información detallada de un usuario.
- * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
- * Autor: José Antonio Cortés Ferre
+ * Page to show detailed user information.
+ * Uses functions from lib/business/user_operations and lib/presentation/user_views modules.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once '../../config/init.php';
@@ -13,7 +13,7 @@ $pageTitle = "User Information";
 $pageHeader = "User Details";
 
 try {
-    // Validar que se proporcione un ID
+    // Validate that an ID is provided
     if (!isset($_GET['id'])) {
         include getPath('views/partials/header.php');
         echo renderMessage('ERROR: No user ID provided.', 'error');
@@ -24,7 +24,7 @@ try {
     
     $userId = $_GET['id'];
     
-    // Cargar usuario
+    // Load user
     try {
         $user = getUserById($userId);
         
@@ -48,13 +48,13 @@ try {
         exit;
     }
     
-    // Mostrar información del usuario
+    // Show user information
     include getPath('views/partials/header.php');
     echo renderUserInfo($user);
     include getPath('views/partials/footer.php');
     
 } catch (Exception $e) {
-    // Error no esperado
+    // Unexpected error
     include getPath('views/partials/header.php');
     echo renderMessage('ERROR: An unexpected error occurred. ' . $e->getMessage(), 'error');
     echo '<p><a href="user_index.php">Back to User List</a></p>';

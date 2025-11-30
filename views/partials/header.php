@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? $pageTitle : 'CRUD PHP'; ?></title>
 
-    <!-- Inicialización del tema -->
+    <!-- Theme initialization -->
     <script src="<?php echo getWebPath('assets/js/theme-init.js'); ?>"></script>
     
     <link rel="stylesheet" href="<?php echo getWebPath('assets/css/styles.css'); ?>">
@@ -41,13 +41,13 @@
                 <li class="nav-item">
                     <a href="<?php echo getWebPath('pages/users/user_index.php'); ?>" class="nav-link" data-page="users">
                         <i class="fas fa-users nav-icon"></i>
-                        <span class="nav-text">Usuarios</span>
+                        <span class="nav-text">Users</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo getWebPath('pages/users/user_create.php'); ?>" class="nav-link" data-page="create">
                         <i class="fas fa-user-plus nav-icon"></i>
-                        <span class="nav-text">Invitar Usuario</span>
+                        <span class="nav-text">Invite User</span>
                     </a>
                 </li>
             </ul>
@@ -63,20 +63,20 @@
                         <?php endif; ?>
                     </div>
                     <div class="profile-info">
-                        <span class="profile-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuario'); ?></span>
+                        <span class="profile-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></span>
                         <span class="profile-role"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'role'); ?></span>
                     </div>
                     <i class="fas fa-chevron-down profile-chevron"></i>
                     
                     <div class="profile-dropdown-menu">
                         <div class="dropdown-user-header">
-                            <span class="dropdown-user-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Usuario'); ?></span>
+                            <span class="dropdown-user-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></span>
                             <span class="dropdown-user-email"><?php echo htmlspecialchars($_SESSION['user_email'] ?? ''); ?></span>
                         </div>
                         <ul class="dropdown-list">
                             <li>
                                 <a href="<?php echo getWebPath('pages/users/user_info.php?id=' . $_SESSION['user_id']); ?>" class="dropdown-item">
-                                    <i class="fas fa-user"></i> Ver Perfil
+                                    <i class="fas fa-user"></i> View Profile
                                 </a>
                             </li>
                             <li>
@@ -84,7 +84,7 @@
                             </li>
                             <li>
                                 <a href="<?php echo getWebPath('pages/auth/logout.php'); ?>" class="dropdown-item text-danger">
-                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                    <i class="fas fa-sign-out-alt"></i> Logout
                                 </a>
                             </li>
                         </ul>
@@ -94,7 +94,7 @@
                 <div class="user-profile justify-content-center">
                     <a href="<?php echo getWebPath('pages/auth/login.php'); ?>" class="btn btn-primary btn-sm w-100 login-btn btn-sidebar-login">
                         <i class="fas fa-sign-in-alt"></i>
-                        <span class="login-text">Iniciar Sesión</span>
+                        <span class="login-text">Login</span>
                     </a>
                 </div>
                 <?php endif; ?>
@@ -114,7 +114,7 @@
             </div>
             <div class="header-right">
                 <div class="header-actions">
-                    <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
+                    <button class="theme-toggle" id="themeToggle" title="Change theme">
                         <i class="fas fa-sun theme-icon-light"></i>
                         <i class="fas fa-moon theme-icon-dark"></i>
                     </button>
@@ -126,7 +126,7 @@
         <main class="page-content">
             <div class="content-container">
                 <?php
-                // Mostrar mensajes flash
+                // Show flash messages
                 if (class_exists('Session') && Session::hasFlashes()) {
                     $flashes = Session::getFlashes();
                     foreach ($flashes as $flash) {

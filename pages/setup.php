@@ -27,15 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     try {
         if (empty($name) || empty($email) || empty($password)) {
-            throw new ValidationException('Todos los campos son obligatorios.');
+            throw new ValidationException('All fields are required.');
         }
 
         if ($password !== $confirm_password) {
-            throw new ValidationException('Las contraseñas no coinciden.');
+            throw new ValidationException('Passwords do not match.');
         }
 
         if (strlen($password) < 8) {
-            throw new ValidationException('La contraseña debe tener al menos 8 caracteres.');
+            throw new ValidationException('Password must be at least 8 characters long.');
         }
 
         $db = Database::getInstance();
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'init_db') {
     try {
         initializeDatabase();
-        $success = 'Base de datos inicializada correctamente.';
+        $success = 'Database initialized successfully.';
     } catch (Exception $e) {
         $error = $e->getMessage();
     }
@@ -90,7 +90,7 @@ if ($step === 1) {
     // DB Connection
     $dbStatus = checkSystemStatus();
     $checks[] = [
-        'name' => 'Conexión a Base de Datos',
+        'name' => 'Database Connection',
         'status' => $dbStatus['status'] === 'OK',
         'message' => $dbStatus['message']
     ];
@@ -99,7 +99,7 @@ if ($step === 1) {
     if ($dbStatus['status'] === 'OK') {
         $schemaStatus = checkDatabaseSchema();
         $checks[] = [
-            'name' => 'Esquema de Base de Datos',
+            'name' => 'Database Schema',
             'status' => $schemaStatus['status'] === 'OK',
             'message' => $schemaStatus['message'],
             'action' => $schemaStatus['status'] !== 'OK' ? 'init_db' : null
@@ -128,9 +128,9 @@ if ($step === 1) {
     }
     
     $checks[] = [
-        'name' => 'Permisos de Escritura (Uploads)',
+        'name' => 'Write Permissions (Uploads)',
         'status' => $isWritable,
-        'message' => $isWritable ? 'Directorio escribible' : 'No se puede escribir en el directorio de subidas' . $debugInfo
+        'message' => $isWritable ? 'Directory is writable' : 'Cannot write to the upload directory' . $debugInfo
     ];
 
     $allChecksPassed = !in_array(false, array_column($checks, 'status'));
@@ -150,8 +150,8 @@ if ($step === 1) {
 <body>
     <div class="setup-card">
         <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Instalación de CRUDle</h1>
-            <p class="text-gray-500">Asistente de configuración inicial</p>
+            <h1 class="text-2xl font-bold text-gray-800">CRUDle Setup</h1>
+            <p class="text-gray-500">Initial configuration assistant</p>
         </div>
 
         <div class="step-indicator">
@@ -162,7 +162,7 @@ if ($step === 1) {
 
         <?php if ($step === 1): ?>
             <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-4">Verificación del Sistema</h2>
+                <h2 class="text-xl font-semibold mb-4">System Verification</h2>
                 <div class="bg-gray-50 rounded-lg p-4">
                     <?php foreach ($checks as $check): ?>
                         <div class="check-item">
@@ -176,7 +176,7 @@ if ($step === 1) {
                             <?php if (isset($check['action']) && $check['action'] === 'init_db'): ?>
                                 <form method="POST" action="setup.php" class="mt-2">
                                     <input type="hidden" name="action" value="init_db">
-                                    <button type="submit" class="btn btn-sm btn-outline">Inicializar Base de Datos</button>
+                                    <button type="submit" class="btn btn-sm btn-outline">Initialize Database</button>
                                 </form>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -185,47 +185,47 @@ if ($step === 1) {
             </div>
             <div class="flex justify-end">
                 <?php if ($allChecksPassed): ?>
-                    <a href="setup.php?step=2" class="btn btn-primary w-full text-center">Continuar <i class="fas fa-arrow-right ml-2"></i></a>
+                    <a href="setup.php?step=2" class="btn btn-primary w-full text-center">Continue <i class="fas fa-arrow-right ml-2"></i></a>
                 <?php else: ?>
-                    <button disabled class="btn btn-secondary w-full cursor-not-allowed opacity-50">Corregir errores para continuar</button>
-                    <a href="setup.php" class="btn btn-outline mt-2 w-full text-center">Reintentar</a>
+                    <button disabled class="btn btn-secondary w-full cursor-not-allowed opacity-50">Fix errors to continue</button>
+                    <a href="setup.php" class="btn btn-outline mt-2 w-full text-center">Retry</a>
                 <?php endif; ?>
             </div>
 
         <?php elseif ($step === 2): ?>
             <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-4">Crear Administrador</h2>
+                <h2 class="text-xl font-semibold mb-4">Create Admin</h2>
                 <?php if ($error): ?>
                     <div class="message message-error mb-4"><?php echo htmlspecialchars($error); ?></div>
                 <?php endif; ?>
                 <form method="POST" action="setup.php">
                     <input type="hidden" name="action" value="create_admin">
                     <div class="form-group mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                         <input type="text" name="name" class="form-input w-full" required value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>">
                     </div>
                     <div class="form-group mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <input type="email" name="email" class="form-input w-full" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
                     </div>
                     <div class="form-group mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
                         <input type="password" name="password" class="form-input w-full" required minlength="8">
                     </div>
                     <div class="form-group mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar Contraseña</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
                         <input type="password" name="confirm_password" class="form-input w-full" required minlength="8">
                     </div>
-                    <button type="submit" class="btn btn-primary w-full">Crear Administrador</button>
+                    <button type="submit" class="btn btn-primary w-full">Create Admin</button>
                 </form>
             </div>
 
         <?php elseif ($step === 3): ?>
             <div class="text-center mb-6">
                 <div class="text-success text-5xl mb-4"><i class="fas fa-check-circle"></i></div>
-                <h2 class="text-2xl font-bold mb-2">¡Instalación Completada!</h2>
-                <p class="text-gray-600 mb-6">El usuario administrador ha sido creado exitosamente. Ya has iniciado sesión automáticamente.</p>
-                <a href="../index.php" class="btn btn-primary w-full">Ir al Dashboard</a>
+                <h2 class="text-2xl font-bold mb-2">Setup Completed!</h2>
+                <p class="text-gray-600 mb-6">The admin user has been created successfully. You have been logged in automatically.</p>
+                <a href="../index.php" class="btn btn-primary w-full">Go to Dashboard</a>
             </div>
         <?php endif; ?>
     </div>

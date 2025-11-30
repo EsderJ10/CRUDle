@@ -1,35 +1,35 @@
 /*
- * Punto de entrada en JavaScript para la aplicación CRUD.
- * Este archivo inicializa la aplicación y configura los módulos necesarios.
- * Autor: José Antonio Cortés Ferre.
+ * JavaScript entry point for the CRUD application.
+ * This file initializes the application and configures necessary modules.
+ * Author: José Antonio Cortés Ferre.
  */
 const CrudApp = {
     config: {
         debug: false,
         version: '1.1.0'
     },
-    
+
     modules: {},
-    
+
     /**
-     * Inicializa la aplicación CRUD
+     * Initializes the CRUD application
      */
     init() {
         if (this.config.debug) {
             console.log('CRUDle initializing...', this.config);
         }
-        
+
         this.initGlobalEventListeners();
-        
+
         if (this.config.debug) {
             console.log('CRUDle initialized successfully');
         }
     },
-    
+
     /**
-     * Registra un módulo en la aplicación
-     * @param {string} name - Nombre del módulo
-     * @param {Object} module - Objeto del módulo
+     * Registers a module in the application
+     * @param {string} name - Module name
+     * @param {Object} module - Module object
      */
     registerModule(name, module) {
         this.modules[name] = module;
@@ -37,18 +37,18 @@ const CrudApp = {
             console.log(`Module '${name}' registered.`);
         }
     },
-    
+
     /**
-     * Obtiene un módulo registrado
-     * @param {string} name - Nombre del módulo
-     * @returns {Object|null} Objeto del módulo o null si no se encuentra
+     * Gets a registered module
+     * @param {string} name - Module name
+     * @returns {Object|null} Module object or null if not found
      */
     getModule(name) {
         return this.modules[name] || null;
     },
-    
+
     /**
-     * Inicializa los listeners de eventos globales
+     * Initializes global event listeners
      */
     initGlobalEventListeners() {
         window.addEventListener('error', (event) => {
@@ -56,18 +56,18 @@ const CrudApp = {
                 console.error('Global error:', event.error);
             }
         });
-        
+
         window.addEventListener('unhandledrejection', (event) => {
             if (this.config.debug) {
                 console.error('Unhandled promise rejection:', event.reason);
             }
         });
     },
-    
+
     /**
-     * Función de utilidad para obtener un elemento de forma segura por ID
-     * @param {string} id - Elemento ID
-     * @returns {HTMLElement|null} Elemento o null si no se encuentra
+     * Utility function to safely get an element by ID
+     * @param {string} id - Element ID
+     * @returns {HTMLElement|null} Element or null if not found
      */
     getElementById(id) {
         const element = document.getElementById(id);
@@ -76,11 +76,11 @@ const CrudApp = {
         }
         return element;
     },
-    
+
     /**
-     * Función de utilidad para mostrar notificaciones
-     * @param {string} message - Mensaje de la notificación
-     * @param {string} type - Tipo de notificación (success, error, warning, info)
+     * Utility function to show notifications
+     * @param {string} message - Notification message
+     * @param {string} type - Notification type (success, error, warning, info)
      */
     showNotification(message, type = 'info') {
         console.log(`[${type.toUpperCase()}] ${message}`);

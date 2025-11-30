@@ -1,9 +1,9 @@
 <?php
 /*
- * Página para eliminar un usuario.
- * Maneja la confirmación y el procesamiento de la eliminación.
- * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
- * Autor: José Antonio Cortés Ferre
+ * Page to delete a user.
+ * Handles confirmation and deletion processing.
+ * Uses functions from lib/business/user_operations and lib/presentation/user_views modules.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once '../../config/init.php';
@@ -17,7 +17,7 @@ $pageTitle = "Delete User";
 $pageHeader = "Confirm Deletion";
 
 try {
-    // Mostrar confirmación en GET
+    // Show confirmation on GET
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         $userId = $_GET['id'];
         
@@ -33,9 +33,9 @@ try {
         include getPath('views/partials/footer.php');
     }
     
-    // Procesar eliminación en POST
+    // Process deletion on POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['confirm'])) {
-        // Validar CSRF
+        // Validate CSRF
         if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
             Session::setFlash('error', 'Security error: Invalid CSRF token.');
             header('Location: user_index.php');
@@ -46,19 +46,18 @@ try {
         
         try {
             if ($_POST['confirm'] === 'yes') {
-                // Obtener datos del usuario antes de eliminarlo para limpiar el avatar
+                // Get user data before deleting to clean up avatar
                 $user = getUserById($userId);
                 
-                // Eliminar usuario
+                // Delete user
                 $success = deleteUserById($userId);
                 
-                // Limpiar avatar si existe
+                // Clean up avatar if exists
                 if ($user && !empty($user['avatar'])) {
                     try {
                         deleteAvatarFile($user['avatar']);
                     } catch (AvatarException $e) {
                         error_log('Avatar cleanup failed: ' . $e->getMessage());
-                        // No fallar la operación entera por esto
                     }
                 }
                 
@@ -75,13 +74,13 @@ try {
             exit;
         }
     } else if (!isset($_POST['id']) && !isset($_GET['id'])) {
-        // La petición no es válida
+        // Invalid request
         Session::setFlash('error', 'No user ID provided.');
         header('Location: user_index.php');
         exit;
     }
 } catch (Exception $e) {
-    // Error no esperado - Dejar que el Global Handler lo maneje
+    // Unexpected error - Let Global Handler handle it
     throw $e;
 }
 ?>

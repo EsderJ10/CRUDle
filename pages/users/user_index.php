@@ -1,9 +1,9 @@
 <?php
 /*
- * Página para listar usuarios.
- * Muestra una tabla con todos los usuarios y opciones para editar o eliminar.
- * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
- * Autor: José Antonio Cortés Ferre
+ * Page to list users.
+ * Displays a table with all users and options to edit or delete.
+ * Uses functions from lib/business/user_operations and lib/presentation/user_views modules.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once '../../config/init.php';
@@ -19,9 +19,9 @@ $pageHeader = "User List";
 try {
     include getPath('views/partials/header.php');
     
-    // Mensajes flash y de URL son manejados automáticamente en header.php
+    // Flash and URL messages are handled automatically in header.php
     
-    // Obtener y mostrar usuarios
+    // Get and display users
     try {
         $users = getAllUsers();
         echo renderUserTable($users);
@@ -35,7 +35,7 @@ try {
     
     include getPath('views/partials/footer.php');
 } catch (Exception $e) {
-    // Error no esperado
+    // Unexpected error
     include getPath('views/partials/header.php');
     echo renderMessage('ERROR: An unexpected error occurred. ' . $e->getMessage(), 'error');
     include getPath('views/partials/footer.php');

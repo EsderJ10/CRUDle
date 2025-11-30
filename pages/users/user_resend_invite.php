@@ -1,6 +1,6 @@
 <?php
 /*
- * Script para reenviar la invitación a un usuario.
+ * Script to resend invitation to a user.
  */
 
 require_once '../../config/init.php';
@@ -9,7 +9,7 @@ require_once getPath('lib/business/auth_operations.php');
 
 requireLogin();
 
-// Verificar si es admin
+// Check if admin
 if (!isAdmin()) {
     Session::setFlash('error', 'Access denied.');
     header('Location: user_index.php');

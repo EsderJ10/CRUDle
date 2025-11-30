@@ -1,11 +1,11 @@
 <?php
 /*
- * Página de error.
- * Muestra una página de error con detalles de la excepción
+ * Error page.
+ * Displays an error page with exception details.
  *
- * Parámetros:
- * - $exception: El objeto de excepción Throwable
- * - $isProductionMode: Booleano que indica el entorno de producción
+ * Parameters:
+ * - $exception: The Throwable exception object
+ * - $isProductionMode: Boolean indicating production environment
  */
 
 $message = $isProductionMode 
@@ -29,15 +29,15 @@ $message = $isProductionMode
         
         <?php if (!$isProductionMode): ?>
             <div class="error-code">
-                <strong>Detalles técnicos:</strong>
-                Tipo: <?php echo htmlspecialchars($exception::class); ?><br>
-                Archivo: <?php echo htmlspecialchars($exception->getFile()); ?><br>
-                Línea: <?php echo htmlspecialchars((string)$exception->getLine()); ?><br>
-                <strong>Mensaje:</strong>
+                <strong>Technical details:</strong>
+                Type: <?php echo htmlspecialchars($exception::class); ?><br>
+                File: <?php echo htmlspecialchars($exception->getFile()); ?><br>
+                Line: <?php echo htmlspecialchars((string)$exception->getLine()); ?><br>
+                <strong>Message:</strong>
                 <?php echo htmlspecialchars($exception->getMessage()); ?>
             </div>
         <?php endif; ?>
-        <a href="<?php echo getWebPath('index.php'); ?>" class="btn">Volver a Inicio</a>
+        <a href="<?php echo getWebPath('index.php'); ?>" class="btn">Return to Home</a>
     </div>
 </body>
 </html>

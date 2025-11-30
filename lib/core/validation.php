@@ -1,6 +1,6 @@
 <?php
 /*
- * En este archivo se definen funciones para validar los datos de entrada del usuario.
+ * Functions to validate user input data are defined in this file.
  */
 
 require_once getPath('config/config.php');
@@ -65,7 +65,7 @@ function validateAvatar($file) {
     }
     
     try {
-        // Se busca cualquier error en la subida del archivo para manejarlo
+        // Check for any file upload errors to handle them
         if ($file['error'] !== UPLOAD_ERR_OK) {
             $uploadErrors = [
                 UPLOAD_ERR_INI_SIZE => 'File is too large (server limit).',
@@ -84,7 +84,7 @@ function validateAvatar($file) {
             );
         }
         
-        // Comprobar el tamaño del archivo (máximo 2MB)
+        // Check file size (max 2MB)
         $maxSize = 2 * 1024 * 1024; // 2MB
         if ($file['size'] > $maxSize) {
             throw new ValidationException(
@@ -94,7 +94,7 @@ function validateAvatar($file) {
             );
         }
         
-        // Comprobar que el archivo no esté vacío
+        // Check that the file is not empty
         if ($file['size'] <= 0) {
             throw new ValidationException(
                 'Avatar file is empty',
@@ -103,7 +103,7 @@ function validateAvatar($file) {
             );
         }
         
-        // Verificar que sea un archivo temporal válido
+        // Verify it is a valid uploaded file
         if (!is_uploaded_file($file['tmp_name'])) {
             throw new FileUploadException(
                 'Invalid uploaded file: ' . $file['tmp_name'],
@@ -111,11 +111,11 @@ function validateAvatar($file) {
             );
         }
         
-        // Comprobar tipos MIME y extensiones permitidas
+        // Check allowed MIME types and extensions
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
         
-        // Verificar MIME type
+        // Verify MIME type
         try {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             if ($finfo === false) {
@@ -152,7 +152,7 @@ function validateAvatar($file) {
             );
         }
         
-        // Verificar extensión del archivo
+        // Verify file extension
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if (!in_array($extension, $allowedExtensions)) {
             throw new ValidationException(
