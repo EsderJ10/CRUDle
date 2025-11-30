@@ -1,8 +1,8 @@
 <?php
 /*
- * Clase Mailer simple para enviar correos vía SMTP sin dependencias externas.
- * Utiliza fsockopen para conectar al servidor SMTP.
- * Autor: José Antonio Cortés Ferre
+ * Simple Mailer class to send emails via SMTP without external dependencies.
+ * Uses fsockopen to connect to the SMTP server.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once __DIR__ . '/../../config/paths.php';

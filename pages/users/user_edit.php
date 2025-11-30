@@ -1,9 +1,9 @@
 <?php
 /*
- * Página para editar un usuario.
- * Maneja la visualización del formulario y el procesamiento de datos.
- * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
- * Autor: José Antonio Cortés Ferre
+ * Page to edit a user.
+ * Handles form display and data processing.
+ * Uses functions from lib/business/user_operations and lib/presentation/user_views modules.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once '../../config/init.php';
@@ -15,51 +15,51 @@ require_once getPath('lib/core/sanitization.php');
 
 Permissions::require(Permissions::USER_UPDATE);
 
-$pageTitle = "Editar Usuario";
-$pageHeader = "Editar Usuario";
+$pageTitle = "Edit User";
+$pageHeader = "Edit User";
 
 try {
-    // Validar que se proporcione un ID
+    // Validate that an ID is provided
     if (!isset($_GET['id'])) {
-        Session::setFlash('error', 'No se ha proporcionado un ID de usuario.');
+        Session::setFlash('error', 'No user ID provided.');
         header('Location: user_index.php');
         exit;
     }
     
     $userId = $_GET['id'];
     
-    // Cargar usuario existente
+    // Load existing user
     try {
         $user = getUserById($userId);
     } catch (Exception $e) {
-        Session::setFlash('error', 'Error al cargar el usuario: ' . $e->getMessage());
+        Session::setFlash('error', 'Error loading user: ' . $e->getMessage());
         header('Location: user_index.php');
         exit;
     }
     if (!$user) {
-        Session::setFlash('error', 'Usuario no encontrado.');
+        Session::setFlash('error', 'User not found.');
         header('Location: user_index.php');
         exit;
     }
 
     // Check if user has permission to edit this specific target user
     if (!Permissions::canEditUser($user)) {
-        Session::setFlash('error', 'No tienes permisos para editar a este usuario.');
+        Session::setFlash('error', 'You do not have permission to edit this user.');
         header('Location: user_index.php');
         exit;
     }
     
-    // Procesar formulario POST
+    // Process POST form
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Validar CSRF
+        // Validate CSRF
         if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
-            Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
+            Session::setFlash('error', 'Security error: Invalid CSRF token.');
             header('Location: user_edit.php?id=' . $userId);
             exit;
         }
 
         try {
-            // Sanitizar datos
+            // Sanitize data
             $formData = sanitizeUserData([
                 'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
@@ -75,22 +75,22 @@ try {
                 if (!Permissions::canAssignRole($formData['role'])) {
                     throw new ValidationException(
                         'Permission denied',
-                        ['role' => ['No tienes permisos para asignar el rol seleccionado.']],
-                        'Error de permisos.'
+                        ['role' => ['You do not have permission to assign the selected role.']],
+                        'Permission error.'
                     );
                 }
             }
             
-            // Validar datos básicos
+            // Validate basic data
             $errors = validateUserData($formData);
             
-            // Validar conflictos entre remove y upload
+            // Validate conflicts between remove and upload
             $removeAvatar = isset($_POST['remove_avatar']) && $_POST['remove_avatar'] == '1';
             if ($removeAvatar && isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-                $errors[] = "No puedes eliminar y subir un avatar al mismo tiempo. Elige solo una opción.";
+                $errors[] = "You cannot remove and upload an avatar at the same time. Please choose only one option.";
             }
             
-            // Validar avatar si se proporciona
+            // Validate avatar if provided
             if (!$removeAvatar && isset($_FILES['avatar'])) {
                 try {
                     $avatarErrors = validateAvatar($_FILES['avatar']);
@@ -106,61 +106,61 @@ try {
                 throw new ValidationException(
                     'Form validation failed',
                     ['general' => $errors],
-                    'Por favor, corrija los errores en el formulario.'
+                    'Please correct the errors in the form.'
                 );
             }
             
-            // Manejar avatar
+            // Handle avatar
             $newAvatarPath = null;
             $oldAvatarPath = $user['avatar'];
             
             if ($removeAvatar) {
-                // Usuario optó por eliminar el avatar existente
+                // User opted to remove existing avatar
                 if ($oldAvatarPath) {
                     try {
                         deleteAvatarFile($oldAvatarPath);
                     } catch (AvatarException $e) {
                         error_log('Avatar deletion failed: ' . $e->getMessage());
-                        // No fallar la operación entera por esto
+                        // Do not fail the entire operation for this
                     }
                 }
                 $formData['avatar'] = null;
             } else if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-                // Usuario está subiendo un nuevo avatar
+                // User is uploading a new avatar
                 try {
                     $newAvatarPath = handleAvatarUpload($_FILES['avatar'], $userId, $formData['name']);
                     if ($newAvatarPath) {
                         $formData['avatar'] = $newAvatarPath;
-                        // El avatar antiguo se elimina automáticamente en handleAvatarUpload
+                        // Old avatar is automatically deleted in handleAvatarUpload
                     } else {
-                        $formData['avatar'] = $oldAvatarPath; // Mantener el antiguo si la subida falla
+                        $formData['avatar'] = $oldAvatarPath; // Keep old one if upload fails
                     }
                 } catch (AvatarException $e) {
                     error_log('Avatar upload failed: ' . $e->getMessage());
-                    // Mantener el avatar antiguo
+                    // Keep old avatar
                     $formData['avatar'] = $oldAvatarPath;
                 }
             } else {
-                // Sin cambios al avatar
+                // No changes to avatar
                 $formData['avatar'] = $oldAvatarPath;
             }
             
-            // Actualizar usuario
+            // Update user
             $success = updateUser($userId, $formData);
             
             if ($success) {
-                Session::setFlash('success', 'Usuario con ID ' . $userId . ' actualizado exitosamente.');
+                Session::setFlash('success', 'User ID ' . $userId . ' updated successfully.');
                 header('Location: user_index.php');
                 exit;
             } else {
                 throw new UserOperationException(
                     'Failed to update user',
-                    'Error al actualizar el usuario.'
+                    'Error updating user.'
                 );
             }
             
         } catch (ValidationException $e) {
-            // Mostrar formulario con errores
+            // Show form with errors
             include getPath('views/partials/header.php');
             
             $fieldErrors = $e->getErrors();
@@ -168,7 +168,7 @@ try {
                 echo renderMessage($error, 'error');
             }
             
-            // Actualizar datos del formulario
+            // Update form data
             $user['name'] = $formData['name'];
             $user['email'] = $formData['email'];
             $user['role'] = $formData['role'];
@@ -178,14 +178,14 @@ try {
             exit;
             
         } catch (AppException $e) {
-            // Errores de aplicación conocidos
+            // Known application errors
             Session::setFlash('error', $e->getUserMessage());
             header('Location: user_index.php');
             exit;
         }
     }
     
-    // GET request - mostrar formulario con datos del usuario
+    // GET request - show form with user data
     if ($user !== null) {
         include getPath('views/partials/header.php');
         // Filter available roles based on permissions
@@ -203,7 +203,7 @@ try {
     }
     
 } catch (Exception $e) {
-    // Error no esperado - Dejar que el Global Handler lo maneje
+    // Unexpected error - Let Global Handler handle it
     throw $e;
 }
 ?>

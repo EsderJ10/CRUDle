@@ -1,8 +1,8 @@
 /*
- * Módulo del Formulario de Usuario
- * Maneja la interactividad del formulario: avatar (subida, eliminación) y validación
- * La validación real se realiza en PHP. JavaScript solo maneja la experiencia de usuario e interactividad
- * Autor: José Antonio Cortés Ferre.
+ * User Form Module
+ * Handles form interactivity: avatar (upload, removal) and validation
+ * Real validation is done in PHP. JavaScript only handles UX and interactivity
+ * Author: José Antonio Cortés Ferre.
  */
 
 (function () {
@@ -10,46 +10,46 @@
 
     const UserFormModule = {
         /**
-         * Inicializa toda la funcionalidad del formulario de usuario
+         * Initializes all user form functionality
          */
         init() {
             this.initAvatarHandling();
         },
 
         /**
-         * Inicializa el manejo del avatar (subida y eliminación)
-         * Configura los listeners para el checkbox de eliminación y el input de archivo
-         * Sincroniza los estados entre ambos controles para mejorar la UX
+         * Initializes avatar handling (upload and removal)
+         * Sets up listeners for removal checkbox and file input
+         * Synchronizes states between both controls to improve UX
          */
         initAvatarHandling() {
             const removeAvatarCheckbox = document.getElementById('remove_avatar');
             if (removeAvatarCheckbox) {
-                // Inicializa el estado del formulario en la carga de la página
+                // Initialize form state on page load
                 this.toggleAvatarUpload(removeAvatarCheckbox);
 
-                // Configura el listener para cambios en el checkbox
+                // Set up listener for checkbox changes
                 removeAvatarCheckbox.addEventListener('change', () => {
                     this.toggleAvatarUpload(removeAvatarCheckbox);
                 });
             }
 
-            // Agrega un handler para el input de archivo para mejor UX
+            // Add handler for file input for better UX
             const avatarInput = document.getElementById('avatar');
             if (avatarInput) {
                 avatarInput.addEventListener('change', (e) => {
                     const removeCheckbox = document.getElementById('remove_avatar');
                     if (removeCheckbox && avatarInput.files.length > 0) {
-                        // Si el usuario selecciona un archivo, desactiva la opción de eliminación
+                        // If user selects a file, disable removal option
                         removeCheckbox.checked = false;
                         this.toggleAvatarUpload(removeCheckbox);
                     }
 
-                    // Maneja la previsualización del archivo
+                    // Handle file preview
                     this.handleFileSelect(e);
                 });
             }
 
-            // Configura el botón de remover archivo de la previsualización
+            // Set up remove file preview button
             const removePreviewBtn = document.getElementById('filePreviewRemove');
             if (removePreviewBtn) {
                 removePreviewBtn.addEventListener('click', () => {
@@ -57,7 +57,7 @@
                 });
             }
 
-            // Configura drag and drop
+            // Set up drag and drop
             const fileUploadLabel = document.getElementById('customFileUpload');
             if (fileUploadLabel) {
                 this.initDragAndDrop(fileUploadLabel, avatarInput);
@@ -65,8 +65,8 @@
         },
 
         /**
-         * Maneja la selección de archivo y muestra la previsualización
-         * @param {Event} e - El evento de cambio del input
+         * Handles file selection and shows preview
+         * @param {Event} e - Input change event
          */
         handleFileSelect(e) {
             const file = e.target.files[0];
@@ -75,22 +75,22 @@
                 return;
             }
 
-            // Valida que sea una imagen
+            // Validate it is an image
             if (!file.type.match('image.*')) {
-                alert('Por favor, selecciona solo archivos de imagen.');
+                alert('Please select only image files.');
                 this.clearFileInput();
                 return;
             }
 
-            // Valida el tamaño (2MB máximo)
-            const maxSize = 2 * 1024 * 1024; // 2MB en bytes
+            // Validate size (2MB max)
+            const maxSize = 2 * 1024 * 1024;
             if (file.size > maxSize) {
-                alert('El archivo es demasiado grande. El tamaño máximo es 2MB.');
+                alert('File is too large. Maximum size is 2MB.');
                 this.clearFileInput();
                 return;
             }
 
-            // Actualiza la UI
+            // Update UI
             const customFileUpload = document.getElementById('customFileUpload');
             const fileTextMain = document.getElementById('fileTextMain');
             const fileTextSub = document.getElementById('fileTextSub');
@@ -100,20 +100,20 @@
             }
 
             if (fileTextMain) {
-                fileTextMain.textContent = 'Archivo seleccionado';
+                fileTextMain.textContent = 'File selected';
             }
 
             if (fileTextSub) {
                 fileTextSub.textContent = file.name;
             }
 
-            // Muestra la previsualización
+            // Show preview
             this.showFilePreview(file);
         },
 
         /**
-         * Muestra la previsualización del archivo seleccionado
-         * @param {File} file - El archivo a previsualizar
+         * Shows selected file preview
+         * @param {File} file - File to preview
          */
         showFilePreview(file) {
             const preview = document.getElementById('filePreview');
@@ -123,7 +123,7 @@
 
             if (!preview) return;
 
-            // Lee el archivo para mostrar la imagen
+            // Read file to show image
             const reader = new FileReader();
             reader.onload = (e) => {
                 if (previewImage) {
@@ -132,7 +132,7 @@
             };
             reader.readAsDataURL(file);
 
-            // Muestra el nombre y tamaño
+            // Show name and size
             if (previewName) {
                 previewName.textContent = file.name;
             }
@@ -142,12 +142,12 @@
                 previewSize.textContent = `${sizeKB} KB`;
             }
 
-            // Muestra el contenedor de previsualización
+            // Show preview container
             preview.classList.add('show');
         },
 
         /**
-         * Limpia el input de archivo y restaura el estado inicial
+         * Clears file input and restores initial state
          */
         clearFileInput() {
             const avatarInput = document.getElementById('avatar');
@@ -165,11 +165,11 @@
             }
 
             if (fileTextMain) {
-                fileTextMain.textContent = 'Seleccionar archivo';
+                fileTextMain.textContent = 'Select file';
             }
 
             if (fileTextSub) {
-                fileTextSub.textContent = 'o arrastra y suelta aquí';
+                fileTextSub.textContent = 'or drag and drop here';
             }
 
             if (preview) {
@@ -178,14 +178,14 @@
         },
 
         /**
-         * Inicializa el drag and drop para el input de archivo
-         * @param {HTMLElement} dropZone - El elemento donde se puede soltar el archivo
-         * @param {HTMLElement} input - El input de archivo
+         * Initializes drag and drop for file input
+         * @param {HTMLElement} dropZone - Drop zone element
+         * @param {HTMLElement} input - File input
          */
         initDragAndDrop(dropZone, input) {
             if (!dropZone || !input) return;
 
-            // Previene el comportamiento predeterminado para permitir el drop
+            // Prevent default behavior to allow drop
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 dropZone.addEventListener(eventName, (e) => {
                     e.preventDefault();
@@ -193,7 +193,7 @@
                 });
             });
 
-            // Agrega efecto visual cuando se arrastra sobre el elemento
+            // Add visual effect when dragging over element
             ['dragenter', 'dragover'].forEach(eventName => {
                 dropZone.addEventListener(eventName, () => {
                     dropZone.style.borderColor = 'var(--primary)';
@@ -202,7 +202,7 @@
                 });
             });
 
-            // Remueve efecto visual cuando se sale del elemento
+            // Remove visual effect when leaving element
             ['dragleave', 'drop'].forEach(eventName => {
                 dropZone.addEventListener(eventName, () => {
                     dropZone.style.borderColor = '';
@@ -211,12 +211,11 @@
                 });
             });
 
-            // Maneja el drop del archivo
+            // Handle file drop
             dropZone.addEventListener('drop', (e) => {
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
                     input.files = files;
-                    // Dispara el evento change manualmente
                     const event = new Event('change', { bubbles: true });
                     input.dispatchEvent(event);
                 }
@@ -224,10 +223,10 @@
         },
 
         /**
-         * Alterna la visibilidad y estado del área de subida de avatar
-         * Controla la opacidad del formulario, estado del input y avisos visuales
-         * También aplica efectos visuales al avatar actual (desaturado, opacidad)
-         * @param {HTMLElement} checkbox - El checkbox de eliminación de avatar
+         * Toggles visibility and state of avatar upload area
+         * Controls form opacity, input state, and visual warnings
+         * Also applies visual effects to current avatar (desaturated, opacity)
+         * @param {HTMLElement} checkbox - Avatar removal checkbox
          */
         toggleAvatarUpload(checkbox) {
             const avatarUploadSection = document.getElementById('avatarUploadSection');
@@ -237,14 +236,14 @@
             const customFileUpload = document.getElementById('customFileUpload');
 
             if (checkbox.checked) {
-                // Si la opción de eliminar está marcada, desactiva la subida de archivos
+                // If remove option is checked, disable file upload
                 if (avatarUploadSection) avatarUploadSection.style.opacity = '0.5';
                 if (avatarInput) {
                     avatarInput.disabled = true;
-                    avatarInput.value = ''; // Limpia cualquier archivo seleccionado
+                    avatarInput.value = ''; // Clear any selected file
                 }
 
-                // Deshabilita visualmente el área de upload
+                // Visually disable upload area
                 if (customFileUpload) {
                     customFileUpload.classList.add('disabled');
                     customFileUpload.style.pointerEvents = 'none';
@@ -259,11 +258,11 @@
                     currentAvatar.style.filter = 'grayscale(100%)';
                 }
             } else {
-                // Si la opción de eliminar no está marcada, habilita la subida de archivos
+                // If remove option is not checked, enable file upload
                 if (avatarUploadSection) avatarUploadSection.style.opacity = '1';
                 if (avatarInput) avatarInput.disabled = false;
 
-                // Habilita visualmente el área de upload
+                // Visually enable upload area
                 if (customFileUpload) {
                     customFileUpload.classList.remove('disabled');
                     customFileUpload.style.pointerEvents = 'auto';
@@ -281,11 +280,10 @@
         },
     };
 
-    // Inicialización del módulo al cargar el DOM
+    // Module initialization on DOM load
     document.addEventListener('DOMContentLoaded', () => {
         UserFormModule.init();
 
-        // Registra el módulo con la aplicación principal si está disponible
         if (window.CrudApp) {
             window.CrudApp.registerModule('userForm', UserFormModule);
         }

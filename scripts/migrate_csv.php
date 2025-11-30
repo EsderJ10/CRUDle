@@ -1,7 +1,7 @@
 <?php
 /*
- * Script de migración de CSV a Base de Datos.
- * Lee data/users.csv e inserta los usuarios en la tabla users.
+ * CSV to Database migration script.
+ * Reads data/users.csv and inserts users into the users table.
  */
 
 require_once __DIR__ . '/../config/init.php';
@@ -10,18 +10,18 @@ require_once getPath('lib/business/user_operations.php');
 $csvFile = getPath('data/users.csv');
 
 if (!file_exists($csvFile)) {
-    echo "Error: No se encontró el archivo CSV en $csvFile\n";
+    echo "Error: CSV file not found at $csvFile\n";
     exit(1);
 }
 
-echo "Iniciando migración desde $csvFile...\n";
+echo "Starting migration from $csvFile...\n";
 
 if (($handle = fopen($csvFile, "r")) !== FALSE) {
     $row = 0;
     $successCount = 0;
     $errorCount = 0;
     
-    // Detectar encabezados
+    // Detect headers
     $headers = fgetcsv($handle, 1000, ",");
     
     while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -35,49 +35,49 @@ if (($handle = fopen($csvFile, "r")) !== FALSE) {
             $avatarPath = $data[5] ?? null;
             
             if (empty($name) || empty($email)) {
-                echo "Fila $row saltada: Datos incompletos.\n";
+                echo "Row $row skipped: Data incomplete.\n";
                 $errorCount++;
                 continue;
             }
             
-            // Verificar si el email ya existe
+            // Check if email already exists
             $db = Database::getInstance();
             $stmt = $db->query("SELECT id FROM users WHERE email = ?", [$email]);
             if ($stmt->fetch()) {
-                echo "Fila $row saltada: El email $email ya existe.\n";
+                echo "Row $row skipped: Email $email already exists.\n";
                 $errorCount++;
                 continue;
             }
             
-            // Insertar usuario
-            // Contraseña por defecto: 12345678
+            // Insert user
+            // Default password: 12345678
             $formData = [
                 'name' => $name,
                 'email' => $email,
                 'role' => $role,
-                'password' => '12345678',
+                'password' => '12345678', // This could be changed
                 'avatar' => $avatarPath,
                 'status' => 'active',
                 'created_at' => $createdAt
             ];
             
             createUser($formData);
-            echo "Usuario $name ($email) migrado exitosamente.\n";
+            echo "User $name ($email) migrated successfully.\n";
             $successCount++;
             
         } catch (Exception $e) {
-            echo "Error en fila $row: " . $e->getMessage() . "\n";
+            echo "Error in row $row: " . $e->getMessage() . "\n";
             $errorCount++;
         }
     }
     fclose($handle);
     
-    echo "\nMigración completada.\n";
-    echo "Exitosos: $successCount\n";
-    echo "Errores/Saltados: $errorCount\n";
-    echo "Nota: La contraseña por defecto para los usuarios migrados es '12345678'.\n";
+    echo "\nMigration completed.\n";
+    echo "Success: $successCount\n";
+    echo "Errors/Skipped: $errorCount\n";
+    echo "Note: The default password for migrated users is '12345678'.\n";
     
 } else {
-    echo "Error: No se pudo abrir el archivo CSV.\n";
+    echo "Error: Could not open CSV file.\n";
 }
 ?>

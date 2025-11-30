@@ -1,15 +1,15 @@
 <?php
 /*
- * Clase para protección contra Cross-Site Request Forgery (CSRF).
- * Genera y valida tokens para asegurar que los envíos de formularios provienen de la aplicación.
- * Autor: José Antonio Cortés Ferre
+ * Class for Cross-Site Request Forgery (CSRF) protection.
+ * Generates and validates tokens to ensure form submissions come from the application.
+ * Author: José Antonio Cortés Ferre
  */
 
 class CSRF {
     /**
-     * Genera un nuevo token CSRF y lo almacena en la sesión.
-     * Si ya existe uno, lo devuelve (para permitir múltiples pestañas/formularios).
-     * @return string El token CSRF
+     * Generates a new CSRF token and stores it in the session.
+     * If one already exists, returns it (to allow multiple tabs/forms).
+     * @return string The CSRF token
      */
     public static function generate() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -24,8 +24,8 @@ class CSRF {
     }
 
     /**
-     * Obtiene el token CSRF actual.
-     * @return string|null El token o null si no existe
+     * Gets the current CSRF token.
+     * @return string|null The token or null if it doesn't exist
      */
     public static function getToken() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -36,9 +36,9 @@ class CSRF {
     }
 
     /**
-     * Valida un token CSRF.
-     * @param string $token El token a validar
-     * @return bool True si es válido, False si no
+     * Validates a CSRF token.
+     * @param string $token The token to validate
+     * @return bool True if valid, False if not
      */
     public static function validate($token) {
         if (session_status() === PHP_SESSION_NONE) {
@@ -53,8 +53,8 @@ class CSRF {
     }
 
     /**
-     * Renderiza un campo input hidden con el token CSRF.
-     * @return string HTML del input
+     * Renders a hidden input field with the CSRF token.
+     * @return string HTML of the input
      */
     public static function renderInput() {
         $token = self::generate();

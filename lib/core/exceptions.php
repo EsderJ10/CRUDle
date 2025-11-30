@@ -1,24 +1,24 @@
 <?php
 /* 
- * Clases de Excepciones Personalizadas
- * Se definen las excepciones específicas utilizadas en la aplicación CRUDle.
- * Autor: José Antonio Cortés Ferre
+ * Custom Exception Classes
+ * Defines specific exceptions used in the CRUDle application.
+ * Author: José Antonio Cortés Ferre
  * 
  */
 
 /**
- * Excepción Base de la Aplicación
- * Todas las excepciones personalizadas heredan de esta
+ * Base Application Exception
+ * All custom exceptions inherit from this
  */
 class AppException extends Exception {
-    protected $userMessage = 'Ocurrió un error inesperado. Por favor, intente de nuevo.';
+    protected $userMessage = 'An unexpected error occurred. Please try again.';
     
     /**
      * Constructor
-     * @param string $message Mensaje de error técnico para registro
-     * @param string $userMessage Mensaje de error amigable para el usuario
-     * @param int $code Código de error
-     * @param Throwable $previous Excepción previa para encadenamiento
+     * @param string $message Technical error message for logging
+     * @param string $userMessage User-friendly error message
+     * @param int $code Error code
+     * @param Throwable $previous Previous exception for chaining
      */
     public function __construct(
         $message = '',
@@ -39,8 +39,8 @@ class AppException extends Exception {
 
 
 /**
- * Excepción de Validación
- * Se lanza cuando falla la validación de entrada
+ * Validation Exception
+ * Thrown when input validation fails
  */
 class ValidationException extends AppException {
     private $errors = [];
@@ -48,7 +48,7 @@ class ValidationException extends AppException {
     public function __construct(
         $message = 'Validation failed',
         $errors = [],
-        $userMessage = 'Los datos proporcionados no son válidos.',
+        $userMessage = 'The provided data is not valid.',
         $code = 0,
         Throwable $previous = null
     ) {
@@ -70,13 +70,13 @@ class ValidationException extends AppException {
 }
 
 /**
- * Excepción de carga de archivos
- * Se lanza cuando fallan las operaciones de carga de archivos
+ * File Upload Exception
+ * Thrown when file upload operations fail
  */
 class FileUploadException extends AppException {
     public function __construct(
         $message = 'File upload failed',
-        $userMessage = 'Error al procesar el archivo. Por favor, intente de nuevo.',
+        $userMessage = 'Error uploading file. Please try again.',
         $code = 0,
         Throwable $previous = null
     ) {
@@ -85,13 +85,13 @@ class FileUploadException extends AppException {
 }
 
 /**
- * Excepción de Avatar
- * Se lanza cuando fallan las operaciones de avatar (carga, eliminación, procesamiento)
+ * Avatar Exception
+ * Thrown when avatar operations fail (upload, delete, processing)
  */
 class AvatarException extends AppException {
     public function __construct(
         $message = 'Avatar operation failed',
-        $userMessage = 'Error al procesar la imagen de perfil. Por favor, intente de nuevo.',
+        $userMessage = 'Error processing avatar. Please try again.',
         $code = 0,
         Throwable $previous = null
     ) {
@@ -100,13 +100,13 @@ class AvatarException extends AppException {
 }
 
 /**
- * Excepción de operación de Usuario
- * Se lanza cuando fallan las operaciones CRUD de usuario
+ * User Operation Exception
+ * Thrown when user CRUD operations fail
  */
 class UserOperationException extends AppException {
     public function __construct(
         $message = 'User operation failed',
-        $userMessage = 'Error al realizar la operación. Por favor, intente de nuevo.',
+        $userMessage = 'Error performing user operation. Please try again.',
         $code = 0,
         Throwable $previous = null
     ) {
@@ -115,13 +115,13 @@ class UserOperationException extends AppException {
 }
 
 /**
- * Excepción de Recurso No Encontrado
- * Se lanza cuando el recurso solicitado (usuario, archivo, etc.) no se encuentra
+ * Resource Not Found Exception
+ * Thrown when requested resource (user, file, etc.) is not found
  */
 class ResourceNotFoundException extends AppException {
     public function __construct(
         $message = 'Resource not found',
-        $userMessage = 'El recurso solicitado no existe.',
+        $userMessage = 'The requested resource does not exist.',
         $code = 404,
         Throwable $previous = null
     ) {
@@ -130,13 +130,13 @@ class ResourceNotFoundException extends AppException {
 }
 
 /**
- * Excepción de Estado Inválido
- * Se lanza cuando no se puede realizar una operación debido al estado actual
+ * Invalid State Exception
+ * Thrown when an operation cannot be performed due to current state
  */
 class InvalidStateException extends AppException {
     public function __construct(
         $message = 'Invalid state',
-        $userMessage = 'No se puede realizar esta operación en el estado actual.',
+        $userMessage = 'Operation cannot be performed due to current state.',
         $code = 0,
         Throwable $previous = null
     ) {
@@ -145,13 +145,13 @@ class InvalidStateException extends AppException {
 }
 
 /**
- * Excepción de Autenticación
- * Se lanza cuando fallan las operaciones de autenticación
+ * Authentication Exception
+ * Thrown when authentication operations fail
  */
 class AuthException extends AppException {
     public function __construct(
         $message = 'Authentication failed',
-        $userMessage = 'Error de autenticación.',
+        $userMessage = 'Authentication failed.',
         $code = 401,
         Throwable $previous = null
     ) {

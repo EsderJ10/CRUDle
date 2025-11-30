@@ -1,12 +1,12 @@
 /*
- * Módulo del Dashboard
- * Maneja la navegación de la barra lateral, el cambio de tema y las transiciones de página
- * Autor: José Antonio Cortés Ferre.
+ * Dashboard Module
+ * Handles sidebar navigation, theme toggling, and page transitions
+ * Author: José Antonio Cortés Ferre.
  */
 
 const DashboardModule = {
     /**
-     * Inicializa la funcionalidad del dashboard
+     * Initializes dashboard functionality
      */
     init() {
         this.initSidebar();
@@ -16,7 +16,7 @@ const DashboardModule = {
     },
 
     /**
-     * Inicializa la funcionalidad de la barra lateral
+     * Initializes sidebar functionality
      */
     initSidebar() {
         const sidebar = document.getElementById('sidebar');
@@ -32,7 +32,7 @@ const DashboardModule = {
                 e.preventDefault();
                 sidebar.classList.toggle('collapsed');
                 body.classList.toggle('sidebar-collapsed');
-                // Guarda el nuevo estado
+                // Save new state
                 DashboardModule.saveSidebarState(sidebar);
             });
         }
@@ -48,7 +48,7 @@ const DashboardModule = {
             });
         }
 
-        // Cierra la barra lateral móvil al hacer clic en el overlay
+        // Close mobile sidebar when clicking on overlay
         if (sidebarOverlay) {
             sidebarOverlay.addEventListener('click', () => {
                 sidebar.classList.remove('mobile-open');
@@ -59,8 +59,8 @@ const DashboardModule = {
     },
 
     /**
-     * Guarda el estado del sidebar de escritorio en localStorage
-     * @param {HTMLElement} sidebar - Elemento de la barra lateral
+     * Saves desktop sidebar state in localStorage
+     * @param {HTMLElement} sidebar - Sidebar element
      */
     saveSidebarState(sidebar) {
         const isCollapsed = sidebar.classList.contains('collapsed');
@@ -68,10 +68,10 @@ const DashboardModule = {
     },
 
     /**
-     * Restaura el estado guardado del sidebar de escritorio desde localStorage
-     * Se aplican AMBAS clases: .collapsed en el sidebar y .sidebar-collapsed en el body
-     * @param {HTMLElement} sidebar - Elemento de la barra lateral
-     * @param {HTMLElement} body - Elemento body
+     * Restores saved desktop sidebar state from localStorage
+     * Both classes are applied: .collapsed on sidebar and .sidebar-collapsed on body
+     * @param {HTMLElement} sidebar - Sidebar element
+     * @param {HTMLElement} body - Body element
      */
     restoreSidebarState(sidebar, body) {
         if (!sidebar || !body) return;
@@ -79,15 +79,15 @@ const DashboardModule = {
         const savedState = localStorage.getItem('sidebarCollapsed');
         const isCollapsed = savedState === 'true';
 
-        // Aplicar/remover .collapsed en el sidebar
+        // Apply/remove .collapsed on sidebar
         sidebar.classList.toggle('collapsed', isCollapsed);
 
-        // Aplicar/remover .sidebar-collapsed en el body (necesario para el main-wrapper)
+        // Apply/remove .sidebar-collapsed on body (needed for main-wrapper)
         body.classList.toggle('sidebar-collapsed', isCollapsed);
     },
 
     /**
-     * Inicializa la funcionalidad de resaltado de navegación
+     * Initializes navigation highlighting functionality
      */
     initNavigation() {
         const currentPath = window.location.pathname.toLowerCase();
@@ -103,9 +103,9 @@ const DashboardModule = {
         let activeLink = null;
         let matchPriority = 0;
 
-        /* Se determina el mejor enlace coincidente basado en la ruta actual
-         * Es decir, se da prioridad a las coincidencias más específicas
-         * Esto sirve para que, por ejemplo, en user_edit.php se resalte "Usuarios" en lugar de "Dashboard"
+        /* Determine the best matching link based on current path.
+         * Priority is given to more specific matches.
+         * This ensures that e.g. in user_edit.php, "Users" is highlighted instead of "Dashboard"
          */
 
         navLinks.forEach((link) => {
@@ -146,7 +146,7 @@ const DashboardModule = {
     },
 
     /**
-     * Inicializa las transiciones de página
+     * Initializes page transitions
      */
     initPageTransitions() {
         const pageContent = document.querySelector('.page-content');
@@ -163,7 +163,7 @@ const DashboardModule = {
     },
 
     /**
-     * Inicializa el dropdown del perfil de usuario
+     * Initializes user profile dropdown
      */
     initProfileDropdown() {
         const userProfile = document.getElementById('userProfileDropdown');
@@ -197,7 +197,7 @@ const DashboardModule = {
     }
 };
 
-// Inicialización del módulo al cargar el DOM
+// Module initialization on DOM load
 document.addEventListener('DOMContentLoaded', () => {
     DashboardModule.init();
 

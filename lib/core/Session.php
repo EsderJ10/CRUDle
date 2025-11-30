@@ -1,13 +1,13 @@
 <?php
 /*
- * Clase para la gestión de sesiones y mensajes flash.
- * Permite almacenar mensajes temporales que se muestran en la siguiente solicitud.
- * Autor: José Antonio Cortés Ferre
+ * Class for session management and flash messages.
+ * Allows storing temporary messages to be shown in the next request.
+ * Author: José Antonio Cortés Ferre
  */
 
 class Session {
     /**
-     * Inicia la sesión si no está iniciada.
+     * Starts the session if not already started.
      */
     public static function init() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -16,9 +16,9 @@ class Session {
     }
 
     /**
-     * Establece un mensaje flash.
-     * @param string $type Tipo de mensaje (success, error, warning, info)
-     * @param string $message El contenido del mensaje
+     * Sets a flash message.
+     * @param string $type Message type (success, error, warning, info)
+     * @param string $message Message content
      */
     public static function setFlash($type, $message) {
         self::init();
@@ -32,8 +32,8 @@ class Session {
     }
 
     /**
-     * Obtiene y limpia los mensajes flash.
-     * @return array Lista de mensajes flash
+     * Gets and clears flash messages.
+     * @return array List of flash messages
      */
     public static function getFlashes() {
         self::init();
@@ -43,7 +43,7 @@ class Session {
     }
 
     /**
-     * Verifica si hay mensajes flash pendientes.
+     * Checks if there are pending flash messages.
      * @return bool
      */
     public static function hasFlashes() {
@@ -52,9 +52,9 @@ class Session {
     }
 
     /**
-     * Obtiene un valor de sesión.
-     * @param string $variable El nombre de la variable de sesión.
-     * @return mixed El valor de la variable de sesión o null si no existe.
+     * Gets a session value.
+     * @param string $variable Session variable name.
+     * @return mixed Session variable value or null if not exists.
      */
     public static function get($variable = null) {
         self::init();

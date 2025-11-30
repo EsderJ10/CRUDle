@@ -4,7 +4,7 @@
         <!-- Footer -->
         <footer class="main-footer">
             <div class="footer-content">
-                <p>&copy; 2025 CRUDle. Todos los derechos reservados.</p>
+                <p>&copy; 2025 CRUDle. All rights reserved.</p>
                 <a href="https://github.com/EsderJ10" target="_blank" rel="noopener noreferrer" title="View creator's GitHub">
                     <i class="fab fa-github"></i>
                 </a>
@@ -14,7 +14,7 @@
         </footer>
     </div>
 
-    <!-- Sidebar overlay solo para dispositivos móviles -->
+    <!-- Sidebar overlay only for mobile devices -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 </body>

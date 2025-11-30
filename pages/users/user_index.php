@@ -1,9 +1,9 @@
 <?php
 /*
- * Página para listar usuarios.
- * Muestra una tabla con todos los usuarios y opciones para editar o eliminar.
- * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
- * Autor: José Antonio Cortés Ferre
+ * Page to list users.
+ * Displays a table with all users and options to edit or delete.
+ * Uses functions from lib/business/user_operations and lib/presentation/user_views modules.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once '../../config/init.php';
@@ -13,31 +13,31 @@ require_once getPath('lib/presentation/user_views.php');
 
 requireLogin();
 
-$pageTitle = "Gestión de Usuarios";
-$pageHeader = "Lista de Usuarios";
+$pageTitle = "User Management";
+$pageHeader = "User List";
 
 try {
     include getPath('views/partials/header.php');
     
-    // Mensajes flash y de URL son manejados automáticamente en header.php
+    // Flash and URL messages are handled automatically in header.php
     
-    // Obtener y mostrar usuarios
+    // Get and display users
     try {
         $users = getAllUsers();
         echo renderUserTable($users);
     } catch (UserOperationException $e) {
         echo renderMessage('ERROR: ' . $e->getUserMessage(), 'error');
-        echo '<p><a href="user_create.php" class="btn btn-primary">Crear Primer Usuario</a></p>';
+        echo '<p><a href="user_create.php" class="btn btn-primary">Create First User</a></p>';
     } catch (Exception $e) {
-        echo renderMessage('ERROR: Ocurrió un error al cargar los usuarios. ' . $e->getMessage(), 'error');
+        echo renderMessage('ERROR: An error occurred while loading users. ' . $e->getMessage(), 'error');
         error_log('Error loading users: ' . $e->getMessage());
     }
     
     include getPath('views/partials/footer.php');
 } catch (Exception $e) {
-    // Error no esperado
+    // Unexpected error
     include getPath('views/partials/header.php');
-    echo renderMessage('ERROR: Ocurrió un error inesperado. ' . $e->getMessage(), 'error');
+    echo renderMessage('ERROR: An unexpected error occurred. ' . $e->getMessage(), 'error');
     include getPath('views/partials/footer.php');
     error_log('Unexpected error in user_index.php: ' . $e->getMessage());
     exit;

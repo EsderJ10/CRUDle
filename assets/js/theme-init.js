@@ -1,24 +1,24 @@
 /*
- * Script de inicialización del tema y gestión del cambio de tema
- * Maneja la lógica de cambio de tema en un solo lugar
- * Se ejecuta antes de que se renderice la página para evitar parpadeos de tema
- * Debe colocarse en <head> antes de que se cargue CSS
- * Verifica la preferencia de tema guardada en localStorage
- * Recurre a la preferencia del sistema (prefers-color-scheme)
- * Aplica la clase dark-theme al elemento html de inmediato
- * Presenta una suave animación de ola al cambiar de tema
- * Autor: José Antonio Cortés Ferre.
+ * Theme initialization and toggle management script
+ * Handles theme switching logic in one place
+ * Runs before page render to avoid theme flicker
+ * Must be placed in <head> before CSS loads
+ * Checks saved theme preference in localStorage
+ * Fallbacks to system preference (prefers-color-scheme)
+ * Applies dark-theme class to html element immediately
+ * Presents a smooth wave animation when changing theme
+ * Author: José Antonio Cortés Ferre.
  */
- 
-// Se usa IIFE para evitar contaminar el scope global.
 
-(function() {
+// Use IIFE to avoid polluting global scope.
+
+(function () {
     'use strict';
 
     const htmlElement = document.documentElement;
 
     /**
-     * Crea un efecto de ola en el botón al cambiar de tema
+     * Creates a wave effect on the button when changing theme
      */
     function createWaveEffect(event) {
         const button = event.target.closest('button');
@@ -74,8 +74,8 @@
     }
 
     /**
-     * Inicializa el tema al cargar la página
-     * Se ejecuta antes de que se renderice la página para evitar parpadeos de tema
+     * Initializes theme on page load
+     * Runs before page render to avoid theme flicker
      */
     function initializeTheme() {
         const savedTheme = localStorage.getItem('theme');
@@ -90,7 +90,7 @@
     }
 
     /**
-     * Maneja el cambio de tema al hacer clic en el botón
+     * Handles theme toggle on button click
      */
     function toggleTheme(event) {
         createWaveEffect(event);
@@ -104,12 +104,12 @@
     }
 
     /**
-     * Configura el listener para el botón de cambio de tema
+     * Sets up listener for theme toggle button
      */
     function setupThemeToggle() {
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
-            themeToggle.addEventListener('click', function(e) {
+            themeToggle.addEventListener('click', function (e) {
                 e.preventDefault();
                 console.log('Theme toggle clicked');
                 toggleTheme(e);
@@ -126,13 +126,13 @@
     }
 
     /**
-     * Escucha cambios en la preferencia del sistema
-     * Actualiza el tema si el usuario cambia la preferencia a nivel de sistema
+     * Listens for system preference changes
+     * Updates theme if user changes system-level preference
      */
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
         const savedTheme = localStorage.getItem('theme');
-        
-        // Solo hace el cambio si no hay una preferencia guardada
+
+        // Only change if no saved preference
         if (!savedTheme) {
             if (this.matches) {
                 htmlElement.classList.add('dark-theme');

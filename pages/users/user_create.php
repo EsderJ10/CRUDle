@@ -1,9 +1,9 @@
 <?php
 /*
- * Página para crear un nuevo usuario.
- * Maneja la visualización del formulario y el procesamiento de datos.
- * Utiliza funciones de los módulos lib/business/user_operations y lib/presentation/user_views.
- * Autor: José Antonio Cortés Ferre
+ * Page to create a new user.
+ * Handles form display and data processing.
+ * Uses functions from lib/business/user_operations and lib/presentation/user_views modules.
+ * Author: José Antonio Cortés Ferre
  */
 
 require_once '../../config/init.php';
@@ -15,83 +15,83 @@ require_once getPath('lib/core/sanitization.php');
 
 Permissions::require(Permissions::USER_CREATE);
 
-$pageTitle = "Invitar Usuario";
-$pageHeader = "Invitar Nuevo Usuario";
+$pageTitle = "Invite User";
+$pageHeader = "Invite New User";
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Validar CSRF
+        // Validate CSRF
         if (!CSRF::validate($_POST['csrf_token'] ?? '')) {
-            Session::setFlash('error', 'Error de seguridad: Token CSRF inválido.');
-            // Recargar formulario
+            Session::setFlash('error', 'Security error: Invalid CSRF token.');
+            // Reload form
             include getPath('views/partials/header.php');
-            $formData = $_POST; // Repoblar
+            $formData = $_POST; // Repopulate
             include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
             exit;
         }
 
         try {
-            // Sanitizar datos de entrada
+            // Sanitize input data
             $formData = sanitizeUserData([
                 'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
                 'role' => $_POST['role'] ?? ''
             ]);
             
-            // Validar datos básicos (nombre, email, role)
-            // Usamos validateUserData pero ignoramos password y avatar
+            // Validate basic data (name, email, role)
+            // We use validateUserData but ignore password and avatar
             $errors = [];
-            if (empty($formData['name'])) $errors[] = "El name es obligatorio.";
-            if (empty($formData['email'])) $errors[] = "El email es obligatorio.";
-            if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) $errors[] = "El email no es válido.";
-            if (empty($formData['role'])) $errors[] = "El role es obligatorio.";
+            if (empty($formData['name'])) $errors[] = "Name is required.";
+            if (empty($formData['email'])) $errors[] = "Email is required.";
+            if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format.";
+            if (empty($formData['role'])) $errors[] = "Role is required.";
             
             if (!empty($errors)) {
                 throw new ValidationException(
                     'Form validation failed',
                     ['general' => $errors],
-                    'Por favor, corrija los errores en el formulario.'
+                    'Please correct the errors in the form.'
                 );
             }
             
-            // Procesar avatar si se subió uno
+            // Process avatar if one was uploaded
             $avatarPath = null;
             if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 try {
                     $avatarPath = handleAvatarUpload($_FILES['avatar'], null, $formData['name']);
                 } catch (Exception $e) {
-                    // Si falla el avatar, advertimos pero continuamos con la invitación
-                    Session::setFlash('warning', 'Usuario invitado, pero hubo un error al subir el avatar: ' . $e->getMessage());
+                    // If avatar fails, warn but continue with invitation
+                    Session::setFlash('warning', 'User invited, but there was an error uploading the avatar: ' . $e->getMessage());
                 }
             }
             
-            // Invitar usuario
+            // Invite user
             $userId = inviteUser($formData['name'], $formData['email'], $formData['role'], $avatarPath);
             
-            // Éxito - redirigir con mensaje flash
-            Session::setFlash('success', 'Invitación enviada exitosamente.');
+            // Success - redirect with flash message
+            Session::setFlash('success', 'Invitation sent successfully.');
             header('Location: user_index.php');
             exit;
             
         } catch (ValidationException $e) {
-            // Mostrar formulario con errores
+            // Show form with errors
             include getPath('views/partials/header.php');
             
-            // Mostrar errores generales
+            // Show general errors
             $fieldErrors = $e->getErrors();
             foreach ($fieldErrors['general'] ?? [] as $error) {
                 echo renderMessage($error, 'error');
             }
             
-            // Repoblar datos del formulario
-            // $formData ya tiene los datos sanitizados
+            // Repopulate form data
+            // $formData already has sanitized data
             include getPath('views/components/forms/user_form.php');
             include getPath('views/partials/footer.php');
             exit;
             
         } catch (AppException $e) {
-            // Errores de aplicación conocidos (UserOperation, etc.)
+            // Known application errors (UserOperation, etc.)
             Session::setFlash('error', $e->getUserMessage());
             include getPath('views/partials/header.php');
             include getPath('views/components/forms/user_form.php');
@@ -99,13 +99,13 @@ try {
             exit;
         }
     } else {
-        // GET request - mostrar formulario vacío
+        // GET request - show empty form
         include getPath('views/partials/header.php');
         include getPath('views/components/forms/user_form.php');
         include getPath('views/partials/footer.php');
     }
 } catch (Exception $e) {
-    // Error no esperado (500) - Dejar que el Global Handler lo maneje
+    // Unexpected error (500) - Let Global Handler handle it
     throw $e;
 }
 ?>
