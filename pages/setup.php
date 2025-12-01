@@ -210,11 +210,11 @@ if ($step === 1) {
                     </div>
                     <div class="form-group mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" name="password" class="form-input w-full" required minlength="8">
+                        <input type="password" name="password" class="form-input w-full" required minlength="8" placeholder="Minimum 8 characters">
                     </div>
                     <div class="form-group mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                        <input type="password" name="confirm_password" class="form-input w-full" required minlength="8">
+                        <input type="password" name="confirm_password" class="form-input w-full" required minlength="8" placeholder="Repeat password">
                     </div>
                     <button type="submit" class="btn btn-primary w-full">Create Admin</button>
                 </form>

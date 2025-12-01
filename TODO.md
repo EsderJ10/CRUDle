@@ -7,15 +7,15 @@
 - [x] Specify what admin/editor/viewer can do.
 - [x] redirect from email verification must take the port from WEB_PORT (to avoid mismatch)
 - [x] think about avatars, if users are not being shared between each 'deploy', avatars shouldn't be?.
-- [ ] check styles: actions a must be equally displayed, user-profile...
-- [ ] security & design: saving the path in the database, null values...
-- [ ] Translate everything to English.
-- [ ] Check permissions:
+- [x] check styles: actions a must be equally displayed, user-profile...
+- [x] security & design: saving the path in the database, null values...
+- [x] Translate everything to English.
+- [x] Check permissions:
     ```bash
     Warning: error_log(/var/www/html/logs/error.log): Failed to open stream: Permission denied in /var/www/html/lib/core/error_handler.php on line 53
     Warning: error_log(/var/www/html/logs/error.log): Failed to open stream: Permission denied in /var/www/html/lib/core/error_handler.php on line 53
     ```
-- [ ] Check avatar input, on edit drag works but click doesn't; in accept_invite none works.
+- [x] Check avatar input, on edit drag works but click doesn't; in accept_invite none works.
 
 ## HIGH
 
@@ -33,7 +33,7 @@
 - [x] Check docker image (if it could be included or user must create it)
 - [x] Migrate to database.
 - [ ] Add tests.
-- [ ] Implement authentication.
+- [x] Implement authentication.
 
 ## LOW
 
