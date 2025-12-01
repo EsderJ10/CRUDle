@@ -10,6 +10,12 @@
 - [ ] check styles: actions a must be equally displayed, user-profile...
 - [ ] security & design: saving the path in the database, null values...
 - [ ] Translate everything to English.
+- [ ] Check permissions:
+    ```bash
+    Warning: error_log(/var/www/html/logs/error.log): Failed to open stream: Permission denied in /var/www/html/lib/core/error_handler.php on line 53
+    Warning: error_log(/var/www/html/logs/error.log): Failed to open stream: Permission denied in /var/www/html/lib/core/error_handler.php on line 53
+    ```
+- [ ] Check avatar input, on edit drag works but click doesn't; in accept_invite none works.
 
 ## HIGH
 
