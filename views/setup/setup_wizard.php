@@ -36,7 +36,6 @@ $success = $success ?? '';
         <div class="step-indicator">
             <div class="step <?php echo $step >= 1 ? ($step > 1 ? 'completed' : 'active') : ''; ?>"><?php echo $step > 1 ? '<i class="fas fa-check"></i>' : '1'; ?></div>
             <div class="step <?php echo $step >= 2 ? ($step > 2 ? 'completed' : 'active') : ''; ?>"><?php echo $step > 2 ? '<i class="fas fa-check"></i>' : '2'; ?></div>
-            <div class="step <?php echo $step >= 3 ? 'completed' : 'active'; ?>"><?php echo $step >= 3 ? '<i class="fas fa-check"></i>' : '3'; ?></div>
         </div>
 
         <?php if ($step === 1): ?>
@@ -93,15 +92,7 @@ $success = $success ?? '';
                     <button type="submit" class="btn btn-primary w-full mt-6">Create Admin</button>
                 </form>
             </div>
-
-        <?php elseif ($step === 3): ?>
-            <div class="text-center mb-6">
-                <div class="text-success text-5xl mb-4"><i class="fas fa-check-circle"></i></div>
-                <h2 class="text-2xl font-bold mb-2">Setup Completed!</h2>
-                <p class="text-gray-600 mb-6">The admin user has been created successfully. You have been logged in automatically.</p>
-                <a href="../index.php" class="btn btn-primary w-full">Go to Dashboard</a>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
     </div>
     
     <!-- Include auth.js for password toggling -->
