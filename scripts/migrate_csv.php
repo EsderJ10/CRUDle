@@ -5,7 +5,6 @@
  */
 
 require_once __DIR__ . '/../config/init.php';
-require_once getPath('lib/business/user_operations.php');
 
 $csvFile = getPath('data/users.csv');
 

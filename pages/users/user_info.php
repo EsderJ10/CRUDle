@@ -6,8 +6,6 @@
  */
 
 require_once '../../config/init.php';
-require_once getPath('lib/business/user_operations.php');
-require_once getPath('views/user_views.php');
 
 $pageTitle = "User Information";
 $pageHeader = "User Details";

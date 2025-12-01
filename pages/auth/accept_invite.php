@@ -4,8 +4,6 @@
  */
 
 require_once '../../config/init.php';
-require_once getPath('lib/business/user_operations.php');
-require_once getPath('lib/core/validation.php');
 
 $pageTitle = "Accept Invitation";
 $token = $_GET['token'] ?? '';

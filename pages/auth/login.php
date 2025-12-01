@@ -1,6 +1,5 @@
 <?php
 require_once '../../config/init.php';
-require_once getPath('views/user_views.php');
 
 $pageTitle = "Login - CRUDle";
 $pageHeader = "Login";

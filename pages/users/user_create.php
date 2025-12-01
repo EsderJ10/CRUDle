@@ -7,10 +7,6 @@
  */
 
 require_once '../../config/init.php';
-require_once getPath('lib/business/user_operations.php');
-require_once getPath('views/user_views.php');
-require_once getPath('lib/core/validation.php');
-require_once getPath('lib/core/sanitization.php');
 
 Permissions::require(Permissions::USER_CREATE);
 

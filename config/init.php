@@ -3,12 +3,22 @@
  * Initialization file.
  * Loads all necessary dependencies and configures the environment.
  */
-
 // Paths
 require_once __DIR__ . '/paths.php';
 
 // Configuration
 require_once getPath('config/config.php');
+
+// Error Reporting
+if (APP_ENV === 'production') {
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+    error_reporting(0);
+} else {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+}
 
 // Core
 require_once getPath('lib/core/exceptions.php');
@@ -19,6 +29,14 @@ require_once getPath('lib/core/Permissions.php');
 
 // Business Logic
 require_once getPath('lib/business/auth_operations.php');
+require_once getPath('lib/business/user_operations.php');
+
+// Core Utilities
+require_once getPath('lib/core/validation.php');
+require_once getPath('lib/core/sanitization.php');
+
+// Views
+require_once getPath('views/user_views.php');
 
 // Helpers
 require_once getPath('lib/helpers/utils.php');
