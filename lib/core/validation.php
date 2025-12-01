@@ -28,8 +28,8 @@ function validateName($name) {
         $errors[] = "Name cannot contain only numbers.";
     }
     
-    if (!preg_match('/^[a-zA-ZáéíóúñÁÉÍÓÚÑ\s]+$/', $name)) {
-        $errors[] = "Name can only contain letters and spaces.";
+    if (!preg_match('/^[a-zA-ZáéíóúñÁÉÍÓÚÑ\s\-\']+$/', $name)) {
+        $errors[] = "Name can only contain letters, spaces, hyphens and apostrophes.";
     }
     
     return $errors;

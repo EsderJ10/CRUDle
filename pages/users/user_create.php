@@ -7,11 +7,6 @@
  */
 
 require_once '../../config/init.php';
-require_once getPath('lib/business/user_operations.php');
-require_once getPath('lib/business/auth_operations.php');
-require_once getPath('lib/presentation/user_views.php');
-require_once getPath('lib/core/validation.php');
-require_once getPath('lib/core/sanitization.php');
 
 Permissions::require(Permissions::USER_CREATE);
 
@@ -39,12 +34,9 @@ try {
                 'role' => $_POST['role'] ?? ''
             ]);
             
-            // Validate basic data (name, email, role)
-            // We use validateUserData but ignore password and avatar
-            $errors = [];
-            if (empty($formData['name'])) $errors[] = "Name is required.";
-            if (empty($formData['email'])) $errors[] = "Email is required.";
-            if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format.";
+            // Validate basic data (name, email)
+            $errors = validateUserData($formData);
+            
             if (empty($formData['role'])) $errors[] = "Role is required.";
             
             if (!empty($errors)) {

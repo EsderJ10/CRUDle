@@ -5,8 +5,7 @@
  * Author: José Antonio Cortés Ferre
  */
 
-require_once getPath('lib/helpers/utils.php');
-require_once getPath('config/config.php');
+require_once getPath('config/init.php');
 
 $formData = $formData ?? [
     'name' => '',

@@ -7,11 +7,6 @@
  */
 
 require_once '../../config/init.php';
-require_once getPath('lib/business/user_operations.php');
-require_once getPath('lib/business/auth_operations.php');
-require_once getPath('lib/presentation/user_views.php');
-require_once getPath('lib/core/validation.php');
-require_once getPath('lib/core/sanitization.php');
 
 Permissions::require(Permissions::USER_UPDATE);
 
@@ -20,13 +15,13 @@ $pageHeader = "Edit User";
 
 try {
     // Validate that an ID is provided
-    if (!isset($_GET['id'])) {
+    $userId = $_GET['id'] ?? null;
+    
+    if (!$userId) {
         Session::setFlash('error', 'No user ID provided.');
         header('Location: user_index.php');
         exit;
     }
-    
-    $userId = $_GET['id'];
     
     // Load existing user
     try {

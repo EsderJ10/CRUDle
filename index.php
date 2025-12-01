@@ -7,9 +7,6 @@
  */
 
 require_once 'config/init.php';
-require_once getPath('lib/business/user_operations.php');
-require_once getPath('lib/presentation/user_views.php');
-require_once getPath('lib/business/auth_operations.php');
 
 // Check for first run
 try {
@@ -49,7 +46,9 @@ try {
                 <h3>Users Management</h3>
                 <div class="actions mt-4">
                     <a href="pages/users/user_index.php" class="btn btn-primary">View All Users</a>
-                    <a href="pages/users/user_create.php" class="btn btn-success">Invite New User</a>
+                    <?php if (isAdmin()): ?>
+                        <a href="pages/users/user_create.php" class="btn btn-success">Invite New User</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

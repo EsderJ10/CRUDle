@@ -44,38 +44,40 @@
                         <span class="nav-text">Users</span>
                     </a>
                 </li>
+                <?php if (isAdmin()): ?>
                 <li class="nav-item">
                     <a href="<?php echo getWebPath('pages/users/user_create.php'); ?>" class="nav-link" data-page="create">
                         <i class="fas fa-user-plus nav-icon"></i>
                         <span class="nav-text">Invite User</span>
                     </a>
                 </li>
+                <?php endif; ?>
             </ul>
             
             <div class="sidebar-footer">
-                <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if (Session::has('user_id')): ?>
                 <div class="user-profile" id="userProfileDropdown">
                     <div class="profile-avatar">
-                        <?php if (isset($_SESSION['user_avatar']) && $_SESSION['user_avatar']): ?>
-                            <img src="<?php echo htmlspecialchars($_SESSION['user_avatar']); ?>" alt="Avatar">
+                        <?php if (Session::has('user_avatar') && Session::get('user_avatar')): ?>
+                            <img src="<?php echo htmlspecialchars(Session::get('user_avatar')); ?>" alt="Avatar">
                         <?php else: ?>
                             <i class="fas fa-user-circle"></i>
                         <?php endif; ?>
                     </div>
                     <div class="profile-info">
-                        <span class="profile-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></span>
-                        <span class="profile-role"><?php echo htmlspecialchars($_SESSION['user_role'] ?? 'role'); ?></span>
+                        <span class="profile-name"><?php echo htmlspecialchars(Session::get('user_name') ?? 'User'); ?></span>
+                        <span class="profile-role"><?php echo htmlspecialchars(Session::get('user_role') ?? 'role'); ?></span>
                     </div>
                     <i class="fas fa-chevron-down profile-chevron"></i>
                     
                     <div class="profile-dropdown-menu">
                         <div class="dropdown-user-header">
-                            <span class="dropdown-user-name"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></span>
-                            <span class="dropdown-user-email"><?php echo htmlspecialchars($_SESSION['user_email'] ?? ''); ?></span>
+                            <span class="dropdown-user-name"><?php echo htmlspecialchars(Session::get('user_name') ?? 'User'); ?></span>
+                            <span class="dropdown-user-email"><?php echo htmlspecialchars(Session::get('user_email') ?? ''); ?></span>
                         </div>
                         <ul class="dropdown-list">
                             <li>
-                                <a href="<?php echo getWebPath('pages/users/user_info.php?id=' . $_SESSION['user_id']); ?>" class="dropdown-item">
+                                <a href="<?php echo getWebPath('pages/users/user_info.php?id=' . Session::get('user_id')); ?>" class="dropdown-item">
                                     <i class="fas fa-user"></i> View Profile
                                 </a>
                             </li>
@@ -132,10 +134,5 @@
                     foreach ($flashes as $flash) {
                         echo renderMessage($flash['message'], $flash['type']);
                     }
-                }
-
-                if (isset($_GET['message'])) {
-                    $type = $_GET['type'] ?? 'success';
-                    echo renderMessage($_GET['message'], $type);
                 }
                 ?>
