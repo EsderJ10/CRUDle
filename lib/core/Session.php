@@ -60,5 +60,54 @@ class Session {
         self::init();
         return $_SESSION[$variable] ?? null;
     }
+
+    /**
+     * Checks if a session variable exists.
+     * @param string $variable Session variable name.
+     * @return bool
+     */
+    public static function has($variable) {
+        self::init();
+        return isset($_SESSION[$variable]);
+    }
+
+    /**
+     * Sets a session value.
+     * @param string $variable Session variable name.
+     * @param mixed $value Value to store.
+     */
+    public static function set($variable, $value) {
+        self::init();
+        $_SESSION[$variable] = $value;
+    }
+
+    /**
+     * Deletes a session value.
+     * @param string $variable Session variable name.
+     */
+    public static function delete($variable) {
+        self::init();
+        if (isset($_SESSION[$variable])) {
+            unset($_SESSION[$variable]);
+        }
+    }
+
+    /**
+     * Destroys the session and clears cookies.
+     */
+    public static function destroy() {
+        self::init();
+        $_SESSION = [];
+
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+
+        session_destroy();
+    }
 }
 ?>

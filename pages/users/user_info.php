@@ -14,7 +14,7 @@ $pageHeader = "User Details";
 
 try {
     // Validate that an ID is provided
-    if (!isset($_GET['id'])) {
+    if (!isset($_GET['id']) || empty($_GET['id'])) {
         include getPath('views/partials/header.php');
         echo renderMessage('ERROR: No user ID provided.', 'error');
         echo '<p><a href="user_index.php">Back to User List</a></p>';

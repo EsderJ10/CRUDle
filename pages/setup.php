@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/init.php';
 require_once getPath('lib/business/user_operations.php');
-require_once getPath('lib/business/auth_operations.php');
 
 if (getUserCount() > 0) {
     header('Location: auth/login.php');

@@ -16,11 +16,13 @@ class CSRF {
             session_start();
         }
         
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        $token = Session::get('csrf_token');
+        if (empty($token)) {
+            $token = bin2hex(random_bytes(32));
+            Session::set('csrf_token', $token);
         }
         
-        return $_SESSION['csrf_token'];
+        return $token;
     }
 
     /**
@@ -32,7 +34,7 @@ class CSRF {
             session_start();
         }
         
-        return $_SESSION['csrf_token'] ?? null;
+        return Session::get('csrf_token');
     }
 
     /**
@@ -45,11 +47,12 @@ class CSRF {
             session_start();
         }
         
-        if (!isset($_SESSION['csrf_token']) || empty($token)) {
+        $storedToken = Session::get('csrf_token');
+        if (empty($storedToken) || empty($token)) {
             return false;
         }
         
-        return hash_equals($_SESSION['csrf_token'], $token);
+        return hash_equals($storedToken, $token);
     }
 
     /**

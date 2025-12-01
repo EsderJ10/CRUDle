@@ -38,12 +38,12 @@ function login($email, $password) {
 
         // Start session
         Session::init();
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
-        $_SESSION['user_role'] = $user['role'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['user_avatar'] = normalizeAvatarPath($user['avatar_path']);
-        $_SESSION['last_activity'] = time();
+        Session::set('user_id', $user['id']);
+        Session::set('user_name', $user['name']);
+        Session::set('user_role', $user['role']);
+        Session::set('user_email', $user['email']);
+        Session::set('user_avatar', normalizeAvatarPath($user['avatar_path']));
+        Session::set('last_activity', time());
 
         return true;
     } catch (AuthException $e) {
@@ -62,18 +62,7 @@ function login($email, $password) {
  * Closes the current session.
  */
 function logout() {
-    Session::init();
-    $_SESSION = [];
-    
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]
-        );
-    }
-    
-    session_destroy();
+    Session::destroy();
 }
 
 /**
@@ -82,8 +71,7 @@ function logout() {
  * @return bool
  */
 function isLoggedIn() {
-    Session::init();
-    return isset($_SESSION['user_id']);
+    return Session::get('user_id') !== null;
 }
 
 /**
@@ -102,21 +90,21 @@ function requireLogin() {
  * Checks if the current user is an administrator.
  */
 function isAdmin() {
-    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+    return Session::get('user_role') === 'admin';
 }
 
 /**
  * Checks if the current user is an editor.
  */
 function isEditor() {
-    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'editor';
+    return Session::get('user_role') === 'editor';
 }
 
 /**
  * Checks if the current user is a viewer.
  */
 function isViewer() {
-    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'viewer';
+    return Session::get('user_role') === 'viewer';
 }
 
 /**

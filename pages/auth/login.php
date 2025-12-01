@@ -1,6 +1,5 @@
 <?php
 require_once '../../config/init.php';
-require_once getPath('lib/business/auth_operations.php');
 require_once getPath('views/user_views.php');
 
 $pageTitle = "Login - CRUDle";
@@ -20,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     try {
         if (login($email, $password)) {
-            Session::setFlash('success', 'Welcome back, ' . $_SESSION['user_name']);
+            Session::setFlash('success', 'Welcome, ' . Session::get('user_name'));
             header('Location: ' . getWebPath('index.php'));
             exit;
         }

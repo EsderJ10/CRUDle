@@ -17,6 +17,9 @@ require_once getPath('lib/core/Session.php');
 require_once getPath('lib/core/CSRF.php');
 require_once getPath('lib/core/Permissions.php');
 
+// Business Logic
+require_once getPath('lib/business/auth_operations.php');
+
 // Helpers
 require_once getPath('lib/helpers/utils.php');
 
@@ -36,23 +39,23 @@ if (Session::get('user_id')) {
 
         // Ghost User Check
         if (!$sessionUser) {
-            session_destroy();
+            Session::destroy();
             header('Location: ' . getWebPath('pages/auth/login.php?error=account_deleted'));
             exit;
         }
 
         // Status Check
         if ($sessionUser['status'] !== 'active') {
-            session_destroy();
+            Session::destroy();
             header('Location: ' . getWebPath('pages/auth/login.php?error=account_inactive'));
             exit;
         }
 
         // Data Synchronization
-        $_SESSION['user_role'] = $sessionUser['role'];
-        $_SESSION['user_name'] = $sessionUser['name'];
-        $_SESSION['user_email'] = $sessionUser['email'];
-        $_SESSION['user_avatar'] = $sessionUser['avatar_path']; 
+        Session::set('user_role', $sessionUser['role']);
+        Session::set('user_name', $sessionUser['name']);
+        Session::set('user_email', $sessionUser['email']);
+        Session::set('user_avatar', $sessionUser['avatar_path']); 
 
     } catch (Exception $e) {
         error_log("Session Sync Error: " . $e->getMessage());
