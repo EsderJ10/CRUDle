@@ -16,7 +16,7 @@
     Warning: error_log(/var/www/html/logs/error.log): Failed to open stream: Permission denied in /var/www/html/lib/core/error_handler.php on line 53
     ```
 - [x] Check avatar input, on edit drag works but click doesn't; in accept_invite none works.
-- [ ] Check the profile-avatar img. Session::get('user_avatar') returns the filename but we need the path.
+- [x] Check the profile-avatar img. Session::get('user_avatar') returns the filename but we need the path.
 
 ## HIGH
 
