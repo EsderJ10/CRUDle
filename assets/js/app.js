@@ -15,15 +15,11 @@ const CrudApp = {
      * Initializes the CRUD application
      */
     init() {
-        if (this.config.debug) {
-            console.log('CRUDle initializing...', this.config);
-        }
+        // Debug mode disabled for production
 
         this.initGlobalEventListeners();
 
-        if (this.config.debug) {
-            console.log('CRUDle initialized successfully');
-        }
+        // Initialization complete
     },
 
     /**
@@ -33,9 +29,7 @@ const CrudApp = {
      */
     registerModule(name, module) {
         this.modules[name] = module;
-        if (this.config.debug) {
-            console.log(`Module '${name}' registered.`);
-        }
+
     },
 
     /**
@@ -52,15 +46,11 @@ const CrudApp = {
      */
     initGlobalEventListeners() {
         window.addEventListener('error', (event) => {
-            if (this.config.debug) {
-                console.error('Global error:', event.error);
-            }
+            this.showNotification(event.message, 'danger');
         });
 
         window.addEventListener('unhandledrejection', (event) => {
-            if (this.config.debug) {
-                console.error('Unhandled promise rejection:', event.reason);
-            }
+            this.showNotification(event.reason, 'danger');
         });
     },
 
@@ -71,9 +61,7 @@ const CrudApp = {
      */
     getElementById(id) {
         const element = document.getElementById(id);
-        if (!element && this.config.debug) {
-            console.warn(`Element with ID '${id}' not found`);
-        }
+
         return element;
     },
 
@@ -83,9 +71,33 @@ const CrudApp = {
      * @param {string} type - Notification type (success, error, warning, info)
      */
     showNotification(message, type = 'info') {
-        console.log(`[${type.toUpperCase()}] ${message}`);
+        const uploadSection = document.querySelector('.avatar-upload-section');
+        if (!uploadSection) return;
+
+        let cssClass = 'message-info';
+        if (type === 'success') cssClass = 'message-success';
+        if (type === 'danger' || type === 'error') cssClass = 'message-error';
+        if (type === 'warning') cssClass = 'message-warning';
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${cssClass}`;
+        messageDiv.textContent = message;
+
+        uploadSection.insertBefore(messageDiv, uploadSection.firstChild);
+
+        // Auto dismiss after 5 seconds
+        setTimeout(() => {
+            if (messageDiv.parentElement) {
+                messageDiv.style.transition = 'opacity 0.5s';
+                messageDiv.style.opacity = '0';
+                setTimeout(() => messageDiv.remove(), 500);
+            }
+        }, 5000);
     }
 };
+
+// Expose CrudApp globally
+window.CrudApp = CrudApp;
 
 // Initialize the app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {

@@ -158,4 +158,19 @@ class AuthException extends AppException {
         parent::__construct($message, $userMessage, $code, $previous);
     }
 }
+
+/**
+ * Database Exception
+ * Thrown when database operations fail
+ */
+class DatabaseException extends AppException {
+    public function __construct(
+        $message = 'Database error',
+        $userMessage = 'A database error occurred. Please try again later.',
+        $code = 500,
+        Throwable $previous = null
+    ) {
+        parent::__construct($message, $userMessage, $code, $previous);
+    }
+}
 ?>

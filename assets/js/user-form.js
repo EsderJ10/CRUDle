@@ -77,7 +77,7 @@
 
             // Validate it is an image
             if (!file.type.match('image.*')) {
-                alert('Please select only image files.');
+                window.CrudApp.showNotification('Please select only image files.', 'danger');
                 this.clearFileInput();
                 return;
             }
@@ -85,7 +85,7 @@
             // Validate size (2MB max)
             const maxSize = 2 * 1024 * 1024;
             if (file.size > maxSize) {
-                alert('File is too large. Maximum size is 2MB.');
+                window.CrudApp.showNotification('File is too large. Maximum size is 2MB.', 'danger');
                 this.clearFileInput();
                 return;
             }

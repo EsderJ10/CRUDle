@@ -99,7 +99,6 @@
             htmlElement.classList.toggle('dark-theme');
             const isDark = htmlElement.classList.contains('dark-theme');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            console.log('Theme switched to:', isDark ? 'dark' : 'light');
         }, 50);
     }
 
@@ -111,7 +110,6 @@
         if (themeToggle) {
             themeToggle.addEventListener('click', function (e) {
                 e.preventDefault();
-                console.log('Theme toggle clicked');
                 toggleTheme(e);
             });
         }
