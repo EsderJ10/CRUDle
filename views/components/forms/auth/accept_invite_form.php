@@ -101,6 +101,7 @@ $error = $error ?? null;
         </div>
     </div>
     
+    <script src="<?php echo getWebPath('assets/js/app.js'); ?>"></script>
     <script src="<?php echo getWebPath('assets/js/user-form.js'); ?>"></script>
     <script src="<?php echo getWebPath('assets/js/auth.js'); ?>"></script>
 </body>

@@ -71,8 +71,13 @@ const CrudApp = {
      * @param {string} type - Notification type (success, error, warning, info)
      */
     showNotification(message, type = 'info') {
-        const uploadSection = document.querySelector('.avatar-upload-section');
-        if (!uploadSection) return;
+        // Get or create toast container
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            document.body.appendChild(container);
+        }
 
         let cssClass = 'message-info';
         if (type === 'success') cssClass = 'message-success';
@@ -83,14 +88,35 @@ const CrudApp = {
         messageDiv.className = `message ${cssClass}`;
         messageDiv.textContent = message;
 
-        uploadSection.insertBefore(messageDiv, uploadSection.firstChild);
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-55%);
+            background: none;
+            border: none;
+            color: inherit;
+            opacity: 0.6;
+            cursor: pointer;
+            padding: 5px;
+        `;
+        closeBtn.onclick = () => removeToast(messageDiv);
+        messageDiv.appendChild(closeBtn);
+        messageDiv.style.paddingRight = '40px';
+
+        container.appendChild(messageDiv);
+
+        function removeToast(element) {
+            element.style.animation = 'toastSlideOut 0.5s ease-out forwards';
+            setTimeout(() => element.remove(), 500);
+        }
 
         // Auto dismiss after 5 seconds
         setTimeout(() => {
             if (messageDiv.parentElement) {
-                messageDiv.style.transition = 'opacity 0.5s';
-                messageDiv.style.opacity = '0';
-                setTimeout(() => messageDiv.remove(), 500);
+                removeToast(messageDiv);
             }
         }, 5000);
     }
