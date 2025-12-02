@@ -7,6 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.0] - 2025-12-02
+
+### Added
+- **Authentication & Security**
+  - **Complete Auth System**: Implemented secure Login, Logout, and Session management.
+  - **Role-Based Access Control (RBAC)**: Enforced permissions for Admin, Editor, and Viewer roles.
+  - **Password Security**: Implemented BCRYPT password hashing with configurable cost.
+  - **Secure Sessions**: Added session regeneration, timeout, and secure cookie flags.
+- **Production Readiness**
+  - Complete translation of all documentation and code to English.
+  - Removal of all debug code and development artifacts.
+  - Improved error handling for database connections.
+- **UI/UX Enhancements**
+  - **Toast Notification System**: Implemented a non-blocking, fixed-position notification system to replace browser alerts.
+  - **Animations**: Added smooth slide-in and slide-out animations for notifications.
+  - **Global App Object**: Exposed `CrudApp` globally (`window.CrudApp`) for better module interoperability.
+
+### Changed
+- **Error Handling**: Replaced critical `die()` calls with proper `DatabaseException` handling in `Database` class.
+- **Notifications**: 
+  - Replaced native JavaScript `alert()` calls with `CrudApp.showNotification()`.
+  - Updated `showNotification` to use a dedicated `#toast-container` to prevent layout shifts.
+- **Forms**: Updated `accept_invite_form.php` to include necessary JS dependencies (`app.js`).
+
+### Removed
+- **Legacy Files**: Removed `ACTIVITY.md` and other development tracking files.
+- **Debug Code**: Removed `console.log` and `var_dump` leftovers from production code.
+
+### Migration Guide (v1.2.0 → v2.0.0)
+
+> [!IMPORTANT]
+> **Authentication Update**: This version introduces a mandatory login system. Existing users from v1.2.0 will not have passwords set and cannot log in immediately.
+
+#### 1. Database Schema Update
+The application includes an auto-migration feature that attempts to update your database schema automatically on the first run. However, for production environments, we recommend verifying or running these SQL commands manually:
+
+```sql
+-- Add new columns for Auth and Status
+ALTER TABLE users ADD COLUMN status ENUM('active', 'pending', 'inactive') DEFAULT 'pending' AFTER role;
+ALTER TABLE users ADD COLUMN invitation_token VARCHAR(64) NULL AFTER status;
+ALTER TABLE users ADD COLUMN invitation_expires_at DATETIME NULL AFTER invitation_token;
+ALTER TABLE users ADD COLUMN password VARCHAR(255) NULL AFTER avatar_path;
+```
+
+#### 2. Accessing Your Account (Admin)
+Since existing users have no passwords, you must manually set a password for your admin account directly in the database to gain initial access.
+
+Run this SQL command to set the password `admin123` for user ID 1 (replace with your actual admin ID):
+
+```sql
+-- Password hash for 'admin123' (BCRYPT cost 10)
+UPDATE users 
+SET password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 
+    status = 'active' 
+WHERE id = 1;
+```
+
+#### 3. Migrating Other Users
+Once logged in as Admin:
+1. Go to the Dashboard.
+2. You will see existing users with "Pending" status.
+3. You can use the **Resend Invite** feature (if email is configured) to send them a link to set their password.
+4. Alternatively, you can manually set their passwords in the database using the same method as step 2.
+
 ## [1.2.0] - 2025-11-25
 
 ### Added
