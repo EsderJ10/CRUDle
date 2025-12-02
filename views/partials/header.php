@@ -59,7 +59,7 @@
                 <div class="user-profile" id="userProfileDropdown">
                     <div class="profile-avatar">
                         <?php if (Session::has('user_avatar') && Session::get('user_avatar')): ?>
-                            <img src="<?php echo htmlspecialchars(Session::get('user_avatar')); ?>" alt="Avatar">
+                            <img src="<?php echo htmlspecialchars(getWebPath('uploads/avatars/' . Session::get('user_avatar'))); ?>" alt="Avatar">
                         <?php else: ?>
                             <i class="fas fa-user-circle"></i>
                         <?php endif; ?>
